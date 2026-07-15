@@ -15,6 +15,7 @@ export default function Home() {
         <p className="eyebrow">Life Navigator · seeded demo mode</p>
         <h1>A clear plan for what to consider next.</h1>
         <p className="lede">This is a controlled, test-only experience. It uses validated catalog fixtures and a deterministic roadmap compiler.</p>
+        <p className="notice" data-testid="seeded-ai-boundary">Seeded mode never calls the AI routes; it preserves a deterministic fixture fallback.</p>
       </header>
       <section aria-labelledby="scenario-heading" className="panel">
         <h2 id="scenario-heading">Choose a seeded scenario</h2>

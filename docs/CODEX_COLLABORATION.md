@@ -12,6 +12,13 @@ Week submission. It is a concise evidence log, not a transcript.
 
 ## Entries
 
+### 2026-07-15 — Delegated life-event authoring skill worktree
+
+- Purpose: Delegate a reusable repository-local skill for controlled, evidence-backed draft proposals for future Life Events.
+- Isolated worktree scope: Create the skill under the established `.agents/skills/` convention, with only essential supporting documentation or focused fixtures/tests, on branch `codex/life-event-authoring-skill`; do not change application features, compiler behavior, shared contracts, existing event-pack policy content, package files, `CURRENT_STATE.md`, or this record after this entry.
+- Expected deliverables: A repeatable research/provenance workflow; source-card and candidate-event proposal templates; decision-changing question guidance; reviewer checklist and approval gate; a clearly synthetic, unapproved example; and focused validation evidence.
+- Human-review boundary: Every resulting source, claim, task, rule, question, safety note, and event proposal is draft-only and cannot become catalog-approved or user-facing without explicit human review and approval.
+
 ### 2026-07-15 — P0-01 repository delivery baseline
 
 - Task/outcome: Completed the local bootstrap baseline for Linear issue OPE-5.
@@ -103,3 +110,12 @@ Week submission. It is a concise evidence log, not a transcript.
   `CURRENT_STATE.md` update.
 - Verification: Skill cited required repository sources and made no repository
   or Linear modifications.
+
+### 2026-07-15 — Bounded Structured Outputs orchestration
+
+- Task/outcome: Implemented the server-only AI interpretation and next-question boundary under the user-authorized P4-01 delivery scope (Linear OPE-13).
+- Codex contribution: Added strictly structured Responses API transport, Zod/output allowlists, opaque-session local guarding, redacted telemetry interface, bounded retry/repair behavior, safe fallbacks, route shells, and seeded-mode non-consumption evidence.
+- Human review/decision: Preserved the approved separation of responsibility: only approved packs/compiler data can define tasks, sources, rules, timing, and labels. No reviewed pack registry exists yet, and deployed live calls remain disabled pending shared guard configuration.
+- Changed artifacts: AI orchestration and server route modules; environment template; seeded shell boundary notice; unit and browser coverage; project records.
+- Evidence: Linear OPE-13; `npm run lint`, `npm run typecheck`, `npm run test` (5 files, 19 tests), `npm run build`, and `npm run test:e2e` (1 passed).
+- Verification: All listed checks passed locally. No `/feedback` session ID is recorded.

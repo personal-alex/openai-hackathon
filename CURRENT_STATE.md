@@ -91,6 +91,13 @@ No application implementation has been established yet. This bootstrap package d
 - No approved event content, live AI, source URLs, persistence, authentication, or country selector was introduced; the shell is structured to accept reviewed packs and future interaction modules.
 - Passed: `npm run lint`, `npm run typecheck`, `npm run test` (4 files, 13 tests), `npm run build`, and `npm run test:e2e`.
 
+## 2026-07-15 — Bounded AI orchestration boundary complete
+
+- Under the user-authorized P4-01 delivery scope, `src/ai-orchestrator` now validates Structured Output event suggestions and allowlisted next-question selection; it cannot create catalog tasks, sources, rules, timing, or eligibility conclusions.
+- The routes apply opaque-session rate limits, output caps, one bounded upstream retry/repair path, redacted telemetry, and deterministic fallbacks. Seeded demo mode remains network-free and never consumes AI quota.
+- No reviewed server-side event-pack registry exists yet, so runtime routes fail closed rather than use test fixtures or unreviewed content; deployed live calls remain disabled pending a shared server-side guard adapter.
+- Passed: `npm run lint`, `npm run typecheck`, `npm run test` (5 files, 19 tests), `npm run build`, and `npm run test:e2e`.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

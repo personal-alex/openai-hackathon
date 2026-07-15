@@ -65,3 +65,8 @@ P3-02 (Linear OPE-12) adds a non-production, non-user-selectable IL-shaped contr
 ## P3-03 structured seeded MVP shell (2026-07-15)
 
 P3-03 (Linear OPE-24) adds a judge-facing App Router shell with test-only `expecting_child` and `job_loss` scenarios. Scenario state feeds the deterministic compiler; the UI renders catalog data and controlled fixture explanations only. No approved event content, live AI, source URLs, persistence, authentication, or country selector was introduced. Lint, typecheck, four-file/thirteen-test Vitest matrix, build, and seeded Playwright scenario-switch journey passed. [[CURRENT_STATE]] and [[CODEX_COLLABORATION]] record the evidence.
+
+
+## Bounded AI orchestration delivery (2026-07-15)
+
+OPE-13 was user-authorized to deliver the approved HLD Structured Outputs boundary: server-only extraction and allowlisted question selection are Zod-validated, rate-guarded, redacted, and backed by deterministic fallbacks. Seeded mode makes no live request. No reviewed server-side pack registry or shared deployed guard is configured, so runtime activation remains fail-closed; candidate content research and human approval remain distinct unperformed work. [[01-hld]] [[01-product-flows]] [[CURRENT_STATE]] [[CODEX_COLLABORATION]]
