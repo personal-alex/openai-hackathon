@@ -45,3 +45,8 @@ P0-01 (Linear OPE-5) completed the local Next.js/TypeScript bootstrap with Node 
 ## P0-01 push and P2-01 validated contracts (2026-07-15)
 
 P0-01 initial commit `2f04320` is now pushed to `origin/master`; [[CURRENT_STATE]] and [[CODEX_COLLABORATION]] record that completion. P2-01 (Linear OPE-9) adds the shared [[01-hld]]/[[0002-event-pack-contract-and-roadmap-compiler]] Zod contract boundary for event packs, context facts, tasks, sources, timing, rules, roadmaps, diffs, and local progress. Cross-reference and pack-scoped fact validation fail closed; no policy content, compiler, AI integration, or product flow was added. Lint, typecheck, two-file/six-test Vitest matrix, build, and Playwright smoke test passed.
+
+
+## P2-02 source-review and event-pack authoring workflow (2026-07-15)
+
+P2-02 (Linear OPE-10) adds [[event-pack-authoring]] and a fail-closed product-pack review gate. Candidate curation, project-owner/human-review disposition, and implementation of approved content are separate; source cards now require a named reviewer and non-approved cards are rejected. No event-policy, source, safety-copy, or event-pack content was added. Lint, typecheck, two-file/seven-test Vitest matrix, build, and Playwright smoke test passed. [[CURRENT_STATE]] and [[CODEX_COLLABORATION]] contain the corresponding evidence.

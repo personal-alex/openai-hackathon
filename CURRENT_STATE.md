@@ -67,6 +67,12 @@ No application implementation has been established yet. This bootstrap package d
 - Event-pack cross-references and pack-scoped fact values fail closed; the implementation contains no reviewed event-policy content, compiler logic, model integration, or product flow.
 - Passed: `npm run lint`, `npm run typecheck`, `npm run test` (2 files, 6 tests), `npm run build`, and `npm run test:e2e`.
 
+## 2026-07-15 — P2-02 source-review and event-pack authoring workflow complete
+
+- `docs/event-pack-authoring.md` separates candidate curation, human review, and approved-pack implementation; the project owner/human reviewer records dated source-card dispositions.
+- `validateApprovedEventPack` blocks any source card without an approved disposition; required source metadata now includes a named reviewer.
+- Passed: `npm run lint`, `npm run typecheck`, `npm run test` (2 files, 7 tests), `npm run build`, and `npm run test:e2e`.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

@@ -30,6 +30,15 @@ Week submission. It is a concise evidence log, not a transcript.
 - Evidence: Linear OPE-9; `npm run lint`, `npm run typecheck`, `npm run test` (2 files, 6 tests), `npm run build`, and `npm run test:e2e` (1 passed).
 - Verification: All listed checks passed locally. No `/feedback` session ID is recorded.
 
+### 2026-07-15 — P2-02 source-review and event-pack authoring workflow
+
+- Task/outcome: Implemented the reviewed event-pack authoring workflow for Linear issue OPE-10.
+- Codex contribution: Added an authoring checklist, named-reviewer source-card requirement, and product-pack review gate that rejects non-approved source cards.
+- Human review/decision: Implemented the approved source-review ownership and dated-disposition requirements; no source, policy, safety-copy, or event-pack content was added.
+- Changed artifacts: Authoring workflow documentation; source-card contract; event-pack review validator; contract matrix; project records.
+- Evidence: Linear OPE-10; `npm run lint`, `npm run typecheck`, `npm run test` (2 files, 7 tests), `npm run build`, and `npm run test:e2e` (1 passed).
+- Verification: All listed checks passed locally. No `/feedback` session ID is recorded.
+
 ### 2026-07-15 — Approved UX product-flow package
 
 - Task/outcome: Produced the approved MVP UX/product-flow decision package for the two complete event flows.

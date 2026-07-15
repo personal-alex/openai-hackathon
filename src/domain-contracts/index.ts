@@ -57,6 +57,7 @@ export const SourceCardSchema = z.object({
   publisher: z.string().min(1),
   canonicalUrl: z.url(),
   reviewedOn: z.iso.date(),
+  reviewer: z.string().min(1),
   disposition: z.enum(["approved", "rejected", "needs_review"]),
   scope: z.string().min(1),
   supportedClaimSummary: z.string().min(1)

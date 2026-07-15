@@ -8,6 +8,7 @@ import {
   validateContextForPack,
   validateEventPack
 } from "@/domain-contracts";
+import { validateApprovedEventPack } from "@/event-packs/review";
 
 const validPack = {
   id: "expecting_child",
@@ -16,7 +17,7 @@ const validPack = {
   metadata: { title: "Contract fixture" },
   facts: [{ id: "has_anchor", valueType: "boolean", labelKey: "fact.has_anchor", sensitive: false }],
   questions: [{ id: "ask_anchor", factId: "has_anchor", promptKey: "question.anchor", rationaleKey: "why.anchor", answerType: "boolean", allowSkip: true }],
-  sourceCards: [{ id: "fixture_source", publisher: "Fixture publisher", canonicalUrl: "https://example.invalid/source", reviewedOn: "2026-07-15", disposition: "approved", scope: "Schema fixture only", supportedClaimSummary: "No policy claim." }],
+  sourceCards: [{ id: "fixture_source", publisher: "Fixture publisher", canonicalUrl: "https://example.invalid/source", reviewedOn: "2026-07-15", reviewer: "Fixture reviewer", disposition: "approved", scope: "Schema fixture only", supportedClaimSummary: "No policy claim." }],
   tasks: [{ id: "fixture_task", title: "Fixture task", actionSummary: "Validate contracts.", priority: 1, timing: { kind: "general", labelKey: "timing.general" }, rationaleKey: "task.fixture", sourceIds: ["fixture_source"], verificationLabel: "Verify", dependsOn: [] }],
   baseTaskIds: ["fixture_task"],
   rules: [],
@@ -37,9 +38,19 @@ describe("domain contracts", () => {
 
   it("rejects malformed pack metadata and invalid cross references", () => {
     expect(EventPackSchema.safeParse({ ...validPack, safety: { disclaimerKey: "safety.disclaimer" } }).success).toBe(false);
+    expect(EventPackSchema.safeParse({ ...validPack, sourceCards: [{ ...validPack.sourceCards[0], reviewer: "" }] }).success).toBe(false);
     const result = validateEventPack({ ...validPack, baseTaskIds: ["missing_task"] });
     expect(result.success).toBe(false);
     if (!result.success) expect(result.errors).toContain("unknown base task ID: missing_task");
+  });
+
+  it("blocks non-approved source cards from product packs", () => {
+    const result = validateApprovedEventPack({
+      ...validPack,
+      sourceCards: [{ ...validPack.sourceCards[0], disposition: "needs_review" }]
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) expect(result.errors[0]).toContain("approved disposition");
   });
 
   it("rejects unknown or invalid context facts while preserving unknown facts as absent", () => {
