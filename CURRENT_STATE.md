@@ -104,6 +104,12 @@ No application implementation has been established yet. This bootstrap package d
 - It provides candidate source-card, event-proposal, question-minimization, and reviewer-gate templates without changing event-pack contracts, registries, runtime content, compiler behavior, or user flows.
 - Every generated source, claim, rule, task, question, and safety note remains candidate-only pending dated human review, explicit catalog approval, and separate implementation authorization.
 
+## 2026-07-15 — P5 AI boundary and P0-02 evidence baseline complete
+
+- P5-01/P5-02 now cover all three server-only structured operations (event extraction, allowlisted question selection, and supplemental explanation drafting), bounded token caps, deterministic seeded/failure fallback, redacted health telemetry, and a fail-closed shared deployment-guard adapter.
+- P0-02 completed the primary-thread evidence baseline: material work now records dated outcomes, human decisions, changed artifacts, verification, commit/Linear references, and no fabricated `/feedback` ID.
+- Passed: `npm run lint`, `npm run typecheck`, `npm run test` (5 files, 24 tests), `npm run build`, and `npm run test:e2e`.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

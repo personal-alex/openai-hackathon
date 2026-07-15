@@ -75,3 +75,8 @@ OPE-13 was user-authorized to deliver the approved HLD Structured Outputs bounda
 ## Life-event authoring skill integration (2026-07-15)
 
 The isolated worktree branch `codex/life-event-authoring-skill` was reviewed and its originating commit `5dd341ea164b627a7f149275468db1c249749024` was integrated as `2cdd018`. [[life-event-authoring]] supplies candidate-only provenance, proposal, decision-changing-question, and reviewer-gate templates. It creates no active event packs or policy content: dated human source/content review and a separately authorized approved-pack implementation remain required. [[CURRENT_STATE]] [[CODEX_COLLABORATION]]
+
+
+## P5 bounded AI and P0-02 evidence baseline (2026-07-15)
+
+[[OPE-16]] and [[OPE-18]] are complete in [819ce13]: server-only extraction, question selection, and supplemental explanation drafting remain Zod-validated and catalog-allowlisted, with seeded deterministic fallback, redacted health telemetry, local limits, and a fail-closed shared deployment-guard adapter. [[OPE-6]] now records the primary-thread evidence baseline without fabricating a `/feedback` ID. [[CURRENT_STATE]] [[CODEX_COLLABORATION]]

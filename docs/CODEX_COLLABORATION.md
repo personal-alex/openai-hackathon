@@ -5,7 +5,7 @@ Week submission. It is a concise evidence log, not a transcript.
 
 ## Primary implementation thread
 
-- Codex thread: To be established before implementation
+- Codex thread: Primary local implementation thread; no external session ID is claimed here
 - `/feedback` session ID: To be recorded after feedback is submitted
 - Scope: Scaffold, contracts, event packs, compiler, tests, product integration,
   deployment, and submission materials
@@ -19,6 +19,15 @@ Week submission. It is a concise evidence log, not a transcript.
 - Expected outputs: Review-required candidate artifacts outside runtime pack paths; authoritative-source provenance; explicit uncertainties; human-review checklist/gate; branch commit(s) and verification report.
 - Ownership boundaries: The worktree may not change application features, shared contracts, compiler behavior, the authoring skill, or Linear. It must not activate catalog content, infer eligibility, present legal/medical/tax/financial conclusions, or add live product retrieval; only the main thread may integrate its branch.
 - Required review gates: A named human must record dated source dispositions and approve each claim, task, rule, question, timing, safety label, and implementation authorization. Integration remains a main-thread decision after review; a candidate pack is never user-facing by default.
+
+### 2026-07-15 — P0-02 Codex evidence baseline complete
+
+- Task/outcome: Established the durable evidence baseline for Linear OPE-6.
+- Codex contribution: Maintained the primary-thread record, dated material-work entries, artifact/commit/verification references, delegation provenance, and cross-linked memory updates.
+- Human review/decision: Human review remains required for scope, safety, source, and product decisions; no `/feedback` session ID has been fabricated or recorded.
+- Changed artifacts: `docs/CODEX_COLLABORATION.md`, `CURRENT_STATE.md`, and the configured project memory record.
+- Evidence: OPE-6; prior accepted records for bootstrap, contracts, compiler, seeded shell, AI boundary, and worktree integration; current M5 commit `819ce13`.
+- Verification: Documentation review confirms required evidence fields and explicit no-fabrication boundary.
 
 ### 2026-07-15 — Delegated life-event authoring skill worktree
 
