@@ -1,5 +1,5 @@
 import "server-only";
-import { InMemoryAiRateGuard, LifeNavigatorAi, NoopTelemetry, createResponsesApiTransport, type EventCandidate } from "@/ai-orchestrator";
+import { InMemoryAiRateGuard, LifeNavigatorAi, NoopTelemetry, createHttpSharedAiRateGuard, createResponsesApiTransport, type AiRateGuard, type EventCandidate } from "@/ai-orchestrator";
 
 const localGuard = new InMemoryAiRateGuard();
 
@@ -8,7 +8,11 @@ export function getReviewedAiCandidates(): readonly EventCandidate[] { return []
 
 export function getServerAi(): LifeNavigatorAi {
   const apiKey = process.env.OPENAI_API_KEY;
-  // Deployed live calls remain disabled until a shared server-side guard adapter is configured.
-  const allowLocalLiveCalls = !process.env.VERCEL_ENV;
-  return new LifeNavigatorAi(apiKey && allowLocalLiveCalls ? createResponsesApiTransport(apiKey, process.env.OPENAI_MODEL ?? "gpt-5.6") : undefined, localGuard, NoopTelemetry);
+  const deployed = Boolean(process.env.VERCEL_ENV);
+  const sharedGuardUrl = process.env.AI_SHARED_GUARD_URL;
+  const sharedGuardToken = process.env.AI_SHARED_GUARD_TOKEN;
+  const guard: AiRateGuard = deployed && sharedGuardUrl && sharedGuardToken ? createHttpSharedAiRateGuard(sharedGuardUrl, sharedGuardToken) : localGuard;
+  // A deployed live call is fail-closed unless a trusted shared guard is configured.
+  const allowLiveCalls = !deployed || Boolean(sharedGuardUrl && sharedGuardToken);
+  return new LifeNavigatorAi(apiKey && allowLiveCalls ? createResponsesApiTransport(apiKey, process.env.OPENAI_MODEL ?? "gpt-5.6") : undefined, guard, NoopTelemetry);
 }
