@@ -39,6 +39,15 @@ Week submission. It is a concise evidence log, not a transcript.
 - Evidence: Linear OPE-10; `npm run lint`, `npm run typecheck`, `npm run test` (2 files, 7 tests), `npm run build`, and `npm run test:e2e` (1 passed).
 - Verification: All listed checks passed locally. No `/feedback` session ID is recorded.
 
+### 2026-07-15 — P3-01 deterministic roadmap compiler
+
+- Task/outcome: Implemented the pure deterministic roadmap compiler and task-diff boundary for Linear issue OPE-11.
+- Codex contribution: Added approved rule-expression semantics, base/inclusion/exclusion/override selection, stable sort, unknown-anchor fallback, conflict rejection, and immutable catalog diff generation.
+- Human review/decision: Implemented HLD and ADR 0002 decisions; no event-policy content, source curation, model call, UI flow, or local-progress authority was added.
+- Changed artifacts: Compiler module; compiler test matrix; domain-contract type exports; project records.
+- Evidence: Linear OPE-11; `npm run lint`, `npm run typecheck`, `npm run test` (3 files, 11 tests), `npm run build`, and `npm run test:e2e` (1 passed).
+- Verification: All listed checks passed locally. No `/feedback` session ID is recorded.
+
 ### 2026-07-15 — Approved UX product-flow package
 
 - Task/outcome: Produced the approved MVP UX/product-flow decision package for the two complete event flows.

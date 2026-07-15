@@ -50,3 +50,8 @@ P0-01 initial commit `2f04320` is now pushed to `origin/master`; [[CURRENT_STATE
 ## P2-02 source-review and event-pack authoring workflow (2026-07-15)
 
 P2-02 (Linear OPE-10) adds [[event-pack-authoring]] and a fail-closed product-pack review gate. Candidate curation, project-owner/human-review disposition, and implementation of approved content are separate; source cards now require a named reviewer and non-approved cards are rejected. No event-policy, source, safety-copy, or event-pack content was added. Lint, typecheck, two-file/seven-test Vitest matrix, build, and Playwright smoke test passed. [[CURRENT_STATE]] and [[CODEX_COLLABORATION]] contain the corresponding evidence.
+
+
+## P3-01 deterministic roadmap compiler (2026-07-15)
+
+P3-01 (Linear OPE-11) implements the pure [[0002-event-pack-contract-and-roadmap-compiler]] selection order: base tasks → matching inclusions → matching exclusions → valid overrides → deterministic timing/priority/ID sort. Unknown facts do not match unsupported conditions; unknown anchors become general timing; same-priority conflicting overrides reject. Compiler task diffs are deterministic and local progress remains outside compiler authority. No policy content, AI, UI flow, or source curation was added. Lint, typecheck, three-file/eleven-test Vitest matrix, build, and Playwright smoke test passed. [[CURRENT_STATE]] and [[CODEX_COLLABORATION]] record the evidence.

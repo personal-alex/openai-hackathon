@@ -73,6 +73,12 @@ No application implementation has been established yet. This bootstrap package d
 - `validateApprovedEventPack` blocks any source card without an approved disposition; required source metadata now includes a named reviewer.
 - Passed: `npm run lint`, `npm run typecheck`, `npm run test` (2 files, 7 tests), `npm run build`, and `npm run test:e2e`.
 
+## 2026-07-15 — P3-01 deterministic roadmap compiler complete
+
+- `src/roadmap-compiler` compiles only validated catalog tasks through base selection, matching inclusions, matching exclusions, valid overrides, and stable timing/priority/ID ordering.
+- It preserves unknown facts, falls back unknown timing anchors to general guidance, rejects conflicting same-priority overrides, and emits deterministic added/changed/removed task diffs; local progress remains outside compiler input and output.
+- Passed: `npm run lint`, `npm run typecheck`, `npm run test` (3 files, 11 tests), `npm run build`, and `npm run test:e2e`.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

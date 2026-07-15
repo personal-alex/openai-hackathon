@@ -75,7 +75,7 @@ export const TaskDefinitionSchema = z.object({
   dependsOn: z.array(StableIdSchema)
 }).strict();
 
-type Condition =
+export type Condition =
   | { all: Condition[] }
   | { any: Condition[] }
   | { not: Condition }
@@ -184,6 +184,8 @@ export type UserContext = z.infer<typeof UserContextSchema>;
 export type CompiledRoadmap = z.infer<typeof CompiledRoadmapSchema>;
 export type TaskDiff = z.infer<typeof TaskDiffSchema>;
 export type LocalProgress = z.infer<typeof LocalProgressSchema>;
+export type Timing = z.infer<typeof TimingSchema>;
+export type CatalogTask = z.infer<typeof CatalogTaskSchema>;
 
 export type ContractValidationResult<T> =
   | { success: true; data: T }
