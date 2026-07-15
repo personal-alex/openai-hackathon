@@ -1,0 +1,4 @@
+interface:
+  display_name: "Life Event Authoring"
+  short_description: "Draft safe, reviewable life-event proposals"
+  default_prompt: "Use $life-event-authoring to prepare a reviewable candidate proposal for a Life Navigator event."
