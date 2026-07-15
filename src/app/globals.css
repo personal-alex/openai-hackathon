@@ -1,14 +1,7 @@
-:root {
-  color-scheme: light;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-  margin: 0;
-}
-
-main {
-  max-width: 48rem;
-  margin: 0 auto;
-  padding: 4rem 1.5rem;
-}
+:root { color: #18302a; background: #f7f4ee; font-family: Arial, Helvetica, sans-serif; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+.shell { max-width: 900px; margin: 0 auto; padding: 64px 24px; }
+h1 { max-width: 700px; margin: 8px 0 16px; font-size: clamp(2.25rem, 6vw, 4.5rem); letter-spacing: -.05em; line-height: 1; }
+h2 { margin: 0; font-size: 1.5rem; }.lede { max-width: 620px; color: #4d625c; font-size: 1.1rem; line-height: 1.6; }.eyebrow { color: #6c5035; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.panel { margin-top: 28px; padding: 28px; border: 1px solid #ded8ce; border-radius: 20px; background: #fffdf9; box-shadow: 0 12px 35px #3d342214; }.scenario-list { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }button { border: 1px solid #9c8b76; border-radius: 999px; padding: 10px 15px; background: transparent; color: inherit; cursor: pointer; }button[aria-pressed="true"] { border-color: #1d5d4b; background: #1d5d4b; color: white; }.notice { margin: 20px 0; padding: 14px; border-radius: 10px; background: #edf4ef; line-height: 1.5; }ol { display: grid; gap: 14px; padding: 0; list-style: none; }li { padding: 20px; border-radius: 14px; background: #f7f4ee; }h3 { margin: 0; }dl { display: flex; flex-wrap: wrap; gap: 16px; }dt { color: #6c5035; font-size: .8rem; font-weight: 700; text-transform: uppercase; }dd { margin: 3px 0 0; }footer { margin-top: 28px; color: #4d625c; font-size: .9rem; line-height: 1.5; }

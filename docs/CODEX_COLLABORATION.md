@@ -57,6 +57,15 @@ Week submission. It is a concise evidence log, not a transcript.
 - Evidence: Linear OPE-12; `npm run lint`, `npm run typecheck`, `npm run test` (4 files, 13 tests), `npm run build`, and `npm run test:e2e` (1 passed).
 - Verification: All listed checks passed locally. No `/feedback` session ID is recorded.
 
+### 2026-07-15 — P3-03 structured seeded MVP shell
+
+- Task/outcome: Implemented the judge-facing seeded roadmap shell for Linear issue OPE-24.
+- Codex contribution: Added App Router scenario state, test-only packs, deterministic compiler projection, controlled explanation copy, responsive shell styling, and seeded Playwright coverage.
+- Human review/decision: Kept the shell within the approved UX/HLD boundary; no policy/source content, live AI, persistence, authentication, or country selection was added.
+- Changed artifacts: Test-fixture scenarios; App Router shell and styles; seeded browser test; project records.
+- Evidence: Linear OPE-24; `npm run lint`, `npm run typecheck`, `npm run test` (4 files, 13 tests), `npm run build`, and `npm run test:e2e` (1 passed).
+- Verification: All listed checks passed locally. No `/feedback` session ID is recorded.
+
 ### 2026-07-15 — Approved UX product-flow package
 
 - Task/outcome: Produced the approved MVP UX/product-flow decision package for the two complete event flows.

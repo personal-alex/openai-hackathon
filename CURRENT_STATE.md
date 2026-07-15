@@ -85,6 +85,12 @@ No application implementation has been established yet. This bootstrap package d
 - A deliberately incomplete jurisdiction template fixture fails validation safely. No second jurisdiction or country selector was introduced.
 - Passed: `npm run lint`, `npm run typecheck`, `npm run test` (4 files, 13 tests), `npm run build`, and `npm run test:e2e`.
 
+## 2026-07-15 — P3-03 structured seeded MVP shell complete
+
+- The judge-facing App Router shell uses test-only `expecting_child` and `job_loss` scenarios, a clear scenario-state boundary, deterministic compiled roadmaps, and fixed fixture explanations.
+- No approved event content, live AI, source URLs, persistence, authentication, or country selector was introduced; the shell is structured to accept reviewed packs and future interaction modules.
+- Passed: `npm run lint`, `npm run typecheck`, `npm run test` (4 files, 13 tests), `npm run build`, and `npm run test:e2e`.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

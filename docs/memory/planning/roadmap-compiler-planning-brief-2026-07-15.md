@@ -60,3 +60,8 @@ P3-01 (Linear OPE-11) implements the pure [[0002-event-pack-contract-and-roadmap
 ## P3-02 portability contract proof (2026-07-15)
 
 P3-02 (Linear OPE-12) adds a non-production, non-user-selectable IL-shaped contract fixture that compiles through the shared validator/compiler, plus an intentionally incomplete template fixture that fails safely. Fixtures contain no real advice or source claims and do not add a second jurisdiction or selector. Lint, typecheck, four-file/thirteen-test Vitest matrix, build, and Playwright smoke test passed. [[CURRENT_STATE]] and [[CODEX_COLLABORATION]] record the evidence.
+
+
+## P3-03 structured seeded MVP shell (2026-07-15)
+
+P3-03 (Linear OPE-24) adds a judge-facing App Router shell with test-only `expecting_child` and `job_loss` scenarios. Scenario state feeds the deterministic compiler; the UI renders catalog data and controlled fixture explanations only. No approved event content, live AI, source URLs, persistence, authentication, or country selector was introduced. Lint, typecheck, four-file/thirteen-test Vitest matrix, build, and seeded Playwright scenario-switch journey passed. [[CURRENT_STATE]] and [[CODEX_COLLABORATION]] record the evidence.
