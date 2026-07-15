@@ -70,3 +70,8 @@ P3-03 (Linear OPE-24) adds a judge-facing App Router shell with test-only `expec
 ## Bounded AI orchestration delivery (2026-07-15)
 
 OPE-13 was user-authorized to deliver the approved HLD Structured Outputs boundary: server-only extraction and allowlisted question selection are Zod-validated, rate-guarded, redacted, and backed by deterministic fallbacks. Seeded mode makes no live request. No reviewed server-side pack registry or shared deployed guard is configured, so runtime activation remains fail-closed; candidate content research and human approval remain distinct unperformed work. [[01-hld]] [[01-product-flows]] [[CURRENT_STATE]] [[CODEX_COLLABORATION]]
+
+
+## Life-event authoring skill integration (2026-07-15)
+
+The isolated worktree branch `codex/life-event-authoring-skill` was reviewed and its originating commit `5dd341ea164b627a7f149275468db1c249749024` was integrated as `2cdd018`. [[life-event-authoring]] supplies candidate-only provenance, proposal, decision-changing-question, and reviewer-gate templates. It creates no active event packs or policy content: dated human source/content review and a separately authorized approved-pack implementation remain required. [[CURRENT_STATE]] [[CODEX_COLLABORATION]]

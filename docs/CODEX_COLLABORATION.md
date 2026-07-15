@@ -119,3 +119,11 @@ Week submission. It is a concise evidence log, not a transcript.
 - Changed artifacts: AI orchestration and server route modules; environment template; seeded shell boundary notice; unit and browser coverage; project records.
 - Evidence: Linear OPE-13; `npm run lint`, `npm run typecheck`, `npm run test` (5 files, 19 tests), `npm run build`, and `npm run test:e2e` (1 passed).
 - Verification: All listed checks passed locally. No `/feedback` session ID is recorded.
+
+### 2026-07-15 — Life-event authoring skill worktree review and integration
+
+- Task/outcome: Reviewed and approved the dedicated worktree deliverable for controlled, evidence-backed candidate Life Event proposals; integrated it without activating any event content.
+- Worktree provenance: Branch `codex/life-event-authoring-skill`; originating commit `5dd341ea164b627a7f149275468db1c249749024`; cherry-picked integration commit `2cdd0181664f19551b0a40785f5c294c113a6980`.
+- Scope/review: Added only `.agents/skills/life-event-authoring/` instructions, review templates, and a clearly fictional/unapproved example. The review found no runtime packs, registry entries, shared-contract changes, source URLs, policy claims, compiler changes, or user-facing content; outcome: approved.
+- Human review/decision: All generated material remains candidate-only. Source-card dispositions, claim/task/rule/question/safety approval, any contract change, and a separately authorized approved-pack implementation remain mandatory gates.
+- Verification: Manual frontmatter/metadata and safety-content inspection passed; `npm run lint`, `npm run typecheck`, `npm run test` (4 files, 13 tests), `npm run build`, and `npm run test:e2e` (1 passed) passed in the worktree. The supplied skill validator was not runnable because both available Python runtimes lack PyYAML; no environment dependency was added.

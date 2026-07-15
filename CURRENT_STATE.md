@@ -98,6 +98,12 @@ No application implementation has been established yet. This bootstrap package d
 - No reviewed server-side event-pack registry exists yet, so runtime routes fail closed rather than use test fixtures or unreviewed content; deployed live calls remain disabled pending a shared server-side guard adapter.
 - Passed: `npm run lint`, `npm run typecheck`, `npm run test` (5 files, 19 tests), `npm run build`, and `npm run test:e2e`.
 
+## 2026-07-15 — Life-event authoring skill integrated
+
+- The draft-only repository-local skill `.agents/skills/life-event-authoring/` was reviewed and integrated from worktree branch `codex/life-event-authoring-skill`, originating commit `5dd341ea164b627a7f149275468db1c249749024`, as integration commit `2cdd0181664f19551b0a40785f5c294c113a6980`.
+- It provides candidate source-card, event-proposal, question-minimization, and reviewer-gate templates without changing event-pack contracts, registries, runtime content, compiler behavior, or user flows.
+- Every generated source, claim, rule, task, question, and safety note remains candidate-only pending dated human review, explicit catalog approval, and separate implementation authorization.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations
