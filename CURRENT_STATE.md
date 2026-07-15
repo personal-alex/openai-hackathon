@@ -59,7 +59,13 @@ No application implementation has been established yet. This bootstrap package d
 
 - P0-01 established the local Next.js/TypeScript delivery baseline with Node 24/npm 11 constraints, npm lockfile, lint/test harnesses, and CI configuration.
 - Passed locally: `npm ci`, `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build`, Playwright Chromium installation, and `npm run test:e2e`.
-- The initial Git commit and push remain pending; P0-02 is in progress.
+- Initial commit `2f04320` was pushed to `origin/master`; P0-02 is in progress.
+
+## 2026-07-15 — P2-01 validated domain contracts complete
+
+- `src/domain-contracts` now provides Zod/TypeScript contracts for canonical event IDs, IL event packs, context facts, questions, source cards, tasks, rules, timing, safety metadata, immutable roadmaps, task diffs, and browser-local progress.
+- Event-pack cross-references and pack-scoped fact values fail closed; the implementation contains no reviewed event-policy content, compiler logic, model integration, or product flow.
+- Passed: `npm run lint`, `npm run typecheck`, `npm run test` (2 files, 6 tests), `npm run build`, and `npm run test:e2e`.
 
 ## Deferred / explicitly out of scope for MVP
 

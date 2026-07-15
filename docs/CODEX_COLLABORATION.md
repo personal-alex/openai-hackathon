@@ -19,7 +19,16 @@ Week submission. It is a concise evidence log, not a transcript.
 - Human review/decision: Approved npm 11, Node 24, exact initial dependency pins, TypeScript 6.x, the no-empty-module-directory approach, and the bounded non-product scaffold scope; ESLint 9.39.5 replaced incompatible ESLint 10 after verification.
 - Changed artifacts: Application shell; package/runtime/configuration files; unit and end-to-end scaffold tests; CI workflow; README.
 - Evidence: Linear OPE-5; `npm ci`, `npm run lint`, `npm run typecheck`, `npm run test` (1 passed), `npm run build`, Playwright Chromium installation, and `npm run test:e2e` (1 passed).
-- Verification: All listed checks passed locally. No `/feedback` session ID is recorded; initial Git commit and push remain pending.
+- Verification: All listed checks passed locally. Commit `2f04320` was pushed to `origin/master`; no `/feedback` session ID is recorded.
+
+### 2026-07-15 — P2-01 validated domain and event-pack contracts
+
+- Task/outcome: Implemented the shared Zod/TypeScript validation boundary for Linear issue OPE-9.
+- Codex contribution: Added canonical event, IL pack, fact/context, question, source-card, task, timing, rule-expression, safety, roadmap, diff, and local-progress contracts plus cross-reference and pack-scoped fact-value validation.
+- Human review/decision: Implemented the approved HLD and ADR 0002 contract decisions; no event-policy, source, or safety-policy content was introduced.
+- Changed artifacts: `src/domain-contracts`; domain-contract Vitest matrix; pinned Zod dependency and lockfile; Vitest alias configuration; project records.
+- Evidence: Linear OPE-9; `npm run lint`, `npm run typecheck`, `npm run test` (2 files, 6 tests), `npm run build`, and `npm run test:e2e` (1 passed).
+- Verification: All listed checks passed locally. No `/feedback` session ID is recorded.
 
 ### 2026-07-15 — Approved UX product-flow package
 

@@ -40,3 +40,8 @@ The team approved [[01-product-flows]] for expecting_child and job_loss. It defi
 ## P0-01 repository delivery baseline complete (2026-07-15)
 
 P0-01 (Linear OPE-5) completed the local Next.js/TypeScript bootstrap with Node 24/npm 11 constraints, a committed npm lockfile, lint/typecheck/Vitest/Playwright harnesses, CI, and a minimal non-product app shell. Local verification passed: `npm ci`, lint, typecheck, unit test, build, Playwright Chromium installation, and end-to-end smoke test. [[CURRENT_STATE]] and [[CODEX_COLLABORATION]] record the same evidence. The initial commit/push remains pending; P0-02 is in progress. No event content, compiler, live AI, database, authentication, or product flow was added.
+
+
+## P0-01 push and P2-01 validated contracts (2026-07-15)
+
+P0-01 initial commit `2f04320` is now pushed to `origin/master`; [[CURRENT_STATE]] and [[CODEX_COLLABORATION]] record that completion. P2-01 (Linear OPE-9) adds the shared [[01-hld]]/[[0002-event-pack-contract-and-roadmap-compiler]] Zod contract boundary for event packs, context facts, tasks, sources, timing, rules, roadmaps, diffs, and local progress. Cross-reference and pack-scoped fact validation fail closed; no policy content, compiler, AI integration, or product flow was added. Lint, typecheck, two-file/six-test Vitest matrix, build, and Playwright smoke test passed.
