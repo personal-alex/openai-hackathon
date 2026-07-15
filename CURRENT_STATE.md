@@ -79,6 +79,12 @@ No application implementation has been established yet. This bootstrap package d
 - It preserves unknown facts, falls back unknown timing anchors to general guidance, rejects conflicting same-priority overrides, and emits deterministic added/changed/removed task diffs; local progress remains outside compiler input and output.
 - Passed: `npm run lint`, `npm run typecheck`, `npm run test` (3 files, 11 tests), `npm run build`, and `npm run test:e2e`.
 
+## 2026-07-15 — P3-02 portability contract proof complete
+
+- A non-production, non-user-selectable IL-shaped contract fixture compiles through the shared validator and roadmap compiler; it contains no real advice or source claim.
+- A deliberately incomplete jurisdiction template fixture fails validation safely. No second jurisdiction or country selector was introduced.
+- Passed: `npm run lint`, `npm run typecheck`, `npm run test` (4 files, 13 tests), `npm run build`, and `npm run test:e2e`.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

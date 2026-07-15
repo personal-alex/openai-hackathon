@@ -55,3 +55,8 @@ P2-02 (Linear OPE-10) adds [[event-pack-authoring]] and a fail-closed product-pa
 ## P3-01 deterministic roadmap compiler (2026-07-15)
 
 P3-01 (Linear OPE-11) implements the pure [[0002-event-pack-contract-and-roadmap-compiler]] selection order: base tasks → matching inclusions → matching exclusions → valid overrides → deterministic timing/priority/ID sort. Unknown facts do not match unsupported conditions; unknown anchors become general timing; same-priority conflicting overrides reject. Compiler task diffs are deterministic and local progress remains outside compiler authority. No policy content, AI, UI flow, or source curation was added. Lint, typecheck, three-file/eleven-test Vitest matrix, build, and Playwright smoke test passed. [[CURRENT_STATE]] and [[CODEX_COLLABORATION]] record the evidence.
+
+
+## P3-02 portability contract proof (2026-07-15)
+
+P3-02 (Linear OPE-12) adds a non-production, non-user-selectable IL-shaped contract fixture that compiles through the shared validator/compiler, plus an intentionally incomplete template fixture that fails safely. Fixtures contain no real advice or source claims and do not add a second jurisdiction or selector. Lint, typecheck, four-file/thirteen-test Vitest matrix, build, and Playwright smoke test passed. [[CURRENT_STATE]] and [[CODEX_COLLABORATION]] record the evidence.

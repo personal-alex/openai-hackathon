@@ -48,6 +48,15 @@ Week submission. It is a concise evidence log, not a transcript.
 - Evidence: Linear OPE-11; `npm run lint`, `npm run typecheck`, `npm run test` (3 files, 11 tests), `npm run build`, and `npm run test:e2e` (1 passed).
 - Verification: All listed checks passed locally. No `/feedback` session ID is recorded.
 
+### 2026-07-15 — P3-02 portability contract proof
+
+- Task/outcome: Implemented the non-production portability fixture and contract tests for Linear issue OPE-12.
+- Codex contribution: Added an IL-shaped schema fixture that compiles through shared validation/compiler contracts and an intentionally incomplete template fixture that fails safely.
+- Human review/decision: Preserved the Israel-only boundary: fixtures contain no real advice or source claims and create no second-jurisdiction journey.
+- Changed artifacts: Test-only portability fixtures, compiler contract tests, and project records.
+- Evidence: Linear OPE-12; `npm run lint`, `npm run typecheck`, `npm run test` (4 files, 13 tests), `npm run build`, and `npm run test:e2e` (1 passed).
+- Verification: All listed checks passed locally. No `/feedback` session ID is recorded.
+
 ### 2026-07-15 — Approved UX product-flow package
 
 - Task/outcome: Produced the approved MVP UX/product-flow decision package for the two complete event flows.
