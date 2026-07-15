@@ -1,0 +1,15 @@
+# Project-specific Codex configuration for "openai-hackathon"
+# Location: <project-root>/.codex/config.toml
+# This file is only loaded when the project is marked as TRUSTED in Codex.
+
+[mcp_servers.basic-memory]
+command = "basic-memory"
+args = ["mcp", "--project", "openai-hackathon"]
+
+[mcp_servers.basic-memory.tools.write_note]
+approval_mode = "approve"
+
+# If basic-memory is only available via uvx on this machine, use this instead:
+# [mcp_servers.basic-memory]
+# command = "uvx"
+# args = ["basic-memory", "mcp", "--project", "openai-hackathon"]

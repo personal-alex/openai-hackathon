@@ -1,0 +1,60 @@
+# Codex Collaboration Record
+
+This file records material, verifiable Codex-assisted work for the OpenAI Build
+Week submission. It is a concise evidence log, not a transcript.
+
+## Primary implementation thread
+
+- Codex thread: To be established before implementation
+- `/feedback` session ID: To be recorded after feedback is submitted
+- Scope: Scaffold, contracts, event packs, compiler, tests, product integration,
+  deployment, and submission materials
+
+## Entries
+
+### 2026-07-15 — P0-01 repository delivery baseline
+
+- Task/outcome: Completed the local bootstrap baseline for Linear issue OPE-5.
+- Codex contribution: Scaffolded the minimal Next.js App Router/TypeScript application, npm runtime metadata and lockfile, environment and ignore templates, lint/typecheck/test configuration, Playwright smoke coverage, GitHub Actions CI, and README delivery guidance.
+- Human review/decision: Approved npm 11, Node 24, exact initial dependency pins, TypeScript 6.x, the no-empty-module-directory approach, and the bounded non-product scaffold scope; ESLint 9.39.5 replaced incompatible ESLint 10 after verification.
+- Changed artifacts: Application shell; package/runtime/configuration files; unit and end-to-end scaffold tests; CI workflow; README.
+- Evidence: Linear OPE-5; `npm ci`, `npm run lint`, `npm run typecheck`, `npm run test` (1 passed), `npm run build`, Playwright Chromium installation, and `npm run test:e2e` (1 passed).
+- Verification: All listed checks passed locally. No `/feedback` session ID is recorded; initial Git commit and push remain pending.
+
+### 2026-07-15 — Approved UX product-flow package
+
+- Task/outcome: Produced the approved MVP UX/product-flow decision package for the two complete event flows.
+- Codex contribution: Drafted and revised information architecture, confirmation/correction, acknowledgement constraints, roadmap/diff/progress behavior, accessibility, degraded states, and seeded demo criteria.
+- Human review/decision: Approved the package with independently branded visual direction and optional, skippable expecting-child acknowledgement using neutral alternative copy.
+- Evidence: `docs/ux/01-product-flows.md`; `CURRENT_STATE.md`.
+- Verification: Documentation-only review; no application code, Linear, commit, push, or pull request changes.
+
+### 2026-07-15 — Approved HLD and compiler contract ADR
+
+- Task/outcome: Produced the approved MVP HLD and accepted ADR for the event-pack validation boundary and deterministic roadmap compiler.
+- Codex contribution: Drafted and revised module boundaries, contracts, rule semantics, timing, roadmap/diff data, AI guard behavior, persistence/reset, and test evidence.
+- Human review/decision: Approved the HLD, ADR, source-review ownership, hybrid AI mode, and initial rate/cost controls.
+- Evidence: `docs/architecture/01-hld.md`; `docs/adr/0002-event-pack-contract-and-roadmap-compiler.md`; `CURRENT_STATE.md`.
+- Verification: Documentation-only review; no application code, Linear, commit, push, or pull request changes.
+
+### 2026-07-15 — Approved implementation plan
+
+- Task/outcome: Produced the approved, source-traceable delivery plan and aligned the illustrative event ID with the canonical `expecting_child` identifier.
+- Codex contribution: Drafted and revised the milestone backlog, dependency path, HLD/UX decision packages, and moving-home quality gates.
+- Human review/decision: Approved with HLD and UX sequencing amendments.
+- Evidence: `docs/planning/01-implementation-plan.md`; `docs/technical-product-direction.md`; `CURRENT_STATE.md`.
+- Verification: Documentation-only review; no application code, Linear, commit, push, or pull request changes.
+
+### 2026-07-15 — Repository-specific SDD workflow
+
+- Task/outcome: Created and validated the `life-navigator-sdd` repository-local
+  skill for source-traceable planning, HLD/UX briefs, task drafts, and change
+  reviews.
+- Codex contribution: Generated a read-only planning brief for the deterministic
+  roadmap compiler from repository decision records.
+- Human review/decision: Accepted the compiler boundary; deferred contract,
+  rule, timing, precedence, and diff-schema decisions to HLD.
+- Evidence: `.agents/skills/life-navigator-sdd/SKILL.md`; planning-thread output;
+  `CURRENT_STATE.md` update.
+- Verification: Skill cited required repository sources and made no repository
+  or Linear modifications.
