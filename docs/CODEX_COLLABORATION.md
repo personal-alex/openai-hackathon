@@ -12,6 +12,14 @@ Week submission. It is a concise evidence log, not a transcript.
 
 ## Entries
 
+### 2026-07-15 23:05 IDT — Delegated candidate IL event-pack authoring worktree
+
+- Purpose: Prepare the first evidence-backed, candidate-only Israel Life Navigator event template/pack for human review using the repository-local `life-event-authoring` skill.
+- Scope and base: Dedicated worktree from pushed `master` commit `ed5a47060d0221b9c05b0faa850a1aaea3ee79bc`; candidate curation only for `expecting_child`, including an evidence ledger, catalog-shaped facts/questions/source cards/tasks/rules/timing/safety/demo proposal, and focused schema/compiler validation evidence.
+- Expected outputs: Review-required candidate artifacts outside runtime pack paths; authoritative-source provenance; explicit uncertainties; human-review checklist/gate; branch commit(s) and verification report.
+- Ownership boundaries: The worktree may not change application features, shared contracts, compiler behavior, the authoring skill, or Linear. It must not activate catalog content, infer eligibility, present legal/medical/tax/financial conclusions, or add live product retrieval; only the main thread may integrate its branch.
+- Required review gates: A named human must record dated source dispositions and approve each claim, task, rule, question, timing, safety label, and implementation authorization. Integration remains a main-thread decision after review; a candidate pack is never user-facing by default.
+
 ### 2026-07-15 — Delegated life-event authoring skill worktree
 
 - Purpose: Delegate a reusable repository-local skill for controlled, evidence-backed draft proposals for future Life Events.
