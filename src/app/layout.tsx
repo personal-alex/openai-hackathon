@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Life Navigator",
-  description: "Life Navigator application scaffold"
+  description: "A source-backed planning companion for major life events."
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {

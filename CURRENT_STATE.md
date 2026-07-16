@@ -28,7 +28,7 @@ Last updated: 2026-07-14
 
 ## Current implementation
 
-No application implementation has been established yet. This bootstrap package defines project guidance and documentation only.
+The repository contains a validated modular-monolith baseline, deterministic compiler, bounded server-only AI boundary, and a judge-ready App Router shell using synthetic seeded scenarios. Reviewed IL event-pack content is not yet activated; runtime AI routes fail closed until a reviewed pack registry and deployed shared guard are available.
 
 ## Open decisions
 
@@ -109,6 +109,13 @@ No application implementation has been established yet. This bootstrap package d
 - P5-01/P5-02 now cover all three server-only structured operations (event extraction, allowlisted question selection, and supplemental explanation drafting), bounded token caps, deterministic seeded/failure fallback, redacted health telemetry, and a fail-closed shared deployment-guard adapter.
 - P0-02 completed the primary-thread evidence baseline: material work now records dated outcomes, human decisions, changed artifacts, verification, commit/Linear references, and no fabricated `/feedback` ID.
 - Passed: `npm run lint`, `npm run typecheck`, `npm run test` (5 files, 24 tests), `npm run build`, and `npm run test:e2e`.
+
+## 2026-07-16 — Judge-ready seeded UX refactor complete
+
+- The App Router shell now implements a calm, independently branded opening flow, event confirmation, optional/skippable `expecting_child` acknowledgement, one-question-at-a-time seeded intake, and a persistent compiler-driven roadmap workspace for the test-only `expecting_child` and `job_loss` scenarios.
+- The original route/north-star mark and favicon replace the generic scaffold mark; roadmap cards expose timing, fixture provenance, verification labels, local-only progress, compiler-derived rationale, and labelled added/adjusted/current states.
+- All new questions, tasks, source metadata, and explanations remain synthetic fixtures. No reviewed event pack, policy/source content, live AI integration, persistence, or eligibility conclusion was activated.
+- Passed: `npm run lint`, `npm run typecheck`, `npm run test` (5 files, 24 tests), `npm run build`, and `npm run test:e2e` (3 seeded browser journeys). Manual browser review covered 1440px desktop and 390px mobile; no console warnings/errors were observed.
 
 ## Deferred / explicitly out of scope for MVP
 

@@ -12,6 +12,15 @@ Week submission. It is a concise evidence log, not a transcript.
 
 ## Entries
 
+### 2026-07-16 — Judge-ready seeded UX refactor
+
+- Task/outcome: Implemented the approved visual and interaction direction as Linear issues OPE-25, OPE-26, and OPE-27: an independently branded opening experience, compiler-driven guided fixture workspace, and responsive/accessibility proof.
+- Codex contribution: Added the original continuous-route/north-star SVG mark and favicon; warm responsive UI tokens; event confirmation and optional/skip acknowledgement; one-question fixture flow; deterministic roadmap-diff presentation; task provenance/rationale/verification/local-progress disclosure; and focused Playwright journeys.
+- Human review/decision: The supplied concepts were treated as visual/interaction direction rather than a pixel-perfect design. No new policy/source/task content was approved: every added question, task, source card, and explanation remains synthetic fixture-only pending dated human content review.
+- Changed artifacts: App Router UI, original brand assets, seeded test fixtures, end-to-end journey coverage, `CURRENT_STATE.md`, and this evidence record.
+- Evidence: Linear OPE-25/OPE-26/OPE-27; `npm run lint`, `npm run typecheck`, `npm run test` (5 files, 24 tests), `npm run build`, and `npm run test:e2e` (3 passed); manual 1440px desktop and 390px mobile browser inspection with no console errors.
+- Verification: The deterministic compiler remains the only source of selected tasks, timings, sources, and diffs; seeded mode stays network-free and the UI presents no eligibility conclusion or reviewed external source.
+
 ### 2026-07-15 23:05 IDT — Delegated candidate IL event-pack authoring worktree
 
 - Purpose: Prepare the first evidence-backed, candidate-only Israel Life Navigator event template/pack for human review using the repository-local `life-event-authoring` skill.
