@@ -104,6 +104,12 @@ No application implementation has been established yet. This bootstrap package d
 - It provides candidate source-card, event-proposal, question-minimization, and reviewer-gate templates without changing event-pack contracts, registries, runtime content, compiler behavior, or user flows.
 - Every generated source, claim, rule, task, question, and safety note remains candidate-only pending dated human review, explicit catalog approval, and separate implementation authorization.
 
+## 2026-07-17 — Confirmed transition-gate contract proof complete
+
+- The reusable authoring workflow and shared contracts now support task applicability gated by explicit typed facts declared as `confirmed_transition`; dates, estimates, schedules, inferred milestones, and elapsed time cannot establish that a transition occurred.
+- `tests/fixtures/expecting-child-transition.ts` is a non-production, test-only contract proof using `event_stage = birth_occurred`; `validateApprovedEventPack` rejects it, it is not registered, and it contains no approved source or policy content.
+- No approved runtime `expecting_child` pack exists on this branch. Candidate sources remain `needs_review`; applying this contract to any runtime pack remains contingent on human source/content approval.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

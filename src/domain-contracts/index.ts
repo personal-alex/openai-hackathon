@@ -12,7 +12,9 @@ export const FactDefinitionSchema = z.object({
   id: StableIdSchema,
   valueType: FactValueTypeSchema,
   labelKey: MessageKeySchema,
-  sensitive: z.boolean().default(false)
+  sensitive: z.boolean().default(false),
+  /** A transition gate may reference only facts explicitly authored for that purpose. */
+  factRole: z.enum(["context", "confirmed_transition"]).optional()
 }).strict();
 
 export const UserContextSchema = z.object({
@@ -63,6 +65,14 @@ export const SourceCardSchema = z.object({
   supportedClaimSummary: z.string().min(1)
 }).strict();
 
+export const TaskApplicabilitySchema = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("always") }).strict(),
+  z.object({
+    kind: z.literal("confirmed_transition"),
+    requiredFacts: z.array(z.object({ factId: StableIdSchema, equals: FactValueSchema }).strict()).min(1)
+  }).strict()
+]);
+
 export const TaskDefinitionSchema = z.object({
   id: StableIdSchema,
   title: z.string().min(1),
@@ -72,7 +82,9 @@ export const TaskDefinitionSchema = z.object({
   rationaleKey: MessageKeySchema,
   sourceIds: z.array(StableIdSchema).min(1),
   verificationLabel: z.string().min(1),
-  dependsOn: z.array(StableIdSchema)
+  dependsOn: z.array(StableIdSchema),
+  /** Omitted applicability means the task is always eligible for rule selection. */
+  applicability: TaskApplicabilitySchema.optional()
 }).strict();
 
 export type Condition =
@@ -134,7 +146,9 @@ export const EventPackSchema = z.object({
   baseTaskIds: z.array(StableIdSchema).min(1),
   rules: z.array(RoadmapRuleSchema),
   safety: SafetyPolicySchema,
-  demoScenarios: z.array(DemoScenarioSchema)
+  demoScenarios: z.array(DemoScenarioSchema),
+  /** Test-only packs are allowed for contract proof but never for approved runtime content. */
+  testOnly: z.literal(true).optional()
 }).strict();
 
 export const ProgressStatusSchema = z.enum(["reviewed", "complete"]);
@@ -220,6 +234,20 @@ export function validateEventPack(input: unknown): ContractValidationResult<Even
   for (const task of pack.tasks) {
     for (const sourceId of task.sourceIds) if (!sourceIds.has(sourceId)) errors.push(`unknown task source ID: ${sourceId}`);
     for (const dependencyId of task.dependsOn) if (!taskIds.has(dependencyId)) errors.push(`unknown task dependency ID: ${dependencyId}`);
+    if (task.applicability?.kind === "confirmed_transition") {
+      const seenRequiredFacts = new Set<string>();
+      for (const requiredFact of task.applicability.requiredFacts) {
+        const definition = pack.facts.find((fact) => fact.id === requiredFact.factId);
+        if (!definition) {
+          errors.push(`unknown task transition fact ID: ${requiredFact.factId}`);
+          continue;
+        }
+        if (definition.factRole !== "confirmed_transition") errors.push(`task transition fact ID is not confirmed_transition: ${requiredFact.factId}`);
+        if (typeof requiredFact.equals !== definition.valueType) errors.push(`invalid transition fact value for fact ID: ${requiredFact.factId}`);
+        if (seenRequiredFacts.has(requiredFact.factId)) errors.push(`duplicate task transition fact ID: ${requiredFact.factId}`);
+        seenRequiredFacts.add(requiredFact.factId);
+      }
+    }
   }
   for (const rule of pack.rules) {
     for (const factId of conditionFactIds(rule.when)) if (!factIds.has(factId)) errors.push(`unknown rule fact ID: ${factId}`);

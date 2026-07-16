@@ -8,11 +8,14 @@ export function validateApprovedEventPack(input: unknown): ContractValidationRes
   const validation = validateEventPack(input);
   if (!validation.success) return validation;
 
-  const errors = validation.data.sourceCards.flatMap((sourceCard) =>
-    sourceCard.disposition === "approved"
-      ? []
-      : [`source card ${sourceCard.id} is ${sourceCard.disposition}; approved packs require an approved disposition`]
-  );
+  const errors = [
+    ...(validation.data.testOnly ? ["test-only event packs cannot be approved runtime content"] : []),
+    ...validation.data.sourceCards.flatMap((sourceCard) =>
+      sourceCard.disposition === "approved"
+        ? []
+        : [`source card ${sourceCard.id} is ${sourceCard.disposition}; approved packs require an approved disposition`]
+    )
+  ];
 
   return errors.length === 0 ? validation : { success: false, errors };
 }
