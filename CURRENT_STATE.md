@@ -257,6 +257,25 @@ The repository contains a validated modular-monolith baseline, deterministic com
   it does not activate or change `job_loss` content. Shared entry matching is
   likewise fixture-driven rather than event-specific React logic.
 
+## 2026-07-17 — Reviewed Israel job-loss pack integrated
+
+- Two IL runtime packs are now registered through the validated catalog:
+  `expecting_child@il-expecting-child-v1` and `job_loss@il-job-loss-v1`.
+  The job-loss pack, evidence ledger, and reference-deck review are at
+  `src/event-packs/job-loss.ts`, `docs/candidates/job_loss/`, and
+  `docs/reviews/job-loss-il-skill-vs-reference-deck.md`.
+- Every sourced job-loss task is backed by a human-reviewed
+  `approved_for_hackathon` source card; source-free tasks carry the explicit
+  practical-guidance label. The deterministic compiler remains the sole
+  authority for task selection, timing, sources, and diffs.
+- The flow is educational planning and verification only. It makes no
+  individual eligibility, legal, tax, financial, severance, benefit, payment,
+  or employment-outcome determination. Resignation and non-salaried special
+  routes remain excluded pending separate review.
+- Evidence: merge `f9dffbd`; `git diff --check`, `npm run typecheck`,
+  `npm run lint`, `npm run test` (53 passed), `npm run build`, and 13 seeded
+  Chromium journeys passed. Linear OPE-17, OPE-19, and OPE-20 are Done.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

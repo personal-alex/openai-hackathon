@@ -277,3 +277,28 @@ Week submission. It is a concise evidence log, not a transcript.
 - Verification: `git diff --check`, lint, typecheck, 44 Vitest tests, build,
   and 13 fresh-production Chromium journeys passed; no `/feedback` session ID
   is recorded.
+
+### 2026-07-17 — Reviewed Israel job-loss pack main-session integration
+
+- Task/outcome: Reviewed and merged the isolated `job_loss × IL` pack into the
+  active catalog as `job_loss@il-job-loss-v1` alongside the existing approved
+  `expecting_child` pack.
+- Worktree provenance: `codex/job-loss-deck-audit`, pack adaptation/cleanup
+  range `212b7aa..8214c50`, mechanically updated through `8c19dc4`; main
+  integration merge `f9dffbd`.
+- Codex contribution: Kept candidate content isolated to pack/evidence/fixture
+  files, applied only the approved registry entry during integration, and
+  repaired catalog-level expecting-child assertions to preserve its five-source
+  approval guarantee with two active packs.
+- Human review/decision: Accepted the reviewed source cards and bounded
+  job-loss content for the hackathon catalog. Generic typed-question and
+  reviewed-source safeguards were promoted separately in `f065967`, `b8989db`,
+  and `268cb0e`.
+- Safety boundary: Sourced tasks require reviewed dispositions; source-free
+  tasks are labelled practical guidance. The flow remains educational planning
+  and verification only, with no individual eligibility, legal, tax, financial,
+  severance, benefit, payment, or employment-outcome determination.
+- Evidence: `git diff --check`, lint, typecheck, 53 Vitest tests, build, and
+  13 seeded Chromium journeys passed. Linear OPE-17/OPE-19/OPE-20 were marked
+  Done with linked evidence; the Life Navigator project received an on-track
+  two-pack status update. No `/feedback` session ID is recorded.
