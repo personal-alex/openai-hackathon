@@ -103,6 +103,29 @@ test("covers non-hospital and conditional-name seeded paths", async ({ page }) =
   await expect(page.getByText("Register the child’s first name")).toBeVisible();
 });
 
+test("offers an after-birth preview and upgrades it only after explicit birth confirmation", async ({ page }) => {
+  await beginExpectingChild(page);
+  await page.getByRole("button", { name: "Not yet" }).click();
+  await expect(page.getByText("Preview · After birth")).toBeVisible();
+  await expect(page.getByText(/planning previews, not current required actions/i)).toBeVisible();
+  const toggle = page.getByRole("button", { name: /Toggle details for Register the newborn/i });
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await toggle.press("Space");
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await toggle.press("Enter");
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  const sourceLink = page.getByRole("link", { name: /Open source \(external\)/i }).first();
+  await sourceLink.evaluate((element) => element.addEventListener("click", (event) => event.preventDefault(), { once: true }));
+  await sourceLink.click();
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await page.getByRole("button", { name: /The child has now been born/i }).click();
+  await expect(page.getByRole("status")).toContainText("Roadmap updated");
+  await expect(page.getByText("Preview · After birth")).not.toBeVisible();
+  await expect(page.getByRole("button", { name: "Yes, in Israel" })).toBeVisible();
+});
+
 test("works at a narrow mobile viewport with keyboard-reachable flow", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openLanding(page);
