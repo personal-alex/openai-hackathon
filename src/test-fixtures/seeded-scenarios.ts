@@ -11,6 +11,8 @@ export type SeededScenario = {
   id: "expecting_child" | "job_loss";
   label: string;
   examplePrompt: string;
+  /** Test/demo-only matching hints; shared presentation code contains no event-specific matcher. */
+  statementHints: string[];
   confirmationCopy: string;
   explanation: string;
   catalogKind: "approved" | "synthetic";
@@ -119,6 +121,7 @@ export const seededScenarios: SeededScenario[] = [
     id: "expecting_child",
     label: "Expecting a child",
     examplePrompt: "I’m expecting a child",
+    statementHints: ["expect", "pregnan", "child", "baby"],
     confirmationCopy: "A reviewed Israel event pack will build a source-aware, deterministic roadmap from the facts you choose to share.",
     explanation: "This roadmap is compiled only from the reviewed, validated Israel catalog. It provides educational planning support, not an official determination.",
     catalogKind: "approved",
@@ -155,6 +158,7 @@ export const seededScenarios: SeededScenario[] = [
     id: "job_loss",
     label: "Job loss",
     examplePrompt: "I lost my job",
+    statementHints: ["job", "lost", "laid off", "layoff"],
     confirmationCopy: "A synthetic seeded scenario for demonstrating the shared planning experience.",
     explanation: "This roadmap uses validated, synthetic fixture data and the deterministic compiler. It is not reviewed event content.",
     catalogKind: "synthetic",

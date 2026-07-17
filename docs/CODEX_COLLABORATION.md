@@ -16,7 +16,7 @@ Week submission. It is a concise evidence log, not a transcript.
 
 - Task/outcome: Replaced the blocked candidate branch’s hard-coded typed-date control with a generic main-thread capability for validated catalog questions.
 - Codex contribution: Added the Zod question-presentation/input boundary, generic accessible renderer and parser, choice-question migration, focused contract/component tests, and ADR 0003.
-- Human review/decision: The shared UI contains no job-loss, employment, or date-specific copy. Event-pack data owns prompts, descriptions, rationales, typed constraints, and validation wording; skipped facts remain absent.
+- Human review/decision: The shared UI contains no job-loss, employment, or date-specific copy or matcher. Fixture/catalog data owns prompts, descriptions, rationales, typed constraints, validation wording, and seeded statement hints; skipped facts remain absent.
 - Changed artifacts: Domain contract, generic question renderer, approved expecting-child presentation data, seeded fixtures, unit tests, and ADR. No job-loss pack, source card, rule, registry, compiler selection, or policy content changed.
 - Evidence: `git diff --check`, `npm run lint`, `npm run typecheck`, `npm run test` (8 files, 45 tests), `npm run build`, and `npm run test:e2e` (13 Chromium journeys) passed. The candidate integration remains pending a dedicated branch adaptation and merge-readiness review.
 

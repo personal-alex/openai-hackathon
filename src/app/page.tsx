@@ -19,9 +19,7 @@ const emptyProgress: LocalProgress = { progressStatusByTaskId: {} };
 
 function inferScenarioId(statement: string): SeededScenario["id"] | undefined {
   const normalized = statement.toLowerCase();
-  if (/\b(job|lost|laid off|layoff)\b/.test(normalized)) return "job_loss";
-  if (/\b(expect|pregnan|child|baby)\b/.test(normalized)) return "expecting_child";
-  return undefined;
+  return seededScenarios.find((scenario) => scenario.statementHints.some((hint) => normalized.includes(hint)))?.id;
 }
 
 export default function Home() {

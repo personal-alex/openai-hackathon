@@ -254,7 +254,8 @@ The repository contains a validated modular-monolith baseline, deterministic com
   keys and never receives presentation text.
 - ADR 0003 records this durable catalog/UI boundary. This capability is a
   prerequisite for a future reviewed pack to supply typed-question metadata;
-  it does not activate or change `job_loss` content.
+  it does not activate or change `job_loss` content. Shared entry matching is
+  likewise fixture-driven rather than event-specific React logic.
 
 ## Deferred / explicitly out of scope for MVP
 
