@@ -2,6 +2,7 @@ import { ClassifierProviderSchema, type ClassifierProvider } from "./contracts";
 
 export type LlmConfig = {
   provider: ClassifierProvider;
+  fallbackProvider?: Extract<ClassifierProvider, "gemini">;
   model: string;
   ollamaBaseUrl: string;
   ollamaClassifierModel: string;
@@ -13,6 +14,7 @@ export type LlmConfig = {
   maxRetries: number;
   sessionClassificationCap: number;
   sessionTotalCap: number;
+  ipClassificationCap: number;
 };
 
 function positiveInt(value: string | undefined, fallback: number): number {
@@ -20,15 +22,22 @@ function positiveInt(value: string | undefined, fallback: number): number {
   return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
 }
 
+function nonNegativeInt(value: string | undefined, fallback: number): number {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed >= 0 ? parsed : fallback;
+}
+
 /** All model and request policy configuration stays server-only and centralized here. */
 export function getLlmConfig(env: NodeJS.ProcessEnv = process.env): LlmConfig {
   const provider = ClassifierProviderSchema.catch("ollama").parse(env.LLM_PROVIDER);
+  const fallbackProvider = env.LLM_FALLBACK_PROVIDER === "gemini" ? "gemini" : undefined;
   const ollamaClassifierModel = env.OLLAMA_CLASSIFIER_MODEL ?? "qwen3.5:9b";
   const openAiClassifierModel = env.OPENAI_CLASSIFIER_MODEL ?? env.OPENAI_MODEL ?? "gpt-5.6";
   const geminiClassifierModel = env.GEMINI_CLASSIFIER_MODEL ?? "gemini-2.5-flash";
   const model = env.LLM_MODEL ?? (provider === "ollama" ? ollamaClassifierModel : provider === "openai" ? openAiClassifierModel : geminiClassifierModel);
   return {
     provider,
+    ...(fallbackProvider ? { fallbackProvider } : {}),
     model,
     ollamaBaseUrl: env.OLLAMA_BASE_URL ?? "http://127.0.0.1:11434",
     ollamaClassifierModel,
@@ -37,8 +46,9 @@ export function getLlmConfig(env: NodeJS.ProcessEnv = process.env): LlmConfig {
     timeoutMs: positiveInt(env.LLM_TIMEOUT_MS, 10_000),
     maxInputChars: positiveInt(env.LLM_MAX_INPUT_CHARS, 2_000),
     maxOutputTokens: positiveInt(env.LLM_MAX_OUTPUT_TOKENS, 300),
-    maxRetries: positiveInt(env.LLM_MAX_RETRIES, 1),
+    maxRetries: nonNegativeInt(env.LLM_MAX_RETRIES, 1),
     sessionClassificationCap: positiveInt(env.LLM_SESSION_CLASSIFICATION_CAP, 3),
-    sessionTotalCap: positiveInt(env.LLM_SESSION_TOTAL_CAP, 5)
+    sessionTotalCap: positiveInt(env.LLM_SESSION_TOTAL_CAP, 5),
+    ipClassificationCap: positiveInt(env.LLM_IP_CLASSIFICATION_CAP, 30)
   };
 }

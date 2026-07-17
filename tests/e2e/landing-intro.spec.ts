@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
+import { mockLiveClassifier } from "./classifier";
 
-test.beforeEach(async ({ page }) => { await page.addInitScript(() => { localStorage.clear(); sessionStorage.clear(); }); });
+test.beforeEach(async ({ page }) => { await page.addInitScript(() => { localStorage.clear(); sessionStorage.clear(); }); await mockLiveClassifier(page); });
 
 test("shows the motto on a standard no-plan visit and Continue opens the workspace", async ({ page }) => {
   await page.goto("/");

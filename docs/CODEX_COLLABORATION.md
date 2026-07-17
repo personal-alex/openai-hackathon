@@ -393,3 +393,19 @@ Week submission. It is a concise evidence log, not a transcript.
 - Verification: `git diff --check`, lint, typecheck, 53 Vitest tests, 15
   Chromium journeys run serially, and production build passed. No `/feedback`
   session ID is recorded.
+
+### 2026-07-18 — M9 LLM classification gateway (OPE-30–OPE-35)
+
+- Task/outcome: Added the provider-neutral server-only classification boundary,
+  OpenAI/Ollama adapters, transient-only Gemini fallback, input/call controls,
+  redacted telemetry, and safe live-classifier event intake.
+- Human review/decision: Revised M9 so seeded demo uses live classification;
+  explicit confirmation and deterministic compiler ownership remain unchanged.
+  Ollama defaults to `qwen3.5:9b` with `/no_think` and `think: false`.
+- Safety/scope: Model output is limited to validated registered event IDs and
+  explicitly stated allowlisted facts. It cannot define catalog tasks, sources,
+  rules, timing, questions, policy, benefits, or eligibility. Unsupported and
+  provider-failure outcomes use neutral clarification copy.
+- Verification: `git diff --check`, lint, typecheck, 73 Vitest tests, 17 serial
+  Chromium journeys, and production build passed. OPE-36 remains a human ADR
+  decision; no `/feedback` session ID is recorded.

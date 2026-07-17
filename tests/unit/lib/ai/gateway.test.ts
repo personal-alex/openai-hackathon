@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createLlmGateway, getLlmConfig, type LlmGateway } from "@/lib/ai";
+import { createLlmGateway, getLlmConfig, type LlmGateway, withTransientFallback } from "@/lib/ai";
 
 describe("provider-neutral classification gateway contract", () => {
   it("defaults local classification to qwen3.5:9b through Ollama", () => {
@@ -15,5 +15,14 @@ describe("provider-neutral classification gateway contract", () => {
 
   it("returns a typed clarification when no configured adapter is available", async () => {
     await expect(createLlmGateway(getLlmConfig({ LLM_PROVIDER: "gemini" })).classifyEvent({ text: "test", requestId: "request", candidates: [] })).resolves.toEqual({ kind: "clarification", reason: "unavailable" });
+  });
+
+  it("uses a fallback only for transient provider failures", async () => {
+    const fallback: LlmGateway = { classifyEvent: async () => ({ kind: "classified", classification: { eventId: "expecting_child", facts: [] } }) };
+    const transient: LlmGateway = { classifyEvent: async () => ({ kind: "clarification", reason: "timeout" }) };
+    const invalid: LlmGateway = { classifyEvent: async () => ({ kind: "clarification", reason: "invalid_output" }) };
+    const input = { text: "test", requestId: "request", candidates: [] };
+    await expect(withTransientFallback(transient, fallback).classifyEvent(input)).resolves.toEqual({ kind: "classified", classification: { eventId: "expecting_child", facts: [] } });
+    await expect(withTransientFallback(invalid, fallback).classifyEvent(input)).resolves.toEqual({ kind: "clarification", reason: "invalid_output" });
   });
 });

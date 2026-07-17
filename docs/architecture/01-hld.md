@@ -13,7 +13,11 @@ Provide a bounded, testable Next.js + TypeScript modular monolith that turns val
 - Zod validates AI and domain state; GPT may only interpret stated facts, choose allowlisted questions, and draft bounded explanations. The compiler alone selects tasks, sources, timing, labels, and diffs. `docs/instructions/architecture-and-domain.md#ownership-boundaries`
 - Only reviewed IL content is user-facing. The MVP has no authentication, product database, queues, background workers, integrations, live-web retrieval, determinations, advice, or sensitive-data storage. `AGENTS.md#non-negotiable-scope`
 - Source-card review owner is the project owner/human reviewer, with a dated disposition recorded per source card.
-- Normal mode uses live GPT-5.6 Structured Outputs; seeded demo mode and controlled fallback use validated deterministic fixtures.
+- M9 classification uses a server-only provider-neutral gateway: local default is
+  Ollama `qwen3.5:9b`; a configured OpenAI adapter is production-capable and
+  Gemini is a transient-infrastructure fallback only. Seeded demo uses the same
+  live classification gateway, then retains explicit user confirmation before
+  any deterministic compiler state changes; tests mock this boundary.
 
 ### Proposed implementation decisions
 
@@ -299,7 +303,10 @@ type GuardDecision = { allowed: true } | { allowed: false; retryAfterSeconds: nu
 - Local development uses a clearly labelled in-memory guard fallback.
 - Session IDs are opaque random browser-local values with no personal data.
 - Only trusted deployment-provided client-IP headers are used in deployed environments.
-- Normal mode uses live GPT; seeded demo and fallback use validated deterministic fixtures.
+- Event classification uses the M9 provider-neutral live gateway in normal and
+  seeded demo entry. Seeded mode still uses deterministic compiler behavior
+  after explicit confirmation, while provider failure/unsupported output returns
+  a neutral clarification rather than an empty route or inferred event.
 - Configure initial output caps as extraction `300`, question selection `100`, explanation `180`.
 - Use a 10-second total timeout, one transient retry, and at most one structured repair attempt.
 - For upstream `429`, use at most one randomized exponential-backoff retry only if it remains within total timeout and request budget.

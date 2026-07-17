@@ -1,0 +1,14 @@
+import type { Page } from "@playwright/test";
+
+export async function mockLiveClassifier(page: Page): Promise<{ calls: string[] }> {
+  const calls: string[] = [];
+  await page.route("**/api/ai/extract-event", async (route) => {
+    const body = route.request().postDataJSON() as { story?: unknown };
+    const story = typeof body.story === "string" ? body.story : "";
+    calls.push(story);
+    const normalized = story.toLowerCase();
+    const eventId = /expecting|pregnan/.test(normalized) ? "expecting_child" : /lost.*job|job.*lost|employment.*ended/.test(normalized) ? "job_loss" : null;
+    await route.fulfill({ contentType: "application/json", status: 200, body: JSON.stringify(eventId ? { kind: "classified", classification: { eventId, facts: [] } } : { kind: "clarification", reason: "unsupported" }) });
+  });
+  return { calls };
+}

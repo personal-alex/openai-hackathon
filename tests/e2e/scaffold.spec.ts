@@ -1,7 +1,9 @@
 import { expect, test } from "@playwright/test";
+import { mockLiveClassifier } from "./classifier";
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => { localStorage.clear(); sessionStorage.clear(); });
+  await mockLiveClassifier(page);
 });
 
 async function enterWorkspace(page: import("@playwright/test").Page, statement: string) {
@@ -99,4 +101,22 @@ test("keeps conversation first on mobile with a route jump for the single-column
   await expect(page.getByText("Tell me what changed. I’ll help you organize the next steps and what can wait.")).toBeVisible();
   await page.getByRole("link", { name: "View your route" }).click();
   await expect(page.getByRole("heading", { name: "Your plan will take shape here." })).toBeInViewport();
+});
+
+test("shows a neutral clarification when live classification cannot support the statement", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Skip intro" }).click();
+  await page.getByLabel("What happened?").fill("I need help with something else");
+  await page.locator(".conversation-composer").getByRole("button", { name: "Continue", exact: true }).click();
+  await expect(page.locator(".conversation-composer").getByRole("alert")).toContainText("I’m not yet sure which supported event this is");
+  await expect(page.getByRole("heading", { name: "Your plan will take shape here." })).toBeVisible();
+});
+
+test("the seeded demo query still uses the live classification route", async ({ page }) => {
+  const classifier = await mockLiveClassifier(page);
+  await page.goto("/?demo=seeded");
+  await page.getByLabel("What happened?").fill("I lost my job");
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await expect(page.getByText("Is that right?")).toBeVisible();
+  expect(classifier.calls).toEqual(["I lost my job"]);
 });

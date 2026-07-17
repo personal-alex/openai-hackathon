@@ -369,6 +369,26 @@ The repository contains a validated modular-monolith baseline, deterministic com
   test` (53 passed), `npx playwright test --workers=1` (15 Chromium journeys),
   and `npm run build`.
 
+## 2026-07-18 — M9 LLM classification gateway (OPE-30–OPE-35)
+
+- Event intake now goes through a server-only provider-neutral `LlmGateway`.
+  The local default is Ollama `qwen3.5:9b`, with `/no_think` in the system
+  instruction and `think: false` in its request body; OpenAI supports strict
+  structured classification and optional Gemini is available only for transient
+  OpenAI infrastructure failures.
+- User-approved M9 revision: seeded demo calls the same live classification
+  route rather than bypassing it. Explicit confirmation still precedes any
+  deterministic compiler state, and unavailable/unsupported/invalid/limited
+  output produces a neutral clarification rather than an empty route.
+- Classification can return only registered event IDs and explicitly stated,
+  allowlisted fact values. It cannot define tasks, sources, questions, timing,
+  policy, benefits, or eligibility. Server-only controls bound input, output,
+  timeout/retries, opaque-session and IP calls; telemetry excludes statements,
+  prompts, output, session IDs, IPs, and credentials.
+- OPE-36 remains intentionally unimplemented for human ADR evaluation of Vercel
+  AI Gateway versus the direct adapters. Passed: `git diff --check`, typecheck,
+  lint, 73 Vitest tests, 17 serial Chromium journeys, and production build.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

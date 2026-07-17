@@ -19,6 +19,10 @@ export type ClassifyEventInput = {
   text: string;
   candidates: readonly ClassificationCandidate[];
   requestId: string;
+  /** Opaque browser-local value; never sent to a provider or telemetry sink. */
+  sessionId?: string;
+  /** Trusted deployment-derived IP only; never sent to a provider or telemetry sink. */
+  clientIp?: string;
 };
 
 export type ClassificationTelemetry = {
