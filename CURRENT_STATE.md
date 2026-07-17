@@ -176,6 +176,27 @@ The repository contains a validated modular-monolith baseline, deterministic com
   test` (7 files, 38 tests), `npm run build`, and `npm run test:e2e` (5
   deterministic browser journeys).
 
+## 2026-07-17 — Pre-birth expecting-child preview and accessible task disclosure
+
+- `event_stage = not_yet_born` now renders a clearly labelled, after-birth
+  planning preview derived only from active `expecting_child` catalog tasks,
+  source cards, rationale keys, and canonical links. It does not activate a
+  post-birth task or satisfy `birth_occurred`.
+- A supplied fact that rules out the routine path replaces its ordinary preview
+  with the existing bounded verification route. Explicit `birth_occurred`
+  still switches to the deterministic active roadmap and emits the established
+  task-diff state.
+- The acknowledgement-only interstitial was removed. The first
+  decision-changing question appears immediately with concise supportive copy.
+  Roadmap card headers are semantic, keyboard-accessible disclosure buttons;
+  their source links and local-status controls remain separate interactions.
+- The product remains educational planning support only: it performs no
+  external action and makes no eligibility, legal, medical, tax, financial,
+  citizenship, parentage, or registration determination.
+- Passed: `git diff --check`, `npm run lint`, `npm run typecheck`, `npm run
+  test` (7 files, 41 tests), `npm run build`, and `npm run test:e2e` (6
+  deterministic browser journeys).
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

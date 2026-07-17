@@ -1,0 +1,20 @@
+.supportive-lead { max-width: 34rem; margin: 16px 0 0; color: #435047; font-size: 1.02rem; line-height: 1.5; }
+.preview-notice { margin: 20px 0; border: 1px solid #bdd6c4; border-radius: 16px; padding: 16px 18px; background: #eff6f0; color: #294837; }
+.preview-notice strong { display: block; font-size: .8rem; letter-spacing: .07em; text-transform: uppercase; }
+.preview-notice p { margin: 8px 0 0; line-height: 1.45; }
+.task-card-toggle { display: grid; grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) auto; width: 100%; min-height: 44px; border: 0; padding: 0; background: transparent; color: inherit; cursor: pointer; text-align: left; }
+.task-card-toggle:focus-visible { outline: 3px solid #155c43; outline-offset: -3px; }
+.task-card-toggle .task-aside { position: relative; }
+.disclosure-arrow { display: inline-grid; min-width: 44px; min-height: 44px; place-items: center; font-size: 1.3rem; transition: transform .2s ease; }
+.task-card-toggle[aria-expanded="true"] .disclosure-arrow { transform: rotate(180deg); }
+.task-details-panel { display: grid; grid-column: 1 / -1; grid-template-rows: 0fr; border-top: 0 solid var(--line); transition: grid-template-rows .2s ease, border-top-width .2s ease; }
+.task-details-panel[data-expanded="true"] { grid-template-rows: 1fr; border-top-width: 1px; }
+.task-details-content { min-height: 0; overflow: hidden; padding: 0 20px; }
+.task-details-panel[data-expanded="true"] .task-details-content { padding-top: 16px; padding-bottom: 18px; }
+.task-details-content p { margin: 0 0 10px; color: #435047; line-height: 1.45; }
+.task-details-content a { color: var(--green); font-weight: 750; text-decoration: underline; text-underline-offset: 3px; }
+.task-card--preview { border-color: #a7c5b0; }
+.task-card--preview .change-label { border-color: #bdd6c4; background: #eff6f0; color: #155c43; }
+.task-card--preview .change-label b { background: #155c43; }
+@media (max-width: 620px) { .task-card-toggle { grid-template-columns: 1fr; }.task-card-toggle .task-aside { align-items: flex-start; padding-top: 0; }.disclosure-arrow { align-self: flex-end; } }
+@media (prefers-reduced-motion: reduce) { .disclosure-arrow, .task-details-panel { transition: none; } }

@@ -20,6 +20,7 @@ export type SeededScenario = {
   explanation: string;
   catalogKind: "approved" | "synthetic";
   rationaleByKey?: Record<string, string>;
+  preBirthPreview?: { lead: string; detail: string };
   questions: SeededQuestion[];
   context: UserContext;
   pack: EventPack;
@@ -126,6 +127,10 @@ export const seededScenarios: SeededScenario[] = [
     confirmationCopy: "A reviewed Israel event pack will build a source-aware, deterministic roadmap from the facts you choose to share.",
     explanation: "This roadmap is compiled only from the reviewed, validated Israel catalog. It provides educational planning support, not an official determination.",
     catalogKind: "approved",
+    preBirthPreview: {
+      lead: "Don’t worry, we’ve got you. Here’s what may be relevant after the birth. We’ll guide you through the details when you’re ready.",
+      detail: "These are planning previews, not current required actions. This roadmap will adapt after you explicitly confirm a birth. Verify current information through the linked official sources before acting."
+    },
     rationaleByKey: {
       "expecting_child.rationale.confirm_birth_status": "No post-birth route is shown until you explicitly confirm that the child has been born.",
       "expecting_child.rationale.routine_hospital_registration": "You confirmed a routine birth in Israel in a hospital. The reviewed routine hospital path can now be shown, subject to the source’s eligibility limits.",
@@ -134,7 +139,12 @@ export const seededScenarios: SeededScenario[] = [
       "expecting_child.rationale.birth_abroad": "You said the birth was outside Israel, so the routine Israeli-hospital path was removed and the separate official route was shown.",
       "expecting_child.rationale.non_hospital_birth": "You said the birth was not in an Israeli hospital. The routine hospital-notice path cannot be assumed.",
       "expecting_child.rationale.special_family_path": "You identified a family situation that requires verification, so the routine hospital path was removed.",
-      "expecting_child.rationale.unconfirmed_route": "A fact needed for the routine hospital path is unknown or incompatible, so this plan keeps to a verification-required boundary."
+      "expecting_child.rationale.unconfirmed_route": "A fact needed for the routine hospital path is unknown or incompatible, so this plan keeps to a verification-required boundary.",
+      "expecting_child.preview.routine_registration": "After a birth in an Israeli hospital and where applicable, this roadmap can guide you through the official registration process.",
+      "expecting_child.preview.optional_certificate": "After the birth, an optional certificate follow-up may be relevant. It is never a registration prerequisite.",
+      "expecting_child.preview.birth_abroad": "You shared a fact that rules out the routine Israeli-hospital path, so this preview keeps to the separate official route.",
+      "expecting_child.preview.non_hospital": "You shared a non-hospital setting, so this preview does not assume the routine hospital-notice path.",
+      "expecting_child.preview.special_family": "You shared a family situation that needs verification, so this preview does not apply the routine path."
     },
     context: { facts: {} },
     pack: expectingChildPack,

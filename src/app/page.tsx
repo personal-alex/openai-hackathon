@@ -2,11 +2,13 @@
 
 import { useMemo, useState } from "react";
 import type { CatalogTask, EventPack, LocalProgress, TaskDiff, UserContext } from "@/domain-contracts";
-import { compileRoadmap, diffRoadmaps } from "@/roadmap-compiler";
+import { diffRoadmaps } from "@/roadmap-compiler";
+import { compileRoadmapPresentation } from "@/roadmap-compiler/presentation";
 import { findSeededScenario, seededScenarios, type SeededScenario, type SeededValue } from "@/test-fixtures/seeded-scenarios";
 import { BrandMark } from "./brand";
+import "./roadmap-disclosure.css";
 
-type Screen = "entry" | "confirmation" | "acknowledgement" | "guided";
+type Screen = "entry" | "confirmation" | "guided";
 
 const emptyProgress: LocalProgress = { progressStatusByTaskId: {} };
 
@@ -44,10 +46,12 @@ export default function Home() {
   const [inputError, setInputError] = useState<string>();
   const [lastDiff, setLastDiff] = useState<TaskDiff>();
   const [progress, setProgress] = useState<LocalProgress>(emptyProgress);
+  const [expandedTaskIds, setExpandedTaskIds] = useState<Set<string>>(new Set());
   const [notice, setNotice] = useState("Seeded demo mode is active. No live AI request is made.");
 
   const scenario = findSeededScenario(scenarioId) ?? seededScenarios[0];
-  const roadmap = useMemo(() => compileRoadmap(scenario.pack, context), [scenario, context]);
+  const roadmapPresentation = useMemo(() => compileRoadmapPresentation(scenario.pack, context), [scenario, context]);
+  const roadmap = roadmapPresentation.roadmap;
   const visibleQuestions = scenario.questions.filter((question) => question.isApplicable?.(context.facts) ?? true);
   const activeQuestion = visibleQuestions.find((question) => !(question.factId in context.facts));
   const answeredQuestionCount = visibleQuestions.filter((question) => question.factId in context.facts).length;
@@ -73,8 +77,7 @@ export default function Home() {
   }
 
   function beginGuidedFlow() {
-    if (scenario.id === "expecting_child") setScreen("acknowledgement");
-    else setScreen("guided");
+    setScreen("guided");
     setNotice(`${scenario.catalogKind === "approved" ? "Your approved catalog roadmap" : "Your initial fixture roadmap"} is ready. Answering a question updates it deterministically.`);
   }
 
@@ -85,7 +88,7 @@ export default function Home() {
     else nextFacts[activeQuestion.factId] = value;
 
     const nextContext = { facts: nextFacts };
-    const nextRoadmap = compileRoadmap(scenario.pack, nextContext);
+    const nextRoadmap = compileRoadmapPresentation(scenario.pack, nextContext).roadmap;
     const diff = diffRoadmaps(roadmap, nextRoadmap);
     const activeTaskIds = new Set(nextRoadmap.steps.map((task) => task.id));
     const removedCompleted = Object.entries(progress.progressStatusByTaskId).some(([taskId, status]) => status === "complete" && !activeTaskIds.has(taskId));
@@ -111,14 +114,33 @@ export default function Home() {
     });
   }
 
+  function toggleTaskDetails(taskId: string) {
+    setExpandedTaskIds((previous) => {
+      const next = new Set(previous);
+      if (next.has(taskId)) next.delete(taskId);
+      else next.add(taskId);
+      return next;
+    });
+  }
+
   function changeBirthDetails() {
     if (scenario.id !== "expecting_child" || context.facts.event_stage !== "birth_occurred") return;
     const nextContext = { facts: { event_stage: "birth_occurred" } };
-    const nextRoadmap = compileRoadmap(scenario.pack, nextContext);
+    const nextRoadmap = compileRoadmapPresentation(scenario.pack, nextContext).roadmap;
     setLastDiff(diffRoadmaps(roadmap, nextRoadmap));
     setContext(nextContext);
     setProgress(emptyProgress);
+    setExpandedTaskIds(new Set());
     setNotice("Birth details are ready to update. The routine path was removed until you confirm the new routing facts.");
+  }
+
+  function confirmBirthFromPreview() {
+    if (scenario.id !== "expecting_child" || roadmapPresentation.mode !== "preview") return;
+    const nextContext = { facts: { ...context.facts, event_stage: "birth_occurred" } };
+    const nextRoadmap = compileRoadmapPresentation(scenario.pack, nextContext).roadmap;
+    setLastDiff(diffRoadmaps(roadmap, nextRoadmap));
+    setContext(nextContext);
+    setNotice("Your roadmap updated after you explicitly confirmed the birth. Please answer the next routing question.");
   }
 
   function resetDemo() {
@@ -128,6 +150,7 @@ export default function Home() {
     setContext({ facts: {} });
     setLastDiff(undefined);
     setProgress(emptyProgress);
+    setExpandedTaskIds(new Set());
     setInputError(undefined);
     setNotice("The local seeded demonstration was reset. No server data was stored.");
   }
@@ -186,22 +209,12 @@ export default function Home() {
         </section>
       )}
 
-      {screen === "acknowledgement" && (
-        <section className="confirmation-stage" aria-labelledby="acknowledgement-title">
-          <div className="confirmation-card acknowledgement-card">
-            <BrandMark compact label="Life Navigator" />
-            <h1 id="acknowledgement-title">Congratulations—let’s build a plan for what may be ahead.</h1>
-            <p>This optional acknowledgement is approved pack/safety-policy copy, not model-generated prose.</p>
-            <div className="button-row"><button className="primary-button" type="button" onClick={() => setScreen("guided")}>Continue <span aria-hidden="true">→</span></button><button className="text-button" type="button" onClick={() => setScreen("guided")}>Skip to “Let’s build a plan for what may be ahead.”</button></div>
-          </div>
-        </section>
-      )}
-
       {screen === "guided" && (
         <section className="workspace" aria-label="Guided planning workspace">
           <aside className="question-column" aria-labelledby="question-title">
             <p className="section-kicker">{scenario.catalogKind === "approved" ? "Reviewed catalog plan" : "Seeded fixture plan"} · {scenario.label}</p>
             <h1 id="question-title">Let’s map what comes next.</h1>
+            {scenario.id === "expecting_child" && activeQuestion?.id === "ec_has_child_been_born" && <p className="supportive-lead">Congratulations. Tell us a little about where you are, and we’ll map what may come next.</p>}
             <div className="question-progress" aria-label={`${activeQuestion ? answeredQuestionCount + 1 : answeredQuestionCount} of ${visibleQuestions.length} questions`}>
               <span>{activeQuestion ? `Question ${answeredQuestionCount + 1} of ${visibleQuestions.length}` : "Questions complete"}</span>
               <div className="progress-track">{visibleQuestions.map((question) => <i key={question.id} className={question.factId in context.facts ? "is-complete" : ""} />)}</div>
@@ -214,24 +227,24 @@ export default function Home() {
                 <details className="why-ask"><summary>Why we ask this</summary><p>{activeQuestion.why}</p></details>
               </article>
             ) : (
-              <article className="question-card question-card--complete"><BrandMark compact /><h2>Your roadmap is ready.</h2><p>Change your answers to see how the deterministic compiler replaces affected tasks.</p>{scenario.id === "expecting_child" && context.facts.event_stage === "birth_occurred" && <button className="text-button" type="button" onClick={changeBirthDetails}>Change birth details</button>}</article>
+              <article className="question-card question-card--complete"><BrandMark compact /><h2>{roadmapPresentation.mode === "preview" ? "Your after-birth preview is ready." : "Your roadmap is ready."}</h2><p>{roadmapPresentation.mode === "preview" ? "When the birth occurs, confirm it here and this plan will adapt to the routing facts you choose to share." : "Change your answers to see how the deterministic compiler replaces affected tasks."}</p>{scenario.id === "expecting_child" && roadmapPresentation.mode === "preview" && <button className="primary-button" type="button" onClick={confirmBirthFromPreview}>The child has now been born <span aria-hidden="true">→</span></button>}{scenario.id === "expecting_child" && context.facts.event_stage === "birth_occurred" && <button className="text-button" type="button" onClick={changeBirthDetails}>Change birth details</button>}</article>
             )}
             <div className="answer-summary" aria-label="Current context"><span>Context</span><strong>{answeredQuestionCount} recorded · {visibleQuestions.length - answeredQuestionCount} unknown</strong></div>
           </aside>
 
           <section className="roadmap-column" aria-labelledby="roadmap-title">
             <div className="roadmap-topline"><div><p className="section-kicker">Live deterministic roadmap</p><h2 id="roadmap-title">Your next considerations</h2></div><div className={changeCount ? "update-notice is-active" : "update-notice"} role="status"><span aria-hidden="true">✓</span>{changeCount ? "Roadmap updated" : "Ready to update"}</div></div>
-            <p className="roadmap-disclaimer">{scenario.explanation}</p>
+            {roadmapPresentation.mode === "preview" && scenario.preBirthPreview ? <div className="preview-notice" role="status"><strong>Preview · After birth</strong><p>{scenario.preBirthPreview.lead}</p><p>{scenario.preBirthPreview.detail}</p></div> : <p className="roadmap-disclaimer">{scenario.explanation}</p>}
             <ol className="task-list">{roadmap.steps.map((task, index) => {
               const sourceCards = task.sourceIds.map((sourceId) => scenario.pack.sourceCards.find((source) => source.id === sourceId)).filter((source): source is EventPack["sourceCards"][number] => Boolean(source));
               const status: "not started" | "reviewed" | "complete" = Object.hasOwn(progress.progressStatusByTaskId, task.id)
                 ? progress.progressStatusByTaskId[task.id]!
                 : "not started";
-              const label = changeLabel(task.id, lastDiff);
+              const label = roadmapPresentation.mode === "preview" ? "Preview" : changeLabel(task.id, lastDiff);
+              const expanded = expandedTaskIds.has(task.id);
               return <li className={`task-card task-card--${label.toLowerCase()}`} key={task.id}>
-                <div className="task-card-main"><p className="task-number">Step {index + 1}</p><h3>{task.title}</h3><p className="task-summary">{task.actionSummary}</p><dl className="task-meta"><div><dt>Timing</dt><dd>{timingLabel(task)}</dd></div><div><dt>Status</dt><dd className="local-status">{status}</dd></div><div><dt>Verification</dt><dd>{task.verificationLabel}</dd></div></dl></div>
-                <div className="task-aside"><span className="change-label"><b aria-hidden="true" />{label}</span><div className="source-pills">{sourceCards.map((source) => source && <span key={source.id}>{source.publisher}</span>)}</div></div>
-                <details className="task-details"><summary>Why this appears <span aria-hidden="true">⌄</span></summary><div><p>{scenario.rationaleByKey?.[task.rationale] ?? "This task is selected by the validated catalog and deterministic compiler."}</p>{sourceCards.length > 0 ? sourceCards.map((source) => <section className="source-detail" key={source.id}><p><strong>Source:</strong> {source.title} · {source.publisher} · reviewed {source.reviewedOn} · {source.disposition}</p><p>{source.supportedClaimSummary}</p><p><strong>Scope:</strong> {source.scope}</p><p><strong>Limits:</strong> {source.limitations}</p><p><strong>Verification:</strong> {source.verificationWording}</p><p><strong>Safety:</strong> {source.safetyClassification.replaceAll("_", " ")}</p><a href={source.canonicalUrl} target="_blank" rel="noreferrer">Open official source <span className="sr-only">for {source.title}</span></a></section>) : <p className="source-detail">No source is claimed for this generic verification boundary.</p>}<button type="button" className="progress-button" onClick={() => cycleProgress(task.id)}>Local status: {status} · {status === "not started" ? "mark reviewed" : status === "reviewed" ? "mark complete" : "clear status"}</button></div></details>
+                <button type="button" className="task-card-toggle" aria-label={`Toggle details for ${task.title}`} aria-expanded={expanded} aria-controls={`task-details-${task.id}`} onClick={() => toggleTaskDetails(task.id)}><div className="task-card-main"><p className="task-number">{roadmapPresentation.mode === "preview" ? "After birth preview" : `Step ${index + 1}`}</p><h3>{task.title}</h3><p className="task-summary">{task.actionSummary}</p><dl className="task-meta"><div><dt>Timing</dt><dd>{roadmapPresentation.mode === "preview" ? "After birth · conditional" : timingLabel(task)}</dd></div><div><dt>Status</dt><dd className="local-status">{roadmapPresentation.mode === "preview" ? "preview only" : status}</dd></div><div><dt>Verification</dt><dd>{task.verificationLabel}</dd></div></dl></div><div className="task-aside"><span className="change-label"><b aria-hidden="true" />{label}</span><div className="source-pills">{sourceCards.map((source) => <span key={source.id}>{source.publisher}</span>)}</div><span className="disclosure-arrow" aria-hidden="true">⌄</span></div></button>
+                <div id={`task-details-${task.id}`} className="task-details-panel" data-expanded={expanded}><div className="task-details-content"><p>{scenario.rationaleByKey?.[task.rationale] ?? "This task is selected by the validated catalog and deterministic compiler."}</p>{sourceCards.length > 0 ? sourceCards.map((source) => <section className="source-detail" key={source.id}><p><strong>Source:</strong> {source.title} · {source.publisher} · reviewed {source.reviewedOn} · {source.disposition}</p><p>{source.supportedClaimSummary}</p><p><strong>Scope:</strong> {source.scope}</p><p><strong>Limits:</strong> {source.limitations}</p><p><strong>Verification:</strong> {source.verificationWording}</p><p><strong>Safety:</strong> {source.safetyClassification.replaceAll("_", " ")}</p><a href={source.canonicalUrl} target="_blank" rel="noreferrer">Open official source <span className="sr-only">for {source.title}</span></a></section>) : <p className="source-detail">No source is claimed for this generic verification boundary.</p>}{roadmapPresentation.mode === "active" && <button type="button" className="progress-button" onClick={() => cycleProgress(task.id)}>Local status: {status} · {status === "not started" ? "mark reviewed" : status === "reviewed" ? "mark complete" : "clear status"}</button>}</div></div>
               </li>;
             })}</ol>
             <div className="workspace-footer"><p>General planning support only. Verify current information with an appropriate reviewed source before acting.</p><button type="button" className="text-button" onClick={resetDemo}>Reset local demo</button></div>

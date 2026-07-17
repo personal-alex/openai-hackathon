@@ -202,3 +202,20 @@ Week submission. It is a concise evidence log, not a transcript.
 - Evidence: `git diff --check`, `npm run lint`, `npm run typecheck`, `npm run
   test` (7 files, 38 tests), `npm run build`, and `npm run test:e2e` (5 passed)
   all passed locally. No `/feedback` session ID is recorded.
+
+### 2026-07-17 — Pre-birth preview and task-card disclosure
+
+- Task/outcome: Added a supportive, high-level after-birth preview for the
+  active `expecting_child` flow and replaced the acknowledgement-only
+  interstitial with the first decision-changing question.
+- Codex contribution: Added a catalog-derived preview presentation mode,
+  preview-specific approved rationale keys, accessible full-card disclosure
+  controls, and focused compiler/browser coverage.
+- Human review/decision: Implemented the approved UX request without changing
+  source content, post-birth rules, or the explicit `birth_occurred` gate.
+- Safety boundary: Preview is not an active task, does not imply eligibility or
+  an outcome, and switches to deterministic active content only after explicit
+  confirmation. Source links and local progress remain separate interactions.
+- Evidence: `git diff --check`, `npm run lint`, `npm run typecheck`, `npm run
+  test` (41 passed), `npm run build`, and `npm run test:e2e` (6 passed) all
+  passed locally; no `/feedback` session ID is recorded.

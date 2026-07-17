@@ -89,6 +89,11 @@ export const TaskDefinitionSchema = z.object({
   sourceIds: z.array(StableIdSchema),
   verificationLabel: z.string().min(1),
   dependsOn: z.array(StableIdSchema),
+  /** Presentation-only preview metadata; it never changes active task applicability. */
+  preview: z.object({
+    when: z.lazy(() => ConditionSchema),
+    rationaleKey: MessageKeySchema
+  }).strict().optional(),
   /** Omitted applicability means the task is always eligible for rule selection. */
   applicability: TaskApplicabilitySchema.optional()
 }).strict();
@@ -254,6 +259,7 @@ export function validateEventPack(input: unknown): ContractValidationResult<Even
         seenRequiredFacts.add(requiredFact.factId);
       }
     }
+    if (task.preview) for (const factId of conditionFactIds(task.preview.when)) if (!factIds.has(factId)) errors.push(`unknown task preview fact ID: ${factId}`);
   }
   for (const rule of pack.rules) {
     for (const factId of conditionFactIds(rule.when)) if (!factIds.has(factId)) errors.push(`unknown rule fact ID: ${factId}`);

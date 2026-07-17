@@ -123,7 +123,8 @@ export const expectingChildPack = {
       sourceIds: ["ec_piba_birth_registry_procedure"],
       verificationLabel: "Verify the current process on the official source.",
       dependsOn: [],
-      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "event_stage", equals: "birth_occurred" }] }
+      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "event_stage", equals: "birth_occurred" }] },
+      preview: { when: { not: { any: [{ fact: "birth_location", equals: "outside_israel" }, { fact: "birth_setting", equals: "home_or_other" }, { fact: "family_path", in: ["adoption", "surrogacy", "parentage_needs_verification"] }] } }, rationaleKey: "expecting_child.preview.routine_registration" }
     },
     {
       id: "ec_register_missing_newborn_first_name",
@@ -147,7 +148,8 @@ export const expectingChildPack = {
       sourceIds: ["ec_piba_birth_certificate", "ec_moh_birth_certificate_parents"],
       verificationLabel: "Optional — verify the current process on the official sources.",
       dependsOn: [],
-      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "event_stage", equals: "birth_occurred" }] }
+      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "event_stage", equals: "birth_occurred" }] },
+      preview: { when: { not: { any: [{ fact: "birth_location", equals: "outside_israel" }, { fact: "birth_setting", equals: "home_or_other" }, { fact: "family_path", in: ["adoption", "surrogacy", "parentage_needs_verification"] }] } }, rationaleKey: "expecting_child.preview.optional_certificate" }
     },
     {
       id: "ec_verify_birth_abroad_registration",
@@ -159,7 +161,8 @@ export const expectingChildPack = {
       sourceIds: ["ec_piba_birth_abroad_registration"],
       verificationLabel: "Verification required — use the official source.",
       dependsOn: [],
-      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "event_stage", equals: "birth_occurred" }] }
+      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "event_stage", equals: "birth_occurred" }] },
+      preview: { when: { fact: "birth_location", equals: "outside_israel" }, rationaleKey: "expecting_child.preview.birth_abroad" }
     },
     {
       id: "ec_verify_non_hospital_birth_path",
@@ -171,7 +174,8 @@ export const expectingChildPack = {
       sourceIds: [],
       verificationLabel: "Verification required",
       dependsOn: [],
-      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "event_stage", equals: "birth_occurred" }] }
+      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "event_stage", equals: "birth_occurred" }] },
+      preview: { when: { all: [{ fact: "birth_location", equals: "israel" }, { fact: "birth_setting", equals: "home_or_other" }] }, rationaleKey: "expecting_child.preview.non_hospital" }
     },
     {
       id: "ec_verify_special_family_path",
@@ -183,7 +187,8 @@ export const expectingChildPack = {
       sourceIds: [],
       verificationLabel: "Verification required",
       dependsOn: [],
-      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "event_stage", equals: "birth_occurred" }] }
+      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "event_stage", equals: "birth_occurred" }] },
+      preview: { when: { fact: "family_path", in: ["adoption", "surrogacy", "parentage_needs_verification"] }, rationaleKey: "expecting_child.preview.special_family" }
     },
     {
       id: "ec_verify_unconfirmed_route",
@@ -246,7 +251,7 @@ export const expectingChildPack = {
 } satisfies EventPack;
 
 export const expectingChildQuestionPresentation = {
-  ec_has_child_been_born: { prompt: "Has the child been born?", why: "A post-birth answer is required before this plan can show any post-birth route.", options: [{ label: "Yes, the child has been born", value: "birth_occurred" }, { label: "Not yet", value: "not_yet" }, { label: "I’m not sure" }] },
+  ec_has_child_been_born: { prompt: "Has the child already been born?", why: "A post-birth answer is required before this plan can show any active post-birth route.", options: [{ label: "Yes, the child has been born", value: "birth_occurred" }, { label: "Not yet", value: "not_yet_born" }, { label: "I’m not sure" }] },
   ec_birth_location: { prompt: "Was the child born in Israel?", why: "A birth outside Israel follows a separate official route and cannot use the Israeli-hospital pathway.", options: [{ label: "Yes, in Israel", value: "israel" }, { label: "No, outside Israel", value: "outside_israel" }, { label: "I’m not sure", value: "unknown" }] },
   ec_birth_setting: { prompt: "Was the child born in an Israeli hospital?", why: "Only a confirmed Israeli-hospital birth can be considered for the reviewed routine hospital-notice path.", options: [{ label: "Yes, in an Israeli hospital", value: "hospital" }, { label: "No, another setting", value: "home_or_other" }, { label: "I’m not sure", value: "unknown" }] },
   ec_family_path: { prompt: "Does the routine birth path describe your situation?", why: "A special family situation must remove the routine hospital guidance rather than assume it applies.", options: [{ label: "Yes, routine birth path", value: "routine_birth" }, { label: "Adoption", value: "adoption" }, { label: "Surrogacy", value: "surrogacy" }, { label: "Parentage needs verification", value: "parentage_needs_verification" }, { label: "I’m not sure", value: "unknown" }] },

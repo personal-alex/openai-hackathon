@@ -9,10 +9,10 @@ import {
   validateContextForPack
 } from "@/domain-contracts";
 
-function matches(condition: Condition, facts: UserContext["facts"]): boolean {
-  if ("all" in condition) return condition.all.every((entry) => matches(entry, facts));
-  if ("any" in condition) return condition.any.some((entry) => matches(entry, facts));
-  if ("not" in condition) return !matches(condition.not, facts);
+export function matchesCondition(condition: Condition, facts: UserContext["facts"]): boolean {
+  if ("all" in condition) return condition.all.every((entry) => matchesCondition(entry, facts));
+  if ("any" in condition) return condition.any.some((entry) => matchesCondition(entry, facts));
+  if ("not" in condition) return !matchesCondition(condition.not, facts);
   const value = facts[condition.fact];
   if ("exists" in condition) return condition.exists ? value !== undefined : value === undefined;
   if (value === undefined) return false;
@@ -43,7 +43,7 @@ function taskToCatalog(task: EventPack["tasks"][number], facts: UserContext["fac
 
 function assertNoConflictingOverrides(pack: EventPack, facts: UserContext["facts"]): void {
   const fields = new Map<string, string>();
-  for (const rule of pack.rules.filter((rule) => matches(rule.when, facts))) {
+  for (const rule of pack.rules.filter((rule) => matchesCondition(rule.when, facts))) {
     for (const override of rule.effect.overrides ?? []) {
       for (const field of ["priority", "timing", "rationaleKey"] as const) {
         const value = override[field];
@@ -67,7 +67,7 @@ export function compileRoadmap(pack: EventPack, context: unknown): CompiledRoadm
 
   const tasks = new Map(pack.tasks.map((task) => [task.id, task]));
   const selected = new Set(pack.baseTaskIds);
-  const matchingRules = pack.rules.filter((rule) => matches(rule.when, facts));
+  const matchingRules = pack.rules.filter((rule) => matchesCondition(rule.when, facts));
 
   for (const rule of matchingRules) for (const taskId of rule.effect.includeTaskIds ?? []) selected.add(taskId);
   for (const rule of matchingRules) for (const taskId of rule.effect.excludeTaskIds ?? []) selected.delete(taskId);
