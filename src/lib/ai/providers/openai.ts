@@ -1,7 +1,7 @@
+import OpenAI from "openai";
 import { EventClassificationSchema, type ClassificationCandidate, type ClassificationResult, type ClassifyEventInput, type LlmGateway } from "../contracts";
 import type { LlmConfig } from "../config";
 
-const OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
 const MAX_CANDIDATES = 16;
 const MAX_FACTS_PER_CANDIDATE = 16;
 const MAX_HINTS_PER_CANDIDATE = 4;
@@ -11,10 +11,8 @@ export type OpenAiGatewayDependencies = {
   /** Injected only by the server composition root; this module never reads process.env. */
   apiKey?: string;
   fetch?: typeof fetch;
-  endpoint?: string;
+  client?: Pick<OpenAI, "responses">;
 };
-
-type OpenAiResponse = { output_text?: unknown; output?: unknown };
 
 function boundedText(value: string): string {
   return value.slice(0, MAX_METADATA_TEXT);
@@ -66,26 +64,14 @@ function instructions(candidates: ReturnType<typeof boundedCandidates>): string 
   ].join("\n");
 }
 
-function outputText(payload: OpenAiResponse): string | undefined {
-  if (typeof payload.output_text === "string") return payload.output_text;
-  if (!Array.isArray(payload.output)) return undefined;
-  for (const item of payload.output) {
-    if (!item || typeof item !== "object" || !("content" in item) || !Array.isArray(item.content)) continue;
-    for (const part of item.content) {
-      if (part && typeof part === "object" && "text" in part && typeof part.text === "string") return part.text;
-    }
-  }
-  return undefined;
+function isTransient(status: number | undefined): boolean {
+  return status === 408 || status === 429 || (status !== undefined && status >= 500);
 }
 
-function retryAfterSeconds(value: string | null): number | undefined {
-  if (!value) return undefined;
+function retryAfterSeconds(headers: Headers | undefined): number | undefined {
+  const value = headers?.get("retry-after");
   const seconds = Number(value);
   return Number.isFinite(seconds) && seconds > 0 ? Math.ceil(seconds) : undefined;
-}
-
-function isTransient(status: number): boolean {
-  return status === 408 || status === 429 || status >= 500;
 }
 
 function valueMatchesType(value: string | number | boolean, type: "string" | "number" | "boolean"): boolean {
@@ -110,45 +96,28 @@ function validateClassification(payload: unknown, candidates: readonly Classific
  * interpretations; the deterministic catalog/compiler remains authoritative.
  */
 export function createOpenAiGateway(config: LlmConfig, dependencies: OpenAiGatewayDependencies): LlmGateway {
-  const fetchImpl = dependencies.fetch ?? fetch;
-  const endpoint = dependencies.endpoint ?? OPENAI_RESPONSES_URL;
+  const client = dependencies.client ?? (dependencies.apiKey ? new OpenAI({ apiKey: dependencies.apiKey, fetch: dependencies.fetch, maxRetries: 0, timeout: config.timeoutMs }) : undefined);
 
   return {
     async classifyEvent(input: ClassifyEventInput): Promise<ClassificationResult> {
-      if (!dependencies.apiKey || input.candidates.length === 0) return { kind: "clarification", reason: "unavailable" };
+      if (!client || input.candidates.length === 0) return { kind: "clarification", reason: "unavailable" };
 
       const candidates = boundedCandidates(input.candidates);
-      const body = JSON.stringify({
+      const body = {
         model: config.model,
         temperature: 0,
         max_output_tokens: config.maxOutputTokens,
-        input: [
-          { role: "developer", content: instructions(candidates) },
-          { role: "user", content: input.text.slice(0, config.maxInputChars) }
-        ],
-        text: { format: { type: "json_schema", name: "life_navigator_event_classification", strict: true, schema: classificationSchema(candidates) } }
-      });
+        input: `${instructions(candidates)}\nUser statement: ${input.text.slice(0, config.maxInputChars)}`,
+        text: { format: { type: "json_schema" as const, name: "life_navigator_event_classification", strict: true, schema: classificationSchema(candidates) } }
+      };
 
       let lastReason: ClassificationResult | undefined;
       for (let attempt = 0; attempt <= config.maxRetries; attempt += 1) {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), config.timeoutMs);
         try {
-          const response = await fetchImpl(endpoint, {
-            method: "POST",
-            signal: controller.signal,
-            headers: { "content-type": "application/json", authorization: `Bearer ${dependencies.apiKey}` },
-            body
-          });
-          if (!response.ok) {
-            lastReason = response.status === 429
-              ? { kind: "clarification", reason: "rate_limited", retryAfterSeconds: retryAfterSeconds(response.headers.get("retry-after")) }
-              : { kind: "clarification", reason: response.status >= 500 ? "provider_error" : "unavailable" };
-            if (attempt < config.maxRetries && isTransient(response.status)) continue;
-            return lastReason;
-          }
-          const parsed = await response.json() as OpenAiResponse;
-          const text = outputText(parsed);
+          const response = await client.responses.create(body, { signal: controller.signal });
+          const text = response.output_text;
           if (!text) return { kind: "clarification", reason: "invalid_output" };
           try {
             return validateClassification(JSON.parse(text) as unknown, candidates);
@@ -156,9 +125,12 @@ export function createOpenAiGateway(config: LlmConfig, dependencies: OpenAiGatew
             return { kind: "clarification", reason: "invalid_output" };
           }
         } catch (error) {
-          const wasTimeout = controller.signal.aborted || (error instanceof DOMException && error.name === "AbortError");
-          lastReason = { kind: "clarification", reason: wasTimeout ? "timeout" : "provider_error" };
-          if (attempt < config.maxRetries) continue;
+          const apiError = error instanceof OpenAI.APIError ? error : undefined;
+          const status = apiError?.status;
+          const cause = error instanceof Error && "cause" in error ? error.cause : undefined;
+          const wasTimeout = controller.signal.aborted || error instanceof OpenAI.APIConnectionTimeoutError || (error instanceof DOMException && error.name === "AbortError") || (cause instanceof DOMException && cause.name === "AbortError");
+          lastReason = { kind: "clarification", reason: wasTimeout ? "timeout" : status === 429 ? "rate_limited" : status && status >= 500 ? "provider_error" : "provider_error", ...(status === 429 ? { retryAfterSeconds: retryAfterSeconds(apiError?.headers) } : {}) };
+          if (attempt < config.maxRetries && (wasTimeout || isTransient(status))) continue;
           return lastReason;
         } finally {
           clearTimeout(timeout);

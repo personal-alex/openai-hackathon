@@ -23,7 +23,7 @@ describe("OpenAI classification adapter", () => {
     expect(request.temperature).toBe(0);
     expect(request.text).toMatchObject({ format: { type: "json_schema", strict: true } });
     expect(JSON.stringify(request.input)).toContain("/no_think");
-    expect(fetch.mock.calls[0]?.[1]?.headers).toMatchObject({ authorization: "Bearer test-key" });
+    expect(new Headers(fetch.mock.calls[0]?.[1]?.headers).get("authorization")).toBe("Bearer test-key");
   });
 
   it("rejects schema-invalid output without leaking the provider response", async () => {
