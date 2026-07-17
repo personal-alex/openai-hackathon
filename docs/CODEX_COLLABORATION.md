@@ -227,7 +227,8 @@ Week submission. It is a concise evidence log, not a transcript.
   entry point.
 - Codex contribution: Implemented the restrained glyph-resolution animation,
   transition, Skip intro control, reduced-motion/no-script behavior, input
-  focus handoff, mobile word-wrap protection, and focused browser coverage.
+  focus handoff, mobile word-wrap protection, a 0.9-second first-line pause,
+  and focused browser coverage.
 - Human review/decision: Requested the first-load message, warm visual
   direction, action-oriented landing copy, and non-flashy interaction posture.
 - Changed artifacts: `src/app/landing-intro.tsx`;

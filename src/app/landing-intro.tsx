@@ -6,6 +6,7 @@ const firstLine = "Life doesn’t come with instructions.";
 const firstLineCharacters = Array.from(firstLine.replaceAll(" ", ""));
 const glyphs = "·:+×◇□△";
 const revealIntervalMs = 58;
+const secondLineDelayMs = 900;
 const completedHoldMs = 2500;
 const exitDurationMs = 420;
 
@@ -21,7 +22,7 @@ function transientGlyph(index: number, tick: number) {
 export function LandingIntro({ onComplete }: LandingIntroProps) {
   const [revealedCharacters, setRevealedCharacters] = useState(0);
   const [glyphTick, setGlyphTick] = useState(0);
-  const [phase, setPhase] = useState<"revealing" | "complete" | "leaving">("revealing");
+  const [phase, setPhase] = useState<"revealing" | "line_resolved" | "complete" | "leaving">("revealing");
 
   const leaveIntro = useCallback((immediate = false) => {
     setPhase("leaving");
@@ -39,7 +40,7 @@ export function LandingIntro({ onComplete }: LandingIntroProps) {
       setRevealedCharacters((current) => {
         if (current >= firstLineCharacters.length) {
           window.clearInterval(revealTimer);
-          setPhase("complete");
+          setPhase("line_resolved");
           return current;
         }
         return current + 1;
@@ -53,11 +54,18 @@ export function LandingIntro({ onComplete }: LandingIntroProps) {
   }, [onComplete]);
 
   useEffect(() => {
+    if (phase !== "line_resolved") return;
+    const secondLineTimer = window.setTimeout(() => setPhase("complete"), secondLineDelayMs);
+    return () => window.clearTimeout(secondLineTimer);
+  }, [phase]);
+
+  useEffect(() => {
     if (phase !== "complete") return;
     const holdTimer = window.setTimeout(() => leaveIntro(), completedHoldMs);
     return () => window.clearTimeout(holdTimer);
   }, [leaveIntro, phase]);
 
+  const isLineResolved = phase !== "revealing";
   const isComplete = phase === "complete" || phase === "leaving";
 
   return (
@@ -72,8 +80,8 @@ export function LandingIntro({ onComplete }: LandingIntroProps) {
               return <span className="landing-intro__word" key={`${word}-${wordIndex}`}>
                 {Array.from(word).map((character, characterOffset) => {
                   const index = startIndex + characterOffset;
-                  const isCurrent = index === revealedCharacters && !isComplete;
-                  const isRevealed = index < revealedCharacters || isComplete;
+                  const isCurrent = index === revealedCharacters && !isLineResolved;
+                  const isRevealed = index < revealedCharacters || isLineResolved;
                   return (
                     <span className={isRevealed ? "is-resolved" : isCurrent ? "is-cycling" : "is-pending"} key={`${character}-${index}`}>
                       {isRevealed ? character : isCurrent ? transientGlyph(index, glyphTick) : " "}
@@ -84,7 +92,7 @@ export function LandingIntro({ onComplete }: LandingIntroProps) {
               </span>;
             })}
           </span>
-          <span aria-hidden="true" className={`landing-intro__second-line${isComplete ? " is-visible" : ""}`}>Now it does.</span>
+          <span aria-hidden="true" data-testid="landing-intro-second-line" className={`landing-intro__second-line${isComplete ? " is-visible" : ""}`}>Now it does.</span>
         </h1>
       </div>
       <button type="button" className="landing-intro__skip" onClick={() => leaveIntro(true)}>Skip intro</button>

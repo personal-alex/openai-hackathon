@@ -203,6 +203,8 @@ The repository contains a validated modular-monolith baseline, deterministic com
   introduction: a restrained character-resolution reveal for “Life doesn’t
   come with instructions.” followed by “Now it does.” It fades and lifts into
   the action-oriented landing heading, “Tell us what changed.”
+- The resolved first line holds for approximately 0.9 seconds before the final
+  statement enters, so the opening problem is given clear focus.
 - The overlay has a visible Skip intro control, hands keyboard focus to the
   event input, respects reduced motion by opening the landing immediately, and
   includes a no-JavaScript escape path. It does not alter deterministic
