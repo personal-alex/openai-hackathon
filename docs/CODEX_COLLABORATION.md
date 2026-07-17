@@ -302,3 +302,21 @@ Week submission. It is a concise evidence log, not a transcript.
   13 seeded Chromium journeys passed. Linear OPE-17/OPE-19/OPE-20 were marked
   Done with linked evidence; the Life Navigator project received an on-track
   two-pack status update. No `/feedback` session ID is recorded.
+
+### 2026-07-17 — Responsive desktop landing hierarchy refinement
+
+- Task/outcome: Reviewed the isolated desktop layout adjustment and retained a
+  desktop-only CSS refinement that makes the event input the clear primary
+  reading column while preserving the quiet route-preview motif at the right.
+- Codex contribution: Inspected the stash before application; manually checked
+  landing/intro, guided-question, live-roadmap/task-detail, and mobile states;
+  and kept the accepted change to `src/app/globals.css` without component,
+  contract, catalog, source, rule, fixture, or product-copy changes.
+- Human review/decision: Requested a responsive, accessible layout improvement
+  only when it created a clear usability benefit; the existing mobile and
+  single-question experiences remain unchanged.
+- Verification: `git diff --check`, `npm run typecheck`, `npm run lint`, 53
+  Vitest tests, and `npm run build` passed. The full Playwright suite currently
+  fails a pre-existing Skip-intro test that expects the exited overlay to be
+  removed from the DOM; the same targeted failure reproduces with this CSS
+  query removed. No `/feedback` session ID is recorded.

@@ -276,6 +276,22 @@ The repository contains a validated modular-monolith baseline, deterministic com
   `npm run lint`, `npm run test` (53 passed), `npm run build`, and 13 seeded
   Chromium journeys passed. Linear OPE-17, OPE-19, and OPE-20 are Done.
 
+## 2026-07-17 — Responsive desktop landing hierarchy refined
+
+- At desktop widths (901px and above), the landing input now occupies the
+  primary left-hand reading column while the quiet route preview stays separate
+  at the right. The existing single-column tablet/mobile presentation is
+  unchanged.
+- This is presentation-only: it changes no event pack, source, rule, fixture,
+  route, contract, compiler, AI, intro, question, roadmap, or reduced-motion
+  behavior. The input remains the direct conversational entry point into the
+  roadmap-first product experience.
+- Passed: `git diff --check`, `npm run typecheck`, `npm run lint`, `npm run
+  test` (53 passed), and `npm run build`. The current Playwright suite has an
+  unrelated baseline failure: it expects the visually exited landing intro to
+  be removed from the DOM immediately after Skip intro; the same targeted test
+  fails with this CSS media query temporarily removed.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations
