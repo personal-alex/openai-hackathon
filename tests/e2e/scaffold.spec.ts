@@ -61,7 +61,7 @@ test("guides the approved expecting-child routine path with catalog-derived sour
   await expect(page.getByText("Get a birth certificate")).toBeVisible();
   const toggle = page.getByRole("button", { name: /Toggle details for Register the newborn/i });
   await toggle.click();
-  await expect(page.getByRole("link", { name: /Open official source/i }).first()).toHaveAttribute("href", "https://www.gov.il/BlobFolder/policy/birth_registry_in_israel_procedure/he/2.2.0001.pdf");
+  await expect(page.getByRole("link", { name: /Open source \(external\)/i }).first()).toHaveAttribute("href", "https://www.gov.il/BlobFolder/policy/birth_registry_in_israel_procedure/he/2.2.0001.pdf");
   await page.locator("#task-details-ec_register_newborn_population_registry").getByRole("button", { name: /Local status: not started/i }).click();
   await expect(toggle).toHaveAttribute("aria-expanded", "true");
 });
@@ -73,7 +73,7 @@ test("replaces the routine roadmap with the bounded birth-abroad route", async (
   await expect(page.getByText("Verify the official route for registering a child born outside Israel")).toBeVisible();
   await expect(page.getByText("Register the newborn — Population and Immigration Authority")).not.toBeVisible();
   await page.getByRole("button", { name: /Toggle details for Verify the official route/i }).click();
-  await expect(page.getByText(/separate official process/i)).toBeVisible();
+  await expect(page.locator("#task-details-ec_verify_birth_abroad_registration").getByText(/separate official process/i)).toBeVisible();
   await page.getByRole("button", { name: "Reset local demo" }).click();
   await expect(page.getByRole("heading", { name: "Tell us what changed." })).toBeVisible();
 });

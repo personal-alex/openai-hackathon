@@ -237,3 +237,20 @@ Week submission. It is a concise evidence log, not a transcript.
 - Verification: `git diff --check`, `npm run lint`, `npm run typecheck`,
   `npm run test` (41 passed), `npm run build`, and 8 Chromium journeys against
   the fresh production build passed; no `/feedback` session ID is recorded.
+
+### 2026-07-17 — Generic roadmap clarity and explainability
+
+- Task/outcome: Added a reusable, compiler-output-only roadmap panel for the
+  guided workspace, with timing groups, detailed inspection, local-progress
+  controls, source metadata, change summaries, and question-rationale access.
+- Codex contribution: Separated shared presentation from the page, removed
+  event-specific timing rendering, preserved deterministic/local-progress
+  boundaries, and added focused browser coverage.
+- Human review/decision: Requested main-session-only generic UI work while the
+  job-loss worktree continues independent event-pack review.
+- Handoff: `docs/roadmap-clarity-contract-handoff.md` records missing resolved
+  rationale/diff/replacement/change-condition fields; no UI-generated policy
+  explanation or event-specific workaround was introduced.
+- Verification: `git diff --check`, lint, typecheck, 41 Vitest tests, build,
+  and 11 fresh-production Chromium journeys passed; no `/feedback` session ID
+  is recorded.

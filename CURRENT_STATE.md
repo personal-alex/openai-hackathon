@@ -213,6 +213,20 @@ The repository contains a validated modular-monolith baseline, deterministic com
   test` (7 files, 41 tests), `npm run build`, and 8 production-build Chromium
   journeys, including skip, reduced-motion, and narrow-mobile flow coverage.
 
+## 2026-07-17 — Generic roadmap clarity and explainability
+
+- The guided experience now uses a reusable, event-agnostic roadmap panel that
+  groups validated compiler tasks by typed timing window, exposes task/source/
+  verification/local-status details, and gives `TaskDiff` changes a concise,
+  non-colour-only summary and task markers.
+- No event-pack, source, rule, fixture, policy, compiler, or AI data changed.
+  The main-thread handoff in `docs/roadmap-clarity-contract-handoff.md` records
+  the generic resolved-rationale, diff-reason, removed-task, and task-change
+  fields still required for fuller authoritative explanations.
+- Passed: `git diff --check`, `npm run lint`, `npm run typecheck`, `npm run
+  test` (41 tests), `npm run build`, and 11 Chromium journeys against a fresh
+  production build.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations
