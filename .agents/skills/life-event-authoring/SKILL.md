@@ -12,10 +12,10 @@ pack, policy conclusion, or user-facing content.
 
 1. Read `AGENTS.md`, `CURRENT_STATE.md`, `docs/technical-product-direction.md`,
    `docs/event-pack-authoring.md`, and the current domain contracts before drafting.
-2. Confirm the request is Israel-only and English-only. The complete flows remain
-   `expecting_child` and `job_loss`; `move_home` is stretch-only.
-3. Treat only `expecting_child`, `job_loss`, and `move_home` as canonical event
-   IDs. Do not add a candidate future event to `EventIdSchema` or a registry.
+2. Confirm the request stays within the jurisdiction, language, and event
+   portfolio recorded in the repository's current authority documents.
+3. Treat only existing contract-defined IDs as canonical. Do not add a candidate
+   future event to `EventIdSchema` or a registry.
 4. Keep candidate curation, human review, and approved-pack implementation as
    three separate stages.
 
@@ -38,12 +38,23 @@ only as a shape example; it is fictional and non-production.
    constrained condition/rule shapes, typed timing, task/source references, and
    safety notes. Follow the repository schemas; do not redefine them in a
    template. Mark each uncertain dependency, eligibility issue, and source link.
-4. **Minimize questions.** For every candidate question, identify the fact and
+4. **Author transition gates explicitly.** If a task is applicable only after a
+   real-world event or status transition, declare the required confirmed
+   transition fact(s) as typed facts and attach them to the task's applicability
+   rule. Dates, estimates, schedules, predictions, inferred milestones, and
+   elapsed time are never evidence that a transition occurred. When a required
+   fact is unknown, do not select the task; show it before the transition only
+   when an explicitly authored planning item is clearly labelled as future work.
+   Keep confirmed facts distinct from planned, inferred, estimated, and
+   time-derived values. Cover both applicable and inapplicable cases in
+   deterministic fixtures, and rely on schema/compiler validation rather than
+   prose or model inference.
+5. **Minimize questions.** For every candidate question, identify the fact and
    exactly one or more effects on task selection, timing, ordering, wording,
    verification state, or a documented follow-up. Remove questions with no
    decision-changing effect. Unknown and skipped answers stay unknown; never
    turn them into negative facts.
-5. **Run the approval handoff.** Complete the reviewer checklist and leave the
+6. **Run the approval handoff.** Complete the reviewer checklist and leave the
    proposal unapproved until a named human records dated source dispositions and
    catalog approval. AI help may summarize stated material or draft bounded
    proposals, but cannot activate content, determine eligibility, or resolve

@@ -31,6 +31,11 @@ function knownTiming(timing: Timing, facts: UserContext["facts"]): Timing {
   return timing;
 }
 
+function isTaskApplicable(task: EventPack["tasks"][number], facts: UserContext["facts"]): boolean {
+  if (!task.applicability || task.applicability.kind === "always") return true;
+  return task.applicability.requiredFacts.every(({ factId, equals }) => facts[factId] === equals);
+}
+
 function taskToCatalog(task: EventPack["tasks"][number], facts: UserContext["facts"]): CatalogTask {
   const { rationaleKey, timing, ...taskFields } = task;
   return { ...taskFields, timing: knownTiming(timing, facts), rationale: rationaleKey };
@@ -67,7 +72,12 @@ export function compileRoadmap(pack: EventPack, context: unknown): CompiledRoadm
   for (const rule of matchingRules) for (const taskId of rule.effect.includeTaskIds ?? []) selected.add(taskId);
   for (const rule of matchingRules) for (const taskId of rule.effect.excludeTaskIds ?? []) selected.delete(taskId);
 
-  const overridden = new Map([...selected].map((id) => [id, { ...tasks.get(id)! }]));
+  const overridden = new Map(
+    [...selected]
+      .map((id) => tasks.get(id)!)
+      .filter((task) => isTaskApplicable(task, facts))
+      .map((task) => [task.id, { ...task }])
+  );
   for (const rule of [...matchingRules].sort((a, b) => a.priority - b.priority || a.id.localeCompare(b.id))) {
     for (const override of rule.effect.overrides ?? []) {
       const task = overridden.get(override.taskId);

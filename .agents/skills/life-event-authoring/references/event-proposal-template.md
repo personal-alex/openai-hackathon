@@ -19,6 +19,13 @@ its values in a runtime event pack.
 | <id> | string/boolean/number | yes/no | <candidate impact> | supported/unknown |
 
 ## Candidate rules and task templates
+For transition-gated tasks, declare the prerequisite typed fact as a confirmed
+transition fact and record the exact required value in task applicability. Do
+not use dates, estimates, schedules, inferred milestones, or elapsed time as
+evidence that a transition happened. A pre-transition planning item must be
+explicitly labelled as future/planning work rather than an actionable
+post-transition task.
+
 | Draft rule ID | Explicit condition | Effect | Uncertainty / source dependency |
 | --- | --- | --- | --- |
 | <id> | <contract-shaped condition> | include/exclude/override <task ID> | <unknown or source card ID> |

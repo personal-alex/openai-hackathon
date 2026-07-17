@@ -116,6 +116,40 @@ The repository contains a validated modular-monolith baseline, deterministic com
 - The original route/north-star mark and favicon replace the generic scaffold mark; roadmap cards expose timing, fixture provenance, verification labels, local-only progress, compiler-derived rationale, and labelled added/adjusted/current states.
 - All new questions, tasks, source metadata, and explanations remain synthetic fixtures. No reviewed event pack, policy/source content, live AI integration, persistence, or eligibility conclusion was activated.
 - Passed: `npm run lint`, `npm run typecheck`, `npm run test` (5 files, 24 tests), `npm run build`, and `npm run test:e2e` (3 seeded browser journeys). Manual browser review covered 1440px desktop and 390px mobile; no console warnings/errors were observed.
+## 2026-07-17 — Confirmed transition-gate contract proof complete
+
+- The reusable authoring workflow and shared contracts now support task applicability gated by explicit typed facts declared as `confirmed_transition`; dates, estimates, schedules, inferred milestones, and elapsed time cannot establish that a transition occurred.
+- `tests/fixtures/expecting-child-transition.ts` is a non-production, test-only contract proof using `event_stage = birth_occurred`; `validateApprovedEventPack` rejects it, it is not registered, and it contains no approved source or policy content.
+- No approved runtime `expecting_child` pack exists on this branch. Candidate sources remain `needs_review`; applying this contract to any runtime pack remains contingent on human source/content approval.
+
+## 2026-07-17 — Routine Israeli-hospital registration candidate correction
+
+- The `expecting_child` candidate packet records a human-review decision:
+  **Approved with scope: routine birth in an Israeli hospital.** It is backed
+  by four primary Population and Immigration Authority / Ministry of Health
+  source cards and explicitly distinguishes the hospital birth notice from the
+  Authority's Population Registry entry.
+- The candidate/test-only routing proof requires explicit
+  `event_stage = birth_occurred`; a due date or inferred milestone cannot set
+  it. It routes non-hospital or unknown birth location to verification required
+  and keeps birth outside Israel, home/non-recognised-institution birth,
+  disputed parentage, late registration, corrections, adoption, and surrogacy
+  excluded/deferred.
+- This is not an approved or active runtime event pack, source-card registry,
+  or user-facing flow. Remaining candidate sources and all implementation
+  authorization remain subject to review.
+
+## 2026-07-17 — Reviewed expecting-child candidate artifacts integrated
+
+- Candidate authoring materials from `codex/il-expecting-child-candidate-pack`
+  are now integrated on `master`; they are not an activated runtime event pack,
+  source-card registry, compiler input, or user-facing roadmap flow.
+- Approved scope: **Approved with scope: routine birth in an Israeli hospital.**
+  The system-led routine-path statement applies only where the newborn is
+  eligible for entry in Israel’s Population Registry; it does not mean every
+  newborn born in an Israeli hospital automatically receives an Israeli ID.
+- The test-only, unregistered transition fixture remains rejected by
+  `validateApprovedEventPack`. No production route depends on candidate content.
 
 ## Deferred / explicitly out of scope for MVP
 

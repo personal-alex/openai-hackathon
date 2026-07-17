@@ -20,6 +20,35 @@ Week submission. It is a concise evidence log, not a transcript.
 - Changed artifacts: App Router UI, original brand assets, seeded test fixtures, end-to-end journey coverage, `CURRENT_STATE.md`, and this evidence record.
 - Evidence: Linear OPE-25/OPE-26/OPE-27; `npm run lint`, `npm run typecheck`, `npm run test` (5 files, 24 tests), `npm run build`, and `npm run test:e2e` (3 passed); manual 1440px desktop and 390px mobile browser inspection with no console errors.
 - Verification: The deterministic compiler remains the only source of selected tasks, timings, sources, and diffs; seeded mode stays network-free and the UI presents no eligibility conclusion or reviewed external source.
+### 2026-07-17 — Routine Israeli-hospital newborn-registration candidate correction
+
+- Task/outcome: Updated the `expecting_child` candidate/review artifacts with a
+  dated, human-directed scope decision: **Approved with scope: routine birth in
+  an Israeli hospital.**
+- Codex contribution: Inspected the provided primary Authority procedure and
+  official Authority/Ministry pages; revised the candidate evidence ledger,
+  proposal, reviewer gate, review-deck outline, and validation record. Added a
+  clearly `testOnly` routing fixture and deterministic compiler checks for
+  routine hospital, conditional missing-first-name, and non-hospital/unknown
+  verification routes.
+- Human review/decision: The supplied worktree directive approved only the
+  stated normal-path source scope. It retained explicit `birth_occurred`
+  confirmation, kept special cases excluded/deferred, and prohibited runtime
+  activation.
+- Changed artifacts: Candidate packet, `CURRENT_STATE.md`,
+  `tests/fixtures/expecting-child-transition.ts`, and
+  `tests/unit/roadmap-compiler/transition-gates.test.ts`; commit
+  `877b8c1af58c707126b1db3cc12e23f55d80b650`.
+- Verification: `git diff --check`, `npm run lint`, `npm run typecheck`,
+  `npm run test` (6 files, 27 tests), and `npm run build` passed. The
+  approved-runtime validator rejects the fixture because it is test-only.
+
+### 2026-07-17 — Main-thread review and integration of expecting-child candidate artifacts
+
+- Task/outcome: Reviewed and merged branch `codex/il-expecting-child-candidate-pack`, including commits `877b8c1af58c707126b1db3cc12e23f55d80b650` and `6449d3fca6845f05001684c3b59f96b761134a2e` and their required candidate-packet/transition-gate ancestry.
+- Human review/decision: **Approved with scope: routine birth in an Israeli hospital.** The system-led routine statement applies only where the newborn is eligible for entry in Israel’s Population Registry; it does not mean every newborn born in an Israeli hospital automatically receives an Israeli ID.
+- Boundary: The merge contains reviewed candidate authoring materials and a generic, test-only confirmed-transition proof only. It does not register or activate a runtime `expecting_child` pack, source-card registry entry, production compiler input, route, or user-facing roadmap content.
+- Verification: Main-thread review confirms the four approved canonical official URLs, explicit `birth_occurred`/Israeli-hospital routing, excluded special cases, and approved-runtime rejection of the `testOnly` fixture. Full verification is rerun before the integration commit.
 
 ### 2026-07-15 23:05 IDT — Delegated candidate IL event-pack authoring worktree
 
