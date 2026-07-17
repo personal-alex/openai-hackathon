@@ -26,7 +26,8 @@ salary, age, or employment status is inferred.
 
 | Draft fact ID | Type | Sensitive | Proposed values | Decision-changing purpose | Evidence state |
 | --- | --- | --- | --- | --- | --- |
-| `employment_stage` | string | yes | `ended`, `notice_given`, `not_ending` | Separates active post-end steps from a clearly labelled preview. | Candidate product decision; needs review. |
+| `employment_stage` | string, proposed `confirmed_transition` role | yes | `ended`, `notice_given`, `not_ending` | Separates active post-end steps from a clearly labelled preview. Only an explicit `ended` answer may satisfy a future post-end applicability gate. | Candidate product decision; needs review. |
+| `event_date` | string | yes | an explicitly supplied employment-end date | Lets event-relative timing render only when the person chooses to provide a date. It never establishes that employment ended. | Candidate product decision; needs review. |
 | `work_arrangement` | string | yes | `salaried`, `self_employed`, `both` | Selects the standard salaried official-route review or a verification-required branch. | NII conditions page is a bounded primary input; needs review. |
 | `employment_service_registration` | string | yes | `registered`, `not_registered` | Selects registration prompt vs. follow-official-instructions prompt. | NII primary input; needs review. |
 | `employment_end_confirmation` | string | yes | `has`, `does_not_have` | Changes records wording and adds a verification prompt; does not determine document completeness. | Candidate process/records design; needs review. |
@@ -60,11 +61,11 @@ The source IDs below are candidate-only cards in
 
 | Draft task ID | Candidate action summary | Typed timing | Candidate source IDs | Dependencies | Verification state / safety note |
 | --- | --- | --- | --- | --- | --- |
-| `jl_register_employment_service` | Register with the Employment Service after employment has ended. Registration is an important early step; review the current official instructions and follow-up requirements before acting. | `{ "kind": "event_relative", "anchor": "employment_end", "window": "after", "labelKey": "job_loss.candidate.after_employment_end" }` | `jl_nii_employment_service_registration_reporting`, `jl_nii_submit_unemployment_claim` | `employment_stage = ended`; `work_arrangement = salaried`; not registered | Verify the current official route. Do not state a personal deadline, appointment, payment, or eligibility result. |
-| `jl_review_unemployment_claim_route` | Review the official unemployment-benefit process and current conditions. Eligibility depends on individual circumstances, which this planner does not determine. | `{ "kind": "event_relative", "anchor": "employment_end", "window": "after", "labelKey": "job_loss.candidate.review_after_end" }` | `jl_nii_submit_unemployment_claim`, `jl_nii_unemployment_conditions` | `employment_stage = ended`; `work_arrangement = salaried`; claim not explicitly submitted | Verification required. No claim outcome, benefit amount, qualifying-period, or payment-start claim. |
-| `jl_prepare_claim_route_information` | Keep the employment-end letter and wage or employment information available. Check the current official claim page for requirements in your case. | `{ "kind": "general", "labelKey": "job_loss.candidate.prepare_information" }` | `jl_nii_claim_documents_form100` | `employment_stage = ended`; `work_arrangement = salaried` | The source is legacy-path material. This is not a complete document checklist or a statement that information is sufficient. |
-| `jl_follow_employment_service_instructions` | After you have registered, follow the Employment Service’s current instructions for your situation. | `{ "kind": "general", "labelKey": "job_loss.candidate.follow_current_instructions" }` | `jl_nii_employment_service_registration_reporting`, `jl_employment_service_home` | `employment_stage = ended`; explicitly registered | Verification required. Do not invent reporting days, appointments, or outcome. |
-| `jl_verify_nonstandard_benefit_route` | Your work arrangement or route may not match the standard salaried unemployment path. Review the current official information before assuming a benefits route applies. | `{ "kind": "general", "labelKey": "job_loss.candidate.verify_route" }` | `jl_nii_unemployment_conditions` | `employment_stage = ended`; `work_arrangement in [self_employed, both]` | Verification-only state; no detailed self-employment, mixed-income, or eligibility workflow. |
+| `jl_register_employment_service` | Register with the Employment Service after employment has ended. Registration is an important early step; review the current official instructions and follow-up requirements before acting. | `{ "kind": "event_relative", "anchor": "event_date", "window": "immediate", "labelKey": "job_loss.candidate.after_employment_end" }` | `jl_nii_employment_service_registration_reporting`, `jl_nii_submit_unemployment_claim` | Future applicability: `confirmed_transition(employment_stage = ended)`; `work_arrangement = salaried`; `employment_service_registration = not_registered` | Uses current contract-shaped timing; it does not create or infer an employment-end date. Verify the current official route. Do not state a personal deadline, appointment, payment, or eligibility result. |
+| `jl_review_unemployment_claim_route` | Review the official unemployment-benefit process and current conditions. Eligibility depends on individual circumstances, which this planner does not determine. | `{ "kind": "event_relative", "anchor": "event_date", "window": "immediate", "labelKey": "job_loss.candidate.review_after_end" }` | `jl_nii_submit_unemployment_claim`, `jl_nii_unemployment_conditions` | Future applicability: `confirmed_transition(employment_stage = ended)`; `work_arrangement = salaried`. Exclude/de-emphasize only after explicit `unemployment_claim_status = submitted`. | Uses current contract-shaped timing; it does not create or infer an employment-end date. An absent claim answer selects a review, not an assertion that no claim was submitted. Verification required. No claim outcome, benefit amount, qualifying-period, or payment-start claim. |
+| `jl_prepare_claim_route_information` | Keep the employment-end letter and wage or employment information available. Check the current official claim page for requirements in your case. | `{ "kind": "general", "labelKey": "job_loss.candidate.prepare_information" }` | `jl_nii_claim_documents_form100` | Future applicability: `confirmed_transition(employment_stage = ended)`; `work_arrangement = salaried` | The source is legacy-path material. This is not a complete document checklist or a statement that information is sufficient. |
+| `jl_follow_employment_service_instructions` | After you have registered, follow the Employment Service’s current instructions for your situation. | `{ "kind": "general", "labelKey": "job_loss.candidate.follow_current_instructions" }` | `jl_nii_employment_service_registration_reporting`, `jl_employment_service_home` | Future applicability: `confirmed_transition(employment_stage = ended)`; `work_arrangement = salaried`; `employment_service_registration = registered` | Verification required. Do not invent reporting days, appointments, or outcome. |
+| `jl_verify_nonstandard_benefit_route` | Your work arrangement or route may not match the standard salaried unemployment path. Review the current official information before assuming a benefits route applies. | `{ "kind": "general", "labelKey": "job_loss.candidate.verify_route" }` | `jl_nii_unemployment_conditions` | Future applicability: `confirmed_transition(employment_stage = ended)`; work arrangement is explicitly `self_employed`/`both` or remains unknown | Verification-only state; no detailed self-employment, mixed-income, or eligibility workflow. |
 
 ### 2. Understand rights and records to review
 
@@ -102,10 +103,12 @@ is not passed to a validator/compiler.
 | --- | --- | --- | --- |
 | `jl_preview_before_employment_end` | `{ "fact": "employment_stage", "in": ["notice_given", "not_ending"] }` | Present a preview state for official-route items; retain optional records/resume preparation. | No task is due now; exact preview wording needs safety review. |
 | `jl_include_salaried_official_route` | `{ "all": [{ "fact": "employment_stage", "equals": "ended" }, { "fact": "work_arrangement", "equals": "salaried" }] }` | Include register, claim-route review, claim-information preparation, rights/records, and momentum tasks. | NII sources require human source/claim approval. |
-| `jl_include_registration_prompt` | `{ "all": [{ "fact": "employment_stage", "equals": "ended" }, { "fact": "work_arrangement", "equals": "salaried" }, { "fact": "employment_service_registration", "equals": "not_registered" }] }` | Priority 10: `jl_register_employment_service`. | Do not assume a date/appointment or outcome. |
-| `jl_include_follow_official_instructions` | `{ "all": [{ "fact": "employment_stage", "equals": "ended" }, { "fact": "employment_service_registration", "equals": "registered" }] }` | Replace/de-emphasize initial registration with `jl_follow_employment_service_instructions`. | Official instructions must be current. |
-| `jl_include_nonstandard_route_verification` | `{ "all": [{ "fact": "employment_stage", "equals": "ended" }, { "fact": "work_arrangement", "in": ["self_employed", "both"] }] }` | Exclude standard salaried claim instructions; include `jl_verify_nonstandard_benefit_route` plus momentum tasks. | No self-employed/mixed detailed workflow. |
-| `jl_deemphasize_submitted_claim` | `{ "fact": "unemployment_claim_status", "equals": "submitted" }` | Remove/de-emphasize initial claim-route review; retain official-instruction, records, and momentum tasks. | Does not infer acceptance, payment, or completeness. |
+| `jl_include_registration_prompt` | `{ "all": [{ "fact": "employment_stage", "equals": "ended" }, { "fact": "work_arrangement", "equals": "salaried" }, { "fact": "employment_service_registration", "equals": "not_registered" }] }` | Priority 10: `jl_register_employment_service`. | Only an explicit `not_registered` response selects it; do not use an absent answer to infer a date, appointment, or outcome. |
+| `jl_include_follow_official_instructions` | `{ "all": [{ "fact": "employment_stage", "equals": "ended" }, { "fact": "work_arrangement", "equals": "salaried" }, { "fact": "employment_service_registration", "equals": "registered" }] }` | Replace/de-emphasize initial registration with `jl_follow_employment_service_instructions`. | Only the standard candidate route may select this task; official instructions must be current. |
+| `jl_include_nonstandard_route_verification` | `{ "all": [{ "fact": "employment_stage", "equals": "ended" }, { "not": { "fact": "work_arrangement", "equals": "salaried" } }] }` | Exclude standard salaried claim instructions; include `jl_verify_nonstandard_benefit_route` plus momentum tasks. | Covers explicit self-employed/mixed responses and an absent/unknown arrangement without turning unknown into a negative fact. No detailed nonstandard workflow. |
+| `jl_deemphasize_submitted_claim` | `{ "all": [{ "fact": "work_arrangement", "equals": "salaried" }, { "fact": "unemployment_claim_status", "equals": "submitted" }] }` | Remove/de-emphasize initial claim-route review; retain official-instruction, records, and momentum tasks. | Only an explicit submitted response changes the task. It does not infer acceptance, payment, or completeness. |
+| `jl_adjust_records_for_missing_end_confirmation` | `{ "fact": "employment_end_confirmation", "equals": "does_not_have" }` | Replace any document-completeness implication with a bounded prompt to identify what is unclear and verify the current official route or obtain individual advice. | Candidate records-design decision; no claim that a particular document is legally required. |
+| `jl_adjust_information_prompt_when_unsure` | `{ "fact": "employment_information_status", "equals": "missing_or_unsure" }` | Change claim-information wording from organise to verify current requirements for the person’s route. | Narrow legacy-source dependency; no complete checklist or document-sufficiency conclusion. |
 | `jl_focus_reordering` | `{ "fact": "initial_focus", "equals": "next_role" }` | Raise momentum tasks after any active official-route priority items. | Must never remove time-sensitive official-route review. |
 
 Proposed sort: active official registration (priority 10), official claim-route
@@ -122,7 +125,7 @@ then practical momentum (50). User focus may reorder priorities 30–50 only.
   employment ends. We’ll help you work through the details when you’re ready.”
   Registration is not shown as due now. Records and resume preparation may be
   presented as optional planning guidance.
-- **Registered:** de-emphasize initial registration; do not assume
+- **Registered salaried route:** de-emphasize initial registration; do not assume
   appointments, reporting dates, or results.
 - **Self-employed, mixed, or unknown:** do not show standard salaried-benefit
   instructions as applicable. Use a verification-required benefit state and
@@ -135,6 +138,7 @@ All prompt copy is draft-only and follows one-question-at-a-time interaction.
 | Question ID | Fact ID | Candidate question | Decision-changing effect | Unknown / skip behavior | Evidence state |
 | --- | --- | --- | --- | --- | --- |
 | `jl_employment_stage_question` | `employment_stage` | “Has your employment already ended, have you been given notice, or is it not ending yet?” | Chooses active route vs. preview; prevents treating registration as due before the stated end. | Keep fact absent; show only neutral general planning and a follow-up if the user wants to continue. | Candidate product/safety decision. |
+| `jl_event_date_question` | `event_date` | “Would you like to add the date your employment ended?” | Lets eligible event-relative items use a date-aware timing presentation after an explicit ended state; it does not select a route or establish the transition. | Keep fact absent; task timing remains general/verification-oriented. | Candidate product/safety decision; show only after explicit `employment_stage = ended`. |
 | `jl_work_arrangement_question` | `work_arrangement` | “Was your work salaried, self-employed, or a mix of both?” | Selects standard salaried-route review vs. verification-required state. | Keep fact absent; do not assume standard route. | NII conditions input; needs review. |
 | `jl_employment_service_registration_question` | `employment_service_registration` | “Have you registered with the Employment Service?” | Selects initial registration prompt vs. follow-current-instructions prompt. | Keep fact absent; do not infer a reporting requirement. | NII primary input; needs review. |
 | `jl_end_confirmation_question` | `employment_end_confirmation` | “Do you have written confirmation of how and when the employment ended?” | Changes records wording and shows a bounded verify/ask-for-clarification prompt. | Keep fact absent; do not infer document completeness. | Candidate records design. |
@@ -147,8 +151,9 @@ All prompt copy is draft-only and follows one-question-at-a-time interaction.
 - `job_loss.candidate.reason.employment_ended_salaried`: The person explicitly
   said work ended and described a salaried arrangement; this selects a review of
   official registration/claim information, not an eligibility result.
-- `job_loss.candidate.reason.registration_not_confirmed`: Registration was not
-  explicitly confirmed, so the roadmap raises the official route for review.
+- `job_loss.candidate.reason.registration_not_registered`: The person explicitly
+  said they had not registered, so the roadmap raises the official route for
+  review.
 - `job_loss.candidate.reason.nonstandard_arrangement`: A self-employed or
   mixed arrangement does not safely match the candidate standard salaried path;
   only a verification prompt appears.
@@ -186,7 +191,7 @@ All prompt copy is draft-only and follows one-question-at-a-time interaction.
    question, rationale key, safety label, and demo scenario.
 3. Decision whether rights/records cards remain generic verification prompts or
    gain separately reviewed official subpage support.
-4. Decision on whether/when to create a reviewed runtime pack and whether any
-   task needs an explicit status-transition applicability gate in the existing
-   contract.
+4. Decision on whether/when to create a reviewed runtime pack. Any approved
+   post-end task must use the existing explicit status-transition applicability
+   gate; this candidate does not request a contract change.
 5. Separate implementation authorization. This proposal grants none.

@@ -19,6 +19,17 @@ dated human review.
   page have an explicit keep/reject/revise decision.
 - [ ] Each task/rule has stable IDs, typed facts/timing, source/dependency
   references, verification framing, and no hidden eligibility/outcome claim.
+- [ ] Any proposed post-end task is mapped only through the existing
+  `confirmed_transition` applicability contract with an explicit
+  `employment_stage = ended` answer. Contract-shaped timing does not invent or
+  infer an employment-end date.
+- [ ] An optional supplied `event_date` is used only for timing presentation
+  after an explicit end state; it never acts as transition evidence or selects
+  a post-end route by itself.
+- [ ] An absent registration, claim, or work-arrangement answer is not treated
+  as an explicit negative answer. In particular, the verification branch for an
+  unknown work arrangement remains bounded and the standard salaried route is
+  not selected.
 - [ ] Each question changes selection, timing, ordering, wording, verification,
   or a documented follow-up; no curiosity-only question remains.
 - [ ] Unknown/skip facts remain absent. Notice, dates, schedules, estimates, or
