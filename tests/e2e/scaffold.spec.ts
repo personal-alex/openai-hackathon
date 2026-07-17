@@ -57,6 +57,8 @@ test("opens route detail with reviewed source metadata and returns focus on Esca
   await routeItem.click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await expect(page.getByText("Planning support, not an eligibility determination.")).toBeVisible();
+  await expect(page.getByRole("dialog").getByText("When ready")).toBeVisible();
+  await expect(page.getByRole("dialog")).not.toContainText(/job_loss\.timing\./);
   const source = page.getByRole("dialog").getByRole("link", { name: /Open source/i }).first();
   await expect(source).toHaveAttribute("target", "_blank");
   await expect(page.getByRole("dialog").getByText(/reviewed \d{4}-\d{2}-\d{2}/).first()).toBeVisible();

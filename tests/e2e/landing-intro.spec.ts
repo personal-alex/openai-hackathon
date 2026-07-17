@@ -39,6 +39,14 @@ test("does not replay the intro after a local reset in the same browser session"
   await expect(page.getByLabel("What happened?")).toBeFocused();
 });
 
+test("replays the intro on a new no-plan page load", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Skip intro" }).click();
+  await expect(page.getByTestId("landing-intro")).toHaveCount(0);
+  await page.reload();
+  await expect(page.getByTestId("landing-intro")).toBeVisible();
+});
+
 test("the explicit seeded demo query bypasses the intro deterministically", async ({ page }) => {
   await page.goto("/?demo=seeded");
   await expect(page.getByTestId("landing-intro")).toHaveCount(0);

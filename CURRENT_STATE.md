@@ -336,6 +336,20 @@ The repository contains a validated modular-monolith baseline, deterministic com
   test` (53 passed), `npx playwright test` (13 Chromium journeys), and `npm
   run build`.
 
+## 2026-07-17 — Intro visibility and timing-label correction
+
+- A full no-plan page load now always presents the completed first-load intro
+  until the user selects Continue or Skip. In-app reset still returns directly
+  to the entry conversation, and a valid restored plan or explicit
+  `?demo=seeded` bypasses the intro. This removes the session-wide suppression
+  that prevented the motto from being observable after prior visits.
+- Task drawers now map typed timing semantics to generic user-facing text (for
+  example, “When ready” or “Do now”) and never render internal timing message
+  keys. Verification wording remains the validated catalog value.
+- Passed: `git diff --check`, `npm run typecheck`, `npm run lint`, `npm run
+  test` (53 passed), `npx playwright test` (14 Chromium journeys), and `npm
+  run build`.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

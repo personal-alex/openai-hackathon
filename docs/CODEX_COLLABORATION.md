@@ -360,3 +360,18 @@ Week submission. It is a concise evidence log, not a transcript.
 - Verification: `git diff --check`, lint, typecheck, 53 Vitest tests, 13
   Chromium journeys, and production build passed. No `/feedback` session ID is
   recorded.
+
+### 2026-07-17 — Intro visibility and timing-label correction
+
+- Task/outcome: Repaired two verified Action Route presentation defects: the
+  first-load motto was not reliably observable, and task drawers exposed raw
+  timing message keys.
+- Codex contribution: Removed the session-wide intro suppression while retaining
+  reset/restored-plan/demo boundaries; made completion user-controlled; and
+  mapped the validated timing union to generic display text without inspecting
+  event, task, or jurisdiction IDs.
+- Human review/decision: Reported the missing intro and raw `labelKey` display
+  from the live interface.
+- Verification: `git diff --check`, lint, typecheck, 53 Vitest tests, 14
+  Chromium journeys, and production build passed. No `/feedback` session ID is
+  recorded.

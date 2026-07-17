@@ -17,7 +17,6 @@ type WorkspaceState = "entry" | "understood" | "planning";
 type StoredPlan = { version: 1; scenarioId: SeededScenario["id"]; statement: string; context: UserContext; progress: LocalProgress; state: WorkspaceState };
 type TranscriptAnswer = { questionId: string; value: string };
 const storageKey = "life-navigator.seeded-plan.v1";
-const introSeenKey = "life-navigator.intro-seen.v2";
 const emptyProgress: LocalProgress = { progressStatusByTaskId: {} };
 const inferScenarioId = (statement: string) => seededScenarios.find((scenario) => scenario.statementHints.some((hint) => statement.toLowerCase().includes(hint)))?.id;
 
@@ -41,7 +40,7 @@ export default function Home() {
   const activeQuestion = questions.find((question) => !(question.factId in context.facts));
 
   /* eslint-disable react-hooks/set-state-in-effect -- local storage is an external state source restored once after hydration. */
-  useEffect(() => { try { const seededDemo = new URLSearchParams(window.location.search).get("demo") === "seeded"; setIsSeededDemo(seededDemo); const stored = JSON.parse(localStorage.getItem(storageKey) ?? "null") as StoredPlan | null; const restoredScenario = stored?.version === 1 ? findSeededScenario(stored.scenarioId) : undefined; if (stored?.state === "planning" && restoredScenario) { const restoredContext = UserContextSchema.parse(stored.context); const restoredProgress = LocalProgressSchema.parse(stored.progress); compileRoadmapPresentation(restoredScenario.pack, restoredContext); setScenarioId(stored.scenarioId); setStatement(stored.statement); setContext(restoredContext); setProgress(restoredProgress); setState("planning"); setShowIntro(false); } else if (seededDemo || sessionStorage.getItem(introSeenKey)) setShowIntro(false); } catch { localStorage.removeItem(storageKey); } finally { setHydrated(true); } }, []);
+  useEffect(() => { try { const seededDemo = new URLSearchParams(window.location.search).get("demo") === "seeded"; setIsSeededDemo(seededDemo); const stored = JSON.parse(localStorage.getItem(storageKey) ?? "null") as StoredPlan | null; const restoredScenario = stored?.version === 1 ? findSeededScenario(stored.scenarioId) : undefined; if (stored?.state === "planning" && restoredScenario) { const restoredContext = UserContextSchema.parse(stored.context); const restoredProgress = LocalProgressSchema.parse(stored.progress); compileRoadmapPresentation(restoredScenario.pack, restoredContext); setScenarioId(stored.scenarioId); setStatement(stored.statement); setContext(restoredContext); setProgress(restoredProgress); setState("planning"); setShowIntro(false); } else if (seededDemo) setShowIntro(false); } catch { localStorage.removeItem(storageKey); } finally { setHydrated(true); } }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
   useEffect(() => { if (!hydrated || state !== "planning") return; localStorage.setItem(storageKey, JSON.stringify({ version: 1, scenarioId, statement, context, progress, state } satisfies StoredPlan)); }, [context, hydrated, progress, scenarioId, state, statement]);
   useEffect(() => { if (!showIntro && state === "entry") input.current?.focus(); }, [showIntro, state]);
@@ -53,7 +52,7 @@ export default function Home() {
   function cycleProgress(taskId: string) { setProgress((current) => { const next = { ...current.progressStatusByTaskId }; if (!next[taskId]) next[taskId] = "reviewed"; else if (next[taskId] === "reviewed") next[taskId] = "complete"; else delete next[taskId]; return { progressStatusByTaskId: next }; }); }
   function confirmBirth() { const next = { facts: { ...context.facts, event_stage: "birth_occurred" } }; setLastDiff(diffRoadmaps(presentation.roadmap, compileRoadmapPresentation(scenario.pack, next).roadmap)); setContext(next); }
   function reset() { localStorage.removeItem(storageKey); setState("entry"); setStatement(""); setScenarioId("expecting_child"); setContext({ facts: {} }); setProgress(emptyProgress); setLastDiff(undefined); setError(undefined); setTranscriptAnswers([]); }
-  function closeIntro() { sessionStorage.setItem(introSeenKey, "true"); setShowIntro(false); }
+  function closeIntro() { setShowIntro(false); }
 
   if (!hydrated) return null;
   return <main className={`app-shell action-shell${showIntro ? introExiting ? " intro-exiting" : " intro-pending" : ""}`}>

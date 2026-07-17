@@ -7,7 +7,6 @@ const firstLineCharacters = Array.from(firstLine.replaceAll(" ", ""));
 const glyphs = "·:+×◇□△";
 const revealIntervalMs = 42;
 const secondLineDelayMs = 350;
-const completedHoldMs = 900;
 const exitDurationMs = 320;
 
 type LandingIntroProps = {
@@ -70,12 +69,6 @@ export function LandingIntro({ onExitStart, onComplete }: LandingIntroProps) {
     const secondLineTimer = window.setTimeout(() => setPhase("complete"), secondLineDelayMs);
     return () => window.clearTimeout(secondLineTimer);
   }, [phase]);
-
-  useEffect(() => {
-    if (phase !== "complete" || reducedMotion) return;
-    const holdTimer = window.setTimeout(() => leaveIntro(), completedHoldMs);
-    return () => window.clearTimeout(holdTimer);
-  }, [leaveIntro, phase, reducedMotion]);
 
   const isLineResolved = phase !== "revealing";
   const isComplete = phase === "complete" || phase === "leaving";
