@@ -223,6 +223,11 @@ The repository contains a validated modular-monolith baseline, deterministic com
   packet, with publisher provenance retained as Kol Zchut. Hebrew source text
   needs a documented online translation checked against the original before it
   can add runtime copy.
+- For Hackathon scope, the product owner authorized documented online
+  translation and automatic `approved_for_hackathon` disposition for the
+  remaining job-loss candidate cards. Approval alone does not create a runtime
+  task: each future use still needs a bounded task mapping and the existing
+  no-determination safety wording.
 
 ## Deferred / explicitly out of scope for MVP
 

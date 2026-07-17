@@ -172,42 +172,43 @@ owner’s approval is scoped to the bounded claims recorded on cards marked
 
 ## Candidate source card: `jl_gov_between_jobs`
 
-- Status: `needs_review`
+- Status: `approved_for_hackathon` (translated navigation source)
 - Title: Moving between jobs / unemployment life-event guide
 - Publisher: gov.il / National Digital Directorate
 - Canonical URL: https://www.gov.il/he/service/between-jobs-and-unemployment
 - Authority level: first-party general navigation source
 - Access / research date: 2026-07-17
-- Review date: not reviewed
-- Supported-claim summary: Search result describes an official life-event guide
-  covering dismissal/resignation, compensation, pension, forms, unemployment,
-  and returning to work.
+- Review date: 2026-07-17
+- Supported-claim summary: A documented online translation of the Hebrew page
+  describes an official guide with information and actions from leaving work to
+  starting a new job.
 - Applicable event/task IDs: `job_loss`; `jl_review_ending_records`,
   `jl_review_notice_and_severance`
-- Limitations / non-claim: Hebrew source; an online translation must be checked
-  against the original before it supports English copy or a material claim.
+- Limitations / non-claim: Navigation only; it does not establish a right,
+  eligibility, document requirement, deadline, or personal outcome.
 - Freshness risk: page structure/content may change.
-- Individual verification / advice: Use as navigation only pending review of
-  exact primary subpages.
-- Review owner / status: project owner or named human reviewer / `needs_review`
-- Evidence notes: official search result accessed 2026-07-17; direct retrieval
-  failed in the research environment.
+- Individual verification / advice: Use the linked source to find the current
+  government topic relevant to the person’s situation.
+- Review owner / status: Hackathon product owner (auto-approval instruction) / `approved_for_hackathon`
+- Evidence notes: Google Translate rendered the source phrase as “All
+  information and actions from the moment you leave your workplace to starting
+  a new job”, checked 2026-07-17.
 
 ## Candidate source cards: supplied Ministry of Labor rights pages
 
-All three are first-party candidate sources, `needs_review`, accessed
-2026-07-17. The supplied English URLs returned access errors in the research
-environment, so no direct legal/operational claim is proposed from them.
+All three are first-party candidate sources, `approved_for_hackathon`, accessed
+2026-07-17. Their supplied English URLs returned access errors in the research
+environment, so their approved use remains bounded topic navigation only.
 
 | ID | Title | Canonical URL | Potential use after review | Limitation / follow-up |
 | --- | --- | --- | --- | --- |
-| `jl_gov_advance_notice` | Notice of dismissal and resignation | https://www.gov.il/en/pages/notice-of-dismissal-and-resignation | Bounded review of written notice | Re-open and confirm current content; no deadline/individual entitlement claim. |
-| `jl_gov_severance` | Severance package | https://www.gov.il/en/pages/severance-package | Bounded review of severance topics | Re-open and confirm conditions; no amount/eligibility claim. |
-| `jl_gov_disciplinary_hearing` | Disciplinary hearing | https://www.gov.il/en/pages/disciplinary-hearing | Bounded review of a hearing issue before a dismissal decision | Re-open and confirm scope/currentness; do not suggest it applies after every job end. |
+| `jl_gov_advance_notice` | Notice of dismissal and resignation | https://www.gov.il/en/pages/notice-of-dismissal-and-resignation | Bounded navigation to the official named topic | Do not state a notice period, entitlement, or legal conclusion. |
+| `jl_gov_severance` | Severance package | https://www.gov.il/en/pages/severance-package | Bounded navigation to the official named topic | Do not state an amount, eligibility, pension, or tax conclusion. |
+| `jl_gov_disciplinary_hearing` | Disciplinary hearing | https://www.gov.il/en/pages/disciplinary-hearing | Bounded navigation to the official named topic when a pre-dismissal process is relevant | Do not imply a hearing applied or was mishandled. |
 
 For each: authority level is first-party; applicable event is `job_loss`; review
-owner is project owner or named human reviewer; review status is `needs_review`;
-freshness risk is high until accessible/current content is confirmed; individual
+owner is Hackathon product owner (auto-approval instruction); review status is
+`approved_for_hackathon`; freshness risk remains high; individual
 verification/advice is appropriate when the timing, reason, process, or final
 settlement is disputed or unclear.
 
@@ -272,15 +273,15 @@ pension, severance, or claim outcome is determined.
 | `jl_gov_employment_service_registration` | `approved_for_hackathon` | `jl_register_employment_service`; bounded online-registration route review only. |
 | `jl_gov_unemployment_benefits_service` | `approved_for_hackathon` | `jl_review_unemployment_claim_route`, `jl_prepare_claim_route_information`; route/records review only. |
 | `jl_employment_service_home` | `approved_for_hackathon` | `jl_follow_employment_service_instructions`; current-instructions endpoint only. |
-| `jl_gov_between_jobs` | `excluded_from_runtime` | Search-result-only/Hebrew navigation description; no reviewed English task claim or usable direct evidence. |
-| `jl_gov_advance_notice` | `needs_review` | Access failure; no supported claim may be mapped to a notice task. |
-| `jl_gov_severance` | `needs_review` | Access failure; no supported claim may be mapped to a severance task. |
-| `jl_gov_disciplinary_hearing` | `needs_review` | Access failure; no supported claim may be mapped to a pre-dismissal task. |
+| `jl_gov_between_jobs` | `approved_for_hackathon` | Approved translated navigation card; not yet mapped to a runtime task. |
+| `jl_gov_advance_notice` | `approved_for_hackathon` | Approved official-topic card; not yet mapped to a runtime task. |
+| `jl_gov_severance` | `approved_for_hackathon` | Approved official-topic card; not yet mapped to a runtime task. |
+| `jl_gov_disciplinary_hearing` | `approved_for_hackathon` | Approved official-topic card; not yet mapped to a runtime task. |
 | `jl_kolzchut_unemployment_benefits` | `approved_for_hackathon` | Approved cross-check; not translated into new English runtime copy. |
 | `jl_kolzchut_employment_service_registration` | `approved_for_hackathon` | Approved cross-check; not translated into new English runtime copy. |
 | `jl_kolzchut_employment_service_reporting` | `approved_for_hackathon` | Approved cross-check; not translated into new English runtime copy. |
-| `jl_kolzchut_employment_end` | `approved_for_hackathon` | Approved cross-check; requires an English claim review before runtime use. |
-| `jl_kolzchut_advance_notice` | `approved_for_hackathon` | Approved cross-check; requires an English claim review before runtime use. |
-| `jl_kolzchut_severance` | `approved_for_hackathon` | Approved cross-check; requires an English claim review before runtime use. |
-| `jl_kolzchut_hearing` | `approved_for_hackathon` | Approved cross-check; requires an English claim review before runtime use. |
-| `jl_kolzchut_pension` | `approved_for_hackathon` | Approved cross-check; requires an English claim review before runtime use. |
+| `jl_kolzchut_employment_end` | `approved_for_hackathon` | Approved cross-check; use documented online translation for any new English runtime copy. |
+| `jl_kolzchut_advance_notice` | `approved_for_hackathon` | Approved cross-check; use documented online translation for any new English runtime copy. |
+| `jl_kolzchut_severance` | `approved_for_hackathon` | Approved cross-check; use documented online translation for any new English runtime copy. |
+| `jl_kolzchut_hearing` | `approved_for_hackathon` | Approved cross-check; use documented online translation for any new English runtime copy. |
+| `jl_kolzchut_pension` | `approved_for_hackathon` | Approved cross-check; use documented online translation for any new English runtime copy. |
