@@ -105,22 +105,22 @@
   outline-offset: 3px;
 }
 
-.app-shell--entry.intro-pending .app-header,
-.app-shell--entry.intro-pending .entry-layout {
+.action-shell.intro-pending .app-header,
+.action-shell.intro-pending .action-workspace {
   opacity: 0;
   pointer-events: none;
   transform: translateY(0.75rem);
 }
 
-.app-shell--entry.intro-exiting .app-header,
-.app-shell--entry.intro-exiting .entry-layout {
+.action-shell.intro-exiting .app-header,
+.action-shell.intro-exiting .action-workspace {
   opacity: 1;
   pointer-events: auto;
   transform: none;
 }
 
-.app-shell--entry .app-header,
-.app-shell--entry .entry-layout {
+.action-shell .app-header,
+.action-shell .action-workspace {
   transition: opacity 420ms ease, transform 420ms ease;
 }
 
@@ -146,8 +146,8 @@
 @media (prefers-reduced-motion: reduce) {
   .landing-intro,
   .landing-intro__second-line,
-  .app-shell--entry .app-header,
-  .app-shell--entry .entry-layout {
+  .action-shell .app-header,
+  .action-shell .action-workspace {
     transition: none;
   }
 }

@@ -292,6 +292,28 @@ The repository contains a validated modular-monolith baseline, deterministic com
   be removed from the DOM immediately after Skip intro; the same targeted test
   fails with this CSS media query temporarily removed.
 
+## 2026-07-17 — Action Route workspace refactor
+
+- The seed-demo experience now treats conversation as structured input and the
+  deterministic compiled roadmap as the primary artifact. Event understanding,
+  confirmation, one active allowlisted question, rationale, local reset, and
+  task inspection all occur in an accessible Action Route workspace; no chat
+  response creates tasks, sources, timing, rules, or eligibility conclusions.
+- Before confirmation the route stays a neutral, non-task preview. After
+  confirmation it renders only validated catalog tasks, source metadata,
+  verification labels, compiler diffs, local progress, and fixture-backed
+  explanation text. A versioned browser-local seeded envelope restores a
+  validated planning state and bypasses the first-load intro; reset preserves
+  the no-replay rule for that browser session.
+- This is shared presentation work only. Both active IL packs, source cards,
+  compiler selection, contracts, AI boundaries, and policy wording are
+  unchanged. The generic timing lanes remain derived from validated timing
+  metadata, not event or jurisdiction conditions.
+- Passed: `git diff --check`, `npm run typecheck`, `npm run lint`, `npm run
+  test` (53 passed), `npx playwright test` (9 Chromium journeys), and `npm run
+  build`. Browser inspection covered desktop intro/entry, a job-loss route and
+  task detail, and 390px mobile conversation-first layout.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

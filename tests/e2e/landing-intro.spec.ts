@@ -1,26 +1,29 @@
 import { expect, test } from "@playwright/test";
 
-test("holds on the resolved first line before revealing the final statement", async ({ page }) => {
+test.beforeEach(async ({ page }) => { await page.addInitScript(() => { localStorage.clear(); sessionStorage.clear(); }); });
+
+test("offers an immediate accessible intro exit into the Action Route workspace", async ({ page }) => {
   await page.goto("/");
-  const secondLine = page.getByTestId("landing-intro-second-line");
-
-  await page.waitForTimeout(2_200);
-  await expect(secondLine).not.toHaveClass(/is-visible/);
-
-  await expect(secondLine).toHaveClass(/is-visible/, { timeout: 1_500 });
+  await expect(page.getByTestId("landing-intro")).toBeVisible();
+  await page.getByRole("button", { name: "Skip intro" }).click();
+  await expect(page.getByTestId("landing-intro")).toHaveCount(0);
+  await expect(page.getByLabel("What happened?")).toBeFocused();
 });
 
-test("does not intercept the entry continue action after the intro is skipped", async ({ page }) => {
+test("reduced motion renders the workspace without requiring the intro animation", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await expect(page.getByTestId("landing-intro")).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "Tell us what changed." })).toBeVisible();
+});
+
+test("does not replay the intro after a local reset in the same browser session", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Skip intro" }).click();
-  await page.getByLabel("What happened?").fill("I’m expecting a child");
+  await page.getByLabel("What happened?").fill("I lost my job");
   await page.getByRole("button", { name: "Continue", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "We heard: Expecting a child." })).toBeVisible();
-});
-
-test("supports Escape as an accessible intro exit", async ({ page }) => {
-  await page.goto("/");
-  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Yes, that’s right" }).click();
+  await page.getByRole("button", { name: "Reset local demo" }).click();
   await expect(page.getByTestId("landing-intro")).toHaveCount(0);
   await expect(page.getByLabel("What happened?")).toBeFocused();
 });

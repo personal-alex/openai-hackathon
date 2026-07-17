@@ -320,3 +320,23 @@ Week submission. It is a concise evidence log, not a transcript.
   fails a pre-existing Skip-intro test that expects the exited overlay to be
   removed from the DOM; the same targeted failure reproduces with this CSS
   query removed. No `/feedback` session ID is recorded.
+
+### 2026-07-17 — Action Route presentation refactor
+
+- Task/outcome: Reframed the seeded MVP around a persistent, route-first
+  workspace: structured conversation collects validated facts while the
+  deterministic catalog roadmap is the visual planning artifact.
+- Codex contribution: Implemented the reusable route, task-detail drawer,
+  neutral pre-confirmation preview, first-load/restored-plan handling,
+  keyboard focus return, mobile route jump, local-only progress/reset, and
+  focused browser coverage without changing packs, contracts, compiler logic,
+  sources, rules, or AI authority.
+- Human review/decision: Supplied the Action Route reference direction and
+  required generic, catalog-driven presentation for both active event packs.
+- Changed artifacts: `src/app/page.tsx`, `src/app/action-route.tsx`, scoped
+  Action Route/intro styles, seeded Chromium tests, `CURRENT_STATE.md`, and
+  the linked `openai-hackathon` implementation memory record.
+- Verification: `git diff --check`, lint, typecheck, 53 Vitest tests, 9
+  Chromium journeys, and production build passed. Browser inspection covered
+  intro/entry, job-loss route/detail, and 390px mobile. No `/feedback` session
+  ID is recorded.
