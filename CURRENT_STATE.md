@@ -314,6 +314,28 @@ The repository contains a validated modular-monolith baseline, deterministic com
   build`. Browser inspection covered desktop intro/entry, a job-loss route and
   task detail, and 390px mobile conversation-first layout.
 
+## 2026-07-17 — Action Route intro and conversational-turn correction
+
+- The first-load motto is visible again for a normal clean visit. Its session
+  marker was versioned from `v1` to `v2` because a prior broad marker suppressed
+  the newly approved intro for existing sessions; only a valid restored local
+  plan or the explicit `?demo=seeded` condition now bypasses it. Reduced-motion
+  users receive the completed static statement with explicit Continue/Skip
+  controls rather than an automatic dismissal.
+- The Action Route no longer repeats a visible hero heading. It begins with the
+  single approved assistant welcome; event confirmation uses the existing
+  seeded presentation field with human-facing copy for each event, not pack or
+  catalog implementation language. Questions render as compact transcript
+  turns with reply chips or an inline typed composer, and prior answers become
+  concise local user bubbles.
+- Route nodes are presentation-only compact connected actions. Full rationale,
+  source, review, verification, safety, and local-status detail remains in the
+  existing drawer. No active pack facts, source claims, task selection, rules,
+  compiler behavior, contracts, or AI behavior changed.
+- Passed: `git diff --check`, `npm run typecheck`, `npm run lint`, `npm run
+  test` (53 passed), `npx playwright test` (13 Chromium journeys), and `npm
+  run build`.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

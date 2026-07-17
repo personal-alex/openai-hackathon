@@ -5,10 +5,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 const firstLine = "Life doesn’t come with instructions.";
 const firstLineCharacters = Array.from(firstLine.replaceAll(" ", ""));
 const glyphs = "·:+×◇□△";
-const revealIntervalMs = 58;
-const secondLineDelayMs = 900;
-const completedHoldMs = 2500;
-const exitDurationMs = 420;
+const revealIntervalMs = 42;
+const secondLineDelayMs = 350;
+const completedHoldMs = 900;
+const exitDurationMs = 320;
 
 type LandingIntroProps = {
   onExitStart: () => void;
@@ -21,9 +21,11 @@ function transientGlyph(index: number, tick: number) {
 
 /** A calm first-load statement; it never supplies roadmap content or application state. */
 export function LandingIntro({ onExitStart, onComplete }: LandingIntroProps) {
-  const [revealedCharacters, setRevealedCharacters] = useState(0);
+  const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const [revealedCharacters, setRevealedCharacters] = useState(() => prefersReducedMotion ? firstLineCharacters.length : 0);
   const [glyphTick, setGlyphTick] = useState(0);
-  const [phase, setPhase] = useState<"revealing" | "line_resolved" | "complete" | "leaving">("revealing");
+  const [phase, setPhase] = useState<"revealing" | "line_resolved" | "complete" | "leaving">(() => prefersReducedMotion ? "complete" : "revealing");
+  const [reducedMotion] = useState(prefersReducedMotion);
   const exitRequested = useRef(false);
 
   const leaveIntro = useCallback((immediate = false) => {
@@ -35,11 +37,7 @@ export function LandingIntro({ onExitStart, onComplete }: LandingIntroProps) {
   }, [onComplete, onExitStart]);
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      onExitStart();
-      onComplete();
-      return;
-    }
+    if (reducedMotion) return;
 
     const glyphTimer = window.setInterval(() => setGlyphTick((current) => current + 1), revealIntervalMs);
     const revealTimer = window.setInterval(() => {
@@ -57,7 +55,7 @@ export function LandingIntro({ onExitStart, onComplete }: LandingIntroProps) {
       window.clearInterval(glyphTimer);
       window.clearInterval(revealTimer);
     };
-  }, [onComplete, onExitStart]);
+  }, [onComplete, onExitStart, reducedMotion]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -74,10 +72,10 @@ export function LandingIntro({ onExitStart, onComplete }: LandingIntroProps) {
   }, [phase]);
 
   useEffect(() => {
-    if (phase !== "complete") return;
+    if (phase !== "complete" || reducedMotion) return;
     const holdTimer = window.setTimeout(() => leaveIntro(), completedHoldMs);
     return () => window.clearTimeout(holdTimer);
-  }, [leaveIntro, phase]);
+  }, [leaveIntro, phase, reducedMotion]);
 
   const isLineResolved = phase !== "revealing";
   const isComplete = phase === "complete" || phase === "leaving";
@@ -109,7 +107,10 @@ export function LandingIntro({ onExitStart, onComplete }: LandingIntroProps) {
           <span aria-hidden="true" data-testid="landing-intro-second-line" className={`landing-intro__second-line${isComplete ? " is-visible" : ""}`}>Now it does.</span>
         </h1>
       </div>
-      <button type="button" className="landing-intro__skip" onClick={() => leaveIntro(true)}>Skip intro</button>
+      <div className="landing-intro__actions">
+        <button type="button" className="landing-intro__continue" onClick={() => leaveIntro(true)}>Continue</button>
+        <button type="button" className="landing-intro__skip" onClick={() => leaveIntro(true)}>Skip intro</button>
+      </div>
     </section>
   );
 }

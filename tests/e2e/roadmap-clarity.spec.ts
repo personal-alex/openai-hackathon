@@ -6,7 +6,7 @@ test("renders one validated question in conversation and keeps rationale one act
   await page.goto("/");
   await page.getByRole("button", { name: "Skip intro" }).click();
   await page.getByLabel("What happened?").fill("I lost my job");
-  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.locator(".conversation-composer").getByRole("button", { name: "Continue", exact: true }).click();
   await page.getByRole("button", { name: "Yes, that’s right" }).click();
   const rationale = page.getByText("Why are we asking this?");
   await rationale.focus();

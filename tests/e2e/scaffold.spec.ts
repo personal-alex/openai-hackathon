@@ -8,7 +8,7 @@ async function enterWorkspace(page: import("@playwright/test").Page, statement: 
   await page.goto("/");
   await page.getByRole("button", { name: "Skip intro" }).click();
   await page.getByLabel("What happened?").fill(statement);
-  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.locator(".conversation-composer").getByRole("button", { name: "Continue", exact: true }).click();
   await expect(page.getByText("Is that right?")).toBeVisible();
   await page.getByRole("button", { name: "Yes, that’s right" }).click();
 }
@@ -16,10 +16,38 @@ async function enterWorkspace(page: import("@playwright/test").Page, statement: 
 test("moves event understanding into the conversation and keeps a sparse route visible", async ({ page }) => {
   await enterWorkspace(page, "I lost my job");
   await expect(page.getByRole("heading", { name: "Your route" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: /Has your employment already ended/i })).toBeVisible();
+  const question = page.getByRole("heading", { name: /Has your employment already ended/i });
+  await expect(question).toBeVisible();
+  await expect(question.locator("xpath=ancestor::article")).toHaveClass(/assistant-message--question/);
+  await expect(page.locator(".answer-list--replies .answer-button--reply").first()).toBeVisible();
   await page.getByRole("button", { name: "My employment has ended" }).click();
+  await expect(page.locator(".user-message--answer")).toHaveText("My employment has ended");
   await expect(page.getByText("Your plan changed.")).toBeVisible();
   await expect(page.getByRole("button", { name: /Open details for/i }).first()).toBeVisible();
+});
+
+test("uses only the assistant welcome and catalog-provided human confirmation copy", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Skip intro" }).click();
+  await expect(page.getByRole("heading", { name: "Tell us what changed." })).toHaveCount(0);
+  await expect(page.getByText("Tell me what changed. I’ll help you organize the next steps and what can wait.")).toHaveCount(1);
+  await page.getByLabel("What happened?").fill("I lost my job");
+  await page.locator(".conversation-composer").getByRole("button", { name: "Continue", exact: true }).click();
+  await expect(page.getByText("It sounds like you lost your job. I can help organize the immediate steps and what can wait. Is that right?")).toBeVisible();
+  await expect(page.getByText(/reviewed event pack|catalog|runtime|deterministic/i)).toHaveCount(0);
+  await page.getByRole("button", { name: "Choose a different event" }).click();
+  await page.getByLabel("What happened?").fill("I’m expecting a child");
+  await page.locator(".conversation-composer").getByRole("button", { name: "Continue", exact: true }).click();
+  await expect(page.getByText("It sounds like you’re expecting a child. I can help organize what may be ahead and what can wait. Is that right?")).toBeVisible();
+});
+
+test("renders typed answers as a compact inline reply composer", async ({ page }) => {
+  await enterWorkspace(page, "I lost my job");
+  await page.getByRole("button", { name: "My employment has ended" }).click();
+  const typedReply = page.locator(".answer-list--typed-reply");
+  await expect(typedReply).toBeVisible();
+  await expect(typedReply.locator("input")).toBeVisible();
+  await expect(page.getByText("Why are we asking this?")).toBeVisible();
 });
 
 test("opens route detail with reviewed source metadata and returns focus on Escape", async ({ page }) => {
@@ -51,7 +79,7 @@ test("keeps conversation first on mobile with a route jump for the single-column
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await page.getByRole("button", { name: "Skip intro" }).click();
-  await expect(page.getByRole("heading", { name: "Tell us what changed." })).toBeVisible();
+  await expect(page.getByText("Tell me what changed. I’ll help you organize the next steps and what can wait.")).toBeVisible();
   await page.getByRole("link", { name: "View your route" }).click();
   await expect(page.getByRole("heading", { name: "Your plan will take shape here." })).toBeInViewport();
 });

@@ -38,7 +38,7 @@ function inputType(input: TypedQuestionInput): "text" | "date" | "number" {
   return input.kind;
 }
 
-export function QuestionInput({ question, onAnswer }: { question: QuestionDefinition; onAnswer: (value: FactValue | undefined) => void }) {
+export function QuestionInput({ question, onAnswer }: { question: QuestionDefinition; onAnswer: (value: FactValue | undefined, label: string) => void }) {
   const { presentation } = question;
   const inputId = useId();
   const descriptionId = useId();
@@ -48,9 +48,9 @@ export function QuestionInput({ question, onAnswer }: { question: QuestionDefini
 
   if (presentation.options) {
     const hasExplicitUnknown = presentation.options.some((option) => option.value === undefined);
-    return <div className="answer-list">
-      {presentation.options.map((option) => <button key={option.label} type="button" className="answer-button" onClick={() => onAnswer(option.value)}>{option.label}</button>)}
-      {question.allowSkip && !hasExplicitUnknown && <button type="button" className="answer-button" onClick={() => onAnswer(undefined)}>Skip for now</button>}
+    return <div className="answer-list answer-list--replies">
+      {presentation.options.map((option) => <button key={option.label} type="button" className="answer-button answer-button--reply" onClick={() => onAnswer(option.value, option.label)}>{option.label}</button>)}
+      {question.allowSkip && !hasExplicitUnknown && <button type="button" className="answer-button answer-button--reply" onClick={() => onAnswer(undefined, "Skip for now")}>Skip for now</button>}
     </div>;
   }
 
@@ -66,10 +66,10 @@ export function QuestionInput({ question, onAnswer }: { question: QuestionDefini
       return;
     }
     setError(undefined);
-    onAnswer(result.value);
+    onAnswer(result.value, rawValue.trim());
   }
 
-  return <form className="answer-list" onSubmit={submit} noValidate>
+  return <form className="answer-list answer-list--typed-reply" onSubmit={submit} noValidate>
     {presentation.description && <p id={descriptionId}>{presentation.description}</p>}
     <label className="sr-only" htmlFor={inputId}>{presentation.prompt}</label>
     <input
@@ -88,7 +88,7 @@ export function QuestionInput({ question, onAnswer }: { question: QuestionDefini
     />
     {input.formatHelp && <p id={`${inputId}-help`}>{input.formatHelp}</p>}
     {error && <p id={errorId} role="alert">{error}</p>}
-    <button type="submit" className="answer-button">Continue</button>
-    {question.allowSkip && <button type="button" className="answer-button" onClick={() => onAnswer(undefined)}>Skip for now</button>}
+    <button type="submit" className="answer-button answer-button--reply">Continue</button>
+    {question.allowSkip && <button type="button" className="answer-button answer-button--reply" onClick={() => onAnswer(undefined, "Skip for now")}>Skip for now</button>}
   </form>;
 }

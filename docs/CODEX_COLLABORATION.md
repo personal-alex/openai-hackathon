@@ -340,3 +340,23 @@ Week submission. It is a concise evidence log, not a transcript.
   Chromium journeys, and production build passed. Browser inspection covered
   intro/entry, job-loss route/detail, and 390px mobile. No `/feedback` session
   ID is recorded.
+
+### 2026-07-17 — Action Route interaction correction
+
+- Task/outcome: Corrected the first-load motto, duplicate opening copy,
+  confirmation language, transcript question treatment, and route density in
+  the shared Action Route presentation.
+- Codex contribution: Identified the legacy `intro-seen.v1` session marker as
+  the cause of suppressed normal intros, versioned it safely, added explicit
+  `?demo=seeded` bypass behavior, kept a static reduced-motion intro with user
+  controls, and reshaped generic reply/detail presentation without touching
+  policy or compiler authority.
+- Human review/decision: Required the exact natural job-loss confirmation,
+  catalog-provided event-safe confirmations, one visible assistant welcome,
+  compact transcript replies, and a less card-like route.
+- Changed artifacts: shared Action Route/intro/question presentation,
+  test-only confirmation wording, seeded Chromium coverage, `CURRENT_STATE.md`,
+  and the linked `openai-hackathon` implementation memory record.
+- Verification: `git diff --check`, lint, typecheck, 53 Vitest tests, 13
+  Chromium journeys, and production build passed. No `/feedback` session ID is
+  recorded.

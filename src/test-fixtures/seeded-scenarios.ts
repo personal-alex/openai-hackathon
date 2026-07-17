@@ -123,7 +123,7 @@ export const seededScenarios: SeededScenario[] = [
     label: "Expecting a child",
     examplePrompt: "I’m expecting a child",
     statementHints: ["expect", "pregnan", "child", "baby"],
-    confirmationCopy: "A reviewed Israel event pack will build a source-aware, deterministic roadmap from the facts you choose to share.",
+    confirmationCopy: "It sounds like you’re expecting a child. I can help organize what may be ahead and what can wait.",
     explanation: "This roadmap is compiled only from the reviewed, validated Israel catalog. It provides educational planning support, not an official determination.",
     catalogKind: "approved",
     preBirthPreview: {
@@ -160,7 +160,7 @@ export const seededScenarios: SeededScenario[] = [
     label: "Job loss",
     examplePrompt: "I lost my job",
     statementHints: ["job", "lost", "laid off", "layoff"],
-    confirmationCopy: "A reviewed Israel event pack can help you review official routes and practical next steps from the facts you choose to share.",
+    confirmationCopy: "It sounds like you lost your job. I can help organize the immediate steps and what can wait.",
     explanation: "This roadmap is compiled only from the approved Hackathon-scope catalog. It provides educational planning support, not an eligibility, legal, tax, pension, or payment determination.",
     catalogKind: "approved",
     rationaleByKey: {
