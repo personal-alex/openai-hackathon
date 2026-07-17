@@ -1,8 +1,8 @@
 import { type ContractValidationResult, type EventPack, validateEventPack } from "@/domain-contracts";
 
 /**
- * Product packs may contain only source cards that a human reviewer has approved.
- * Candidate or rejected material belongs in the curation workflow, not a pack.
+ * Runtime tasks may use only source cards that a human reviewer has approved.
+ * Candidate or rejected material cannot back a sourced task in an active pack.
  */
 export function validateApprovedEventPack(input: unknown): ContractValidationResult<EventPack> {
   const validation = validateEventPack(input);
@@ -10,11 +10,13 @@ export function validateApprovedEventPack(input: unknown): ContractValidationRes
 
   const errors = [
     ...(validation.data.testOnly ? ["test-only event packs cannot be approved runtime content"] : []),
-    ...validation.data.sourceCards.flatMap((sourceCard) =>
-      sourceCard.disposition === "approved"
+    ...validation.data.tasks.flatMap((task) => task.sourceIds.flatMap((sourceId) => {
+      const sourceCard = validation.data.sourceCards.find((source) => source.id === sourceId);
+      if (!sourceCard) return [`task ${task.id} references an unknown source card ${sourceId}`];
+      return sourceCard.disposition === "approved" || sourceCard.disposition === "approved_for_hackathon"
         ? []
-        : [`source card ${sourceCard.id} is ${sourceCard.disposition}; approved packs require an approved disposition`]
-    )
+        : [`task ${task.id} cannot use source card ${sourceCard.id} with disposition ${sourceCard.disposition}`];
+    }))
   ];
 
   return errors.length === 0 ? validation : { success: false, errors };

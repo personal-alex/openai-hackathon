@@ -62,7 +62,27 @@ describe("domain contracts", () => {
       sourceCards: [{ ...validPack.sourceCards[0], disposition: "needs_review" }]
     });
     expect(result.success).toBe(false);
-    if (!result.success) expect(result.errors[0]).toContain("approved disposition");
+    if (!result.success) expect(result.errors[0]).toContain("cannot use source card");
+  });
+
+  it("allows a reviewed Hackathon source only for a sourced task and rejects unsafe practical guidance", () => {
+    const hackathonReviewed = {
+      ...validPack,
+      sourceCards: [{ ...validPack.sourceCards[0], disposition: "approved_for_hackathon" as const }]
+    };
+    expect(validateApprovedEventPack(hackathonReviewed).success).toBe(true);
+    expect(validateApprovedEventPack({ ...hackathonReviewed, sourceCards: [{ ...hackathonReviewed.sourceCards[0], disposition: "rejected" as const }] }).success).toBe(false);
+
+    const unsafePracticalGuidance = {
+      ...validPack,
+      tasks: [{ ...validPack.tasks[0], sourceIds: ["fixture_source"], guidanceType: "practical_guidance" as const, verificationLabel: "Practical planning guidance" }]
+    };
+    const validation = validateEventPack(unsafePracticalGuidance);
+    expect(validation.success).toBe(false);
+    if (!validation.success) expect(validation.errors).toEqual(expect.arrayContaining([
+      "practical guidance task requires the practical guidance verification label: fixture_task",
+      "practical guidance task cannot reference source cards: fixture_task"
+    ]));
   });
 
   it("rejects unknown or invalid context facts while preserving unknown facts as absent", () => {
