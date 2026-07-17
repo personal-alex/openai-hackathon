@@ -16,6 +16,8 @@ approved, current enough for production, or an eligibility conclusion.
 - [Reviewer gate](reviewer-gate.md): required human dispositions and handoff.
 - [Validation evidence](validation.md): scope checks and existing-code
   verification, including why candidate material is not run as a pack.
+- [Internal review-deck outline](internal-review-deck-outline.md): a
+  candidate-only agenda for human source/content review.
 
 ## Runtime boundary
 
