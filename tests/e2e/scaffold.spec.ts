@@ -1,7 +1,14 @@
 import { expect, test } from "@playwright/test";
 
+async function dismissIntro(page: import("@playwright/test").Page) {
+  const skipIntro = page.getByRole("button", { name: "Skip intro" });
+  await skipIntro.click({ force: true, timeout: 5_000 }).catch(() => undefined);
+  await expect(page.getByTestId("landing-intro")).toBeHidden();
+}
+
 async function beginScenario(page: import("@playwright/test").Page, statement: string) {
   await page.goto("/");
+  await dismissIntro(page);
   await expect(page.getByTestId("seeded-ai-boundary")).toBeVisible();
   await page.getByLabel("What happened?").fill(statement);
   await page.getByRole("button", { name: /continue/i }).click();
@@ -10,24 +17,30 @@ async function beginScenario(page: import("@playwright/test").Page, statement: s
 
 async function beginExpectingChild(page: import("@playwright/test").Page) {
   await page.goto("/");
+  await dismissIntro(page);
   await page.getByLabel("What happened?").fill("I’m expecting a child");
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await expect(page.getByRole("heading", { name: "We heard: Expecting a child." })).toBeVisible();
   await page.getByRole("button", { name: /continue to questions/i }).click();
 }
 
-test("guides the seeded job-loss scenario while keeping the compiler roadmap visible", async ({ page }) => {
+test("guides the approved job-loss route while keeping source-backed tasks and diffs visible", async ({ page }) => {
   await beginScenario(page, "I lost my job");
 
   await expect(page.getByRole("heading", { name: "Let’s map what comes next." })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Your next considerations" })).toBeVisible();
-  await page.getByRole("button", { name: "Yes, use a planning date" }).click();
+  await page.getByRole("button", { name: "My employment has ended" }).click();
+  await page.getByLabel("Employment end date").fill("2026-07-17");
+  await page.getByRole("button", { name: "Use this date" }).click();
+  await page.getByRole("button", { name: "Salaried" }).click();
+  await page.getByRole("button", { name: "No, not yet" }).click();
 
   await expect(page.getByRole("status")).toContainText("Roadmap updated");
-  await expect(page.getByText("Shape a planning timeline")).toBeVisible();
+  await expect(page.getByText("Review Employment Service registration")).toBeVisible();
   await expect(page.getByText("New", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: /Toggle details for/i }).first().click();
-  await expect(page.getByText("Synthetic UI demonstration only — not policy content.").first()).toBeVisible();
+  await expect(page.getByText(/Registration and reporting at the Employment Service/i).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: /Open official source/i }).first()).toHaveAttribute("href", /btl\.gov\.il/);
 });
 
 test("guides the approved expecting-child routine path with catalog-derived source details", async ({ page }) => {
@@ -56,7 +69,7 @@ test("replaces the routine roadmap with the bounded birth-abroad route", async (
   await page.getByRole("button", { name: /Toggle details for Verify the official route/i }).click();
   await expect(page.getByText(/separate official process/i)).toBeVisible();
   await page.getByRole("button", { name: "Reset local demo" }).click();
-  await expect(page.getByRole("heading", { name: "Life doesn’t come with instructions. Now it does." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Start with what changed." })).toBeVisible();
 });
 
 test("covers non-hospital and conditional-name seeded paths", async ({ page }) => {
@@ -79,7 +92,8 @@ test("covers non-hospital and conditional-name seeded paths", async ({ page }) =
 test("works at a narrow mobile viewport with keyboard-reachable flow", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Start with what changed." })).toBeVisible();
+  await dismissIntro(page);
+  await expect(page.getByRole("heading", { name: "Tell us what changed." })).toBeVisible();
   await page.getByLabel("What happened?").press("Tab");
   await expect(page.getByRole("button", { name: /continue/i })).toBeFocused();
 });

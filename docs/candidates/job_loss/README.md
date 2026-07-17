@@ -1,6 +1,7 @@
 # Job-loss candidate packet
 
-**Status:** `candidate_only` / `needs_human_review` / non-production
+**Status:** candidate record preserved; bounded subset promoted as
+`job_loss@il-job-loss-v1` for Hackathon scope on 2026-07-17.
 
 This packet is an evidence-backed research and curation handoff for the
 canonical `job_loss` event in Israel (`IL`), in English. It proposes a calm,
@@ -32,28 +33,28 @@ practical next-role momentum without promising an outcome.
 
 ## Runtime boundary
 
-All material remains outside `src/event-packs/`, is not imported by the
-application or compiler, and must not be supplied to `compileRoadmap`.
+Only the four cards recorded as `approved_for_hackathon` in the evidence ledger
+are translated into `src/event-packs/job-loss.ts` and registered after
+`validateApprovedEventPack`. All other candidate material remains outside the
+runtime pack and is not supplied to `compileRoadmap`.
 `validateEventPack` and `validateApprovedEventPack` apply only after a separate,
 authorized translation of dated human-approved data. They do not approve this
 research packet or establish source currency.
 
-Every candidate source card is `needs_review`. In particular, Kol Zchut is a
+The four approved NII cards are bounded route-review/records sources only. In
+particular, Kol Zchut is a
 required secondary rights-navigation cross-check, never sole support for a
 material operational instruction, deadline, document requirement, or rights
 claim. Some supplied English `gov.il` pages were inaccessible or redirected at
 research time; they are explicitly unresolved rather than operationalized.
 
-## Before any runtime implementation
+## Remaining review boundary
 
-1. A named human reviewer re-opens each canonical source and records a dated
-   `approved`, `rejected`, or `needs_review` disposition.
-2. The reviewer approves/rejects each dependent claim, task, timing, rule,
-   question, safety label, English rendering, and demo scenario.
-3. An explicitly authorized follow-up implementation task translates **only**
-   approved material into the existing runtime schema and registry path.
-4. That work runs `validateEventPack`, `validateApprovedEventPack`, focused
-   Vitest coverage, and seeded Playwright journeys.
+1. Re-open and review every excluded/needs-review source before any additional
+   claim, rights/records, Form 1500, severance, pension, Form 161, tax, or
+   training task is proposed for runtime.
+2. Treat Hackathon approval as bounded product scope, never as an individual
+   benefit, legal, tax, pension, severance, document, or payment outcome.
 
 No live product retrieval, provider recommendation, benefit calculation,
 eligibility decision, source activation, external action, authentication,

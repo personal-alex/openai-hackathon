@@ -11,9 +11,9 @@ export function validateApprovedEventPack(input: unknown): ContractValidationRes
   const errors = [
     ...(validation.data.testOnly ? ["test-only event packs cannot be approved runtime content"] : []),
     ...validation.data.sourceCards.flatMap((sourceCard) =>
-      sourceCard.disposition === "approved"
+      sourceCard.disposition === "approved" || sourceCard.disposition === "approved_for_hackathon"
         ? []
-        : [`source card ${sourceCard.id} is ${sourceCard.disposition}; approved packs require an approved disposition`]
+        : [`source card ${sourceCard.id} is ${sourceCard.disposition}; approved packs require an approved disposition (approved or approved_for_hackathon)`]
     )
   ];
 

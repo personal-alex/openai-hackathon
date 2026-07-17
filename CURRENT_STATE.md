@@ -197,6 +197,21 @@ The repository contains a validated modular-monolith baseline, deterministic com
   test` (7 files, 41 tests), `npm run build`, and `npm run test:e2e` (6
   deterministic browser journeys).
 
+## 2026-07-17 — Approved Israel `job_loss` Hackathon pack activated
+
+- Product-owner authorization promoted `job_loss@il-job-loss-v1` through an
+  objective source-card completeness gate. Four bounded NII cards are marked
+  `approved_for_hackathon`; all other candidate cards remain needs-review or
+  excluded and are not referenced by runtime tasks.
+- The active pack uses explicit employment-end transition gating, explicit
+  salaried-route selection, bounded nonstandard-route verification, date-aware
+  timing only when a user supplies an end date, and clearly labelled practical
+  planning tasks. It does not determine eligibility, rights, documents,
+  deadlines, benefit amounts/duration, payment, severance, pension, or tax.
+- The product retains visible source metadata, rationale, verification labels,
+  deterministic diffs, and the educational-planning disclaimer. A complete
+  disposition record is in `docs/candidates/job_loss/evidence-ledger.md`.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

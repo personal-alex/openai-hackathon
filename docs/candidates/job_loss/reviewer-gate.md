@@ -1,8 +1,8 @@
 # Reviewer gate — candidate `job_loss` packet
 
-**Current outcome: not catalog-approved.** Every source, claim, rule, task,
-question, safety label, and English rendering remains draft-only pending named,
-dated human review.
+**Current outcome: approved for bounded Hackathon implementation.** Only the
+four NII cards in the disposition ledger are approved-for-hackathon; excluded
+or needs-review cards remain outside the runtime pack.
 
 ## Checklist
 
@@ -71,12 +71,13 @@ dated human review.
 ## Gate record
 
 - Proposal ID/version: `il-job-loss-candidate-v0.1`
-- Reviewer(s) and roles: unassigned
-- Review date: not reviewed
-- Source-card dispositions: all `needs_review`
-- Catalog-content decision: needs revision; not approved for implementation
-- Required contract change: none authorized
-- Implementation authorization: not authorized
+- Reviewer(s) and roles: Hackathon product owner (explicit scope approval)
+- Review date: 2026-07-17
+- Source-card dispositions: four `approved_for_hackathon`; all others recorded
+  as `needs_review` or `excluded_from_runtime` in the evidence ledger
+- Catalog-content decision: approved for bounded Hackathon implementation
+- Required contract change: source-card disposition and practical-guidance gate
+- Implementation authorization: granted by product-owner authorization
 - Remaining uncertainties and owner: source currency/access, primary support,
   English rendering, all task/rule/question/safety/UX decisions, and all
   nonstandard/dispute routes belong to named human reviewers/project owner.

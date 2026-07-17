@@ -1,0 +1,234 @@
+import { PracticalGuidanceVerificationLabel, type EventPack } from "@/domain-contracts";
+
+/**
+ * Hackathon-scope IL job-loss catalog. It offers route review and practical
+ * planning only; it never determines entitlement, documents, deadlines, or an
+ * employment-law, tax, pension, or payment outcome.
+ */
+export const jobLossPack = {
+  id: "job_loss",
+  version: "il-job-loss-v1",
+  jurisdiction: "IL",
+  metadata: { title: "Job loss — Israel" },
+  facts: [
+    { id: "employment_stage", valueType: "string", labelKey: "job_loss.fact.employment_stage", sensitive: true, factRole: "confirmed_transition" },
+    { id: "event_date", valueType: "string", labelKey: "job_loss.fact.event_date", sensitive: true },
+    { id: "work_arrangement", valueType: "string", labelKey: "job_loss.fact.work_arrangement", sensitive: true },
+    { id: "employment_service_registration", valueType: "string", labelKey: "job_loss.fact.employment_service_registration", sensitive: true },
+    { id: "employment_end_confirmation", valueType: "string", labelKey: "job_loss.fact.employment_end_confirmation", sensitive: true },
+    { id: "unemployment_claim_status", valueType: "string", labelKey: "job_loss.fact.unemployment_claim_status", sensitive: true },
+    { id: "initial_focus", valueType: "string", labelKey: "job_loss.fact.initial_focus", sensitive: false },
+    { id: "employment_information_status", valueType: "string", labelKey: "job_loss.fact.employment_information_status", sensitive: true }
+  ],
+  questions: [
+    { id: "jl_employment_stage_question", factId: "employment_stage", promptKey: "job_loss.question.employment_stage", rationaleKey: "job_loss.why.employment_stage", answerType: "string", allowSkip: true },
+    { id: "jl_event_date_question", factId: "event_date", promptKey: "job_loss.question.event_date", rationaleKey: "job_loss.why.event_date", answerType: "string", allowSkip: true },
+    { id: "jl_work_arrangement_question", factId: "work_arrangement", promptKey: "job_loss.question.work_arrangement", rationaleKey: "job_loss.why.work_arrangement", answerType: "string", allowSkip: true },
+    { id: "jl_employment_service_registration_question", factId: "employment_service_registration", promptKey: "job_loss.question.employment_service_registration", rationaleKey: "job_loss.why.employment_service_registration", answerType: "string", allowSkip: true },
+    { id: "jl_end_confirmation_question", factId: "employment_end_confirmation", promptKey: "job_loss.question.end_confirmation", rationaleKey: "job_loss.why.end_confirmation", answerType: "string", allowSkip: true },
+    { id: "jl_claim_status_question", factId: "unemployment_claim_status", promptKey: "job_loss.question.claim_status", rationaleKey: "job_loss.why.claim_status", answerType: "string", allowSkip: true },
+    { id: "jl_initial_focus_question", factId: "initial_focus", promptKey: "job_loss.question.initial_focus", rationaleKey: "job_loss.why.initial_focus", answerType: "string", allowSkip: true },
+    { id: "jl_information_status_question", factId: "employment_information_status", promptKey: "job_loss.question.information_status", rationaleKey: "job_loss.why.information_status", answerType: "string", allowSkip: true }
+  ],
+  sourceCards: [
+    {
+      id: "jl_nii_employment_service_registration_reporting",
+      title: "Registration and reporting at the Employment Service — Unemployment",
+      publisher: "Bituach Leumi / National Insurance Institute",
+      canonicalUrl: "https://www.btl.gov.il/English%20Homepage/Benefits/Unemployment%20Insurance/Pages/Pleasenote.aspx",
+      jurisdiction: "IL",
+      reviewedOn: "2026-07-17",
+      reviewer: "Hackathon product owner (explicit scope approval)",
+      disposition: "approved_for_hackathon",
+      scope: "Bounded route-review information for Employment Service registration and reporting after an explicit employment end.",
+      supportedClaimSummary: "The NII page describes registration and reporting at the Employment Service as prerequisites in its unemployment-benefit route and says reporting occurs on dates/times set by the Employment Service.",
+      limitations: "Does not establish qualification, a personal reporting date, appointment, payment, benefit amount, or individual route.",
+      verificationWording: "Review the current Employment Service instructions on the official source before acting.",
+      safetyClassification: "verification_required"
+    },
+    {
+      id: "jl_nii_submit_unemployment_claim",
+      title: "How to submit the claim — Unemployment",
+      publisher: "Bituach Leumi / National Insurance Institute",
+      canonicalUrl: "https://www.btl.gov.il/English%20Homepage/Benefits/Unemployment%20Insurance/Pages/submit-the-claim.aspx",
+      jurisdiction: "IL",
+      reviewedOn: "2026-07-17",
+      reviewer: "Hackathon product owner (explicit scope approval)",
+      disposition: "approved_for_hackathon",
+      scope: "Bounded route-review information after an explicit employment end for an explicitly salaried arrangement.",
+      supportedClaimSummary: "The NII page directs readers to report to the Employment Service promptly after employment ends before submitting a claim or documents, and identifies registration/reporting as prerequisites in its described route.",
+      limitations: "Does not determine eligibility, claim outcome, deadline, submission method in every case, or a complete document list.",
+      verificationWording: "Review the current official claim route before acting.",
+      safetyClassification: "verification_required"
+    },
+    {
+      id: "jl_nii_unemployment_conditions",
+      title: "Conditions of entitlement — Unemployment",
+      publisher: "Bituach Leumi / National Insurance Institute",
+      canonicalUrl: "https://www.btl.gov.il/English%20Homepage/Benefits/Unemployment%20Insurance/Conditionsofeligibility/Pages/default.aspx",
+      jurisdiction: "IL",
+      reviewedOn: "2026-07-17",
+      reviewer: "Hackathon product owner (explicit scope approval)",
+      disposition: "approved_for_hackathon",
+      scope: "Verification-only route information for explicitly salaried, self-employed, mixed, or unknown work arrangements.",
+      supportedClaimSummary: "The NII page frames unemployment benefit around salaried employment and multiple conditions, and says the reason employment stopped can affect payment timing.",
+      limitations: "Does not support an eligibility finding, amount, qualifying-period conclusion, payment date, or conclusion about resignation, leave, or another personal route.",
+      verificationWording: "Check the current NII rules for your situation; this roadmap does not determine a benefit route or outcome.",
+      safetyClassification: "verification_required"
+    },
+    {
+      id: "jl_nii_claim_documents_form100",
+      title: "What documents should I attach to the claim for unemployment benefit?",
+      publisher: "Bituach Leumi / National Insurance Institute",
+      canonicalUrl: "https://www.btl.gov.il/English%20Homepage/About/Frequent_questions/Coronavirus/Unemployment/Pages/mismacim.aspx",
+      jurisdiction: "IL",
+      reviewedOn: "2026-07-17",
+      reviewer: "Hackathon product owner (explicit scope approval)",
+      disposition: "approved_for_hackathon",
+      scope: "Narrow records-preservation prompt only; the page is a legacy Coronavirus-path source.",
+      supportedClaimSummary: "The page says an employer sends Form 100 (a payroll abstract) and names an employer employment/pay certificate as a fallback in the stated circumstance.",
+      limitations: "Not a complete document checklist; it does not establish who submits what in every case or that a person’s information is sufficient.",
+      verificationWording: "Keep available information for review and verify current claim requirements on the official source.",
+      safetyClassification: "verification_required"
+    }
+  ],
+  tasks: [
+    {
+      id: "jl_register_employment_service",
+      title: "Review Employment Service registration",
+      actionSummary: "After your employment has explicitly ended, review the current official registration route and follow the instructions that apply to you.",
+      priority: 10,
+      timing: { kind: "event_relative", anchor: "event_date", window: "immediate", labelKey: "job_loss.timing.do_now_after_end" },
+      rationaleKey: "job_loss.rationale.registration_not_registered",
+      sourceIds: ["jl_nii_employment_service_registration_reporting", "jl_nii_submit_unemployment_claim"],
+      verificationLabel: "Verify the current official route",
+      dependsOn: [],
+      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "employment_stage", equals: "ended" }] }
+    },
+    {
+      id: "jl_review_unemployment_claim_route",
+      title: "Review the official unemployment-claim route",
+      actionSummary: "Review the current official claim process and conditions for your situation. This roadmap does not determine whether a claim applies or its outcome.",
+      priority: 20,
+      timing: { kind: "event_relative", anchor: "event_date", window: "immediate", labelKey: "job_loss.timing.do_now_after_end" },
+      rationaleKey: "job_loss.rationale.salaried_claim_route",
+      sourceIds: ["jl_nii_submit_unemployment_claim", "jl_nii_unemployment_conditions"],
+      verificationLabel: "Verification required — no eligibility or payment outcome",
+      dependsOn: [],
+      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "employment_stage", equals: "ended" }] }
+    },
+    {
+      id: "jl_prepare_claim_route_information",
+      title: "Keep employment and pay information available",
+      actionSummary: "Keep your employment-end and pay information available, then check the current official claim page for the requirements in your case.",
+      priority: 30,
+      timing: { kind: "general", labelKey: "job_loss.timing.gather_and_verify" },
+      rationaleKey: "job_loss.rationale.prepare_information",
+      sourceIds: ["jl_nii_claim_documents_form100"],
+      verificationLabel: "Verify current requirements — not a document checklist",
+      dependsOn: [],
+      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "employment_stage", equals: "ended" }] }
+    },
+    {
+      id: "jl_follow_employment_service_instructions",
+      title: "Follow current Employment Service instructions",
+      actionSummary: "Because you said you have registered, review and follow the current Employment Service instructions for your situation.",
+      priority: 20,
+      timing: { kind: "general", labelKey: "job_loss.timing.ongoing_verify" },
+      rationaleKey: "job_loss.rationale.registration_confirmed",
+      sourceIds: ["jl_nii_employment_service_registration_reporting"],
+      verificationLabel: "Verify current instructions — no reporting schedule is assumed",
+      dependsOn: [],
+      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "employment_stage", equals: "ended" }] }
+    },
+    {
+      id: "jl_verify_nonstandard_benefit_route",
+      title: "Verify the appropriate official route for your work arrangement",
+      actionSummary: "Your stated or unknown work arrangement does not safely match the standard salaried route. Review current NII information before assuming a benefits route applies.",
+      priority: 20,
+      timing: { kind: "general", labelKey: "job_loss.timing.verify_route" },
+      rationaleKey: "job_loss.rationale.nonstandard_arrangement",
+      sourceIds: ["jl_nii_unemployment_conditions"],
+      verificationLabel: "Verification required — no route or outcome is determined",
+      dependsOn: [],
+      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "employment_stage", equals: "ended" }] }
+    },
+    {
+      id: "jl_update_resume",
+      title: "Update your resume",
+      actionSummary: "Capture your latest role, achievements, skills, and references while details are fresh. A focused first draft is enough.",
+      priority: 50,
+      timing: { kind: "general", labelKey: "job_loss.timing.when_ready" },
+      rationaleKey: "job_loss.rationale.practical_momentum",
+      sourceIds: [],
+      verificationLabel: PracticalGuidanceVerificationLabel,
+      guidanceType: "practical_guidance",
+      dependsOn: []
+    },
+    {
+      id: "jl_refresh_professional_presence",
+      title: "Refresh your professional presence",
+      actionSummary: "Review your profile, portfolio, and contact details using the channels that fit the kind of role you want next.",
+      priority: 51,
+      timing: { kind: "general", labelKey: "job_loss.timing.when_ready" },
+      rationaleKey: "job_loss.rationale.practical_momentum",
+      sourceIds: [],
+      verificationLabel: PracticalGuidanceVerificationLabel,
+      guidanceType: "practical_guidance",
+      dependsOn: ["jl_update_resume"]
+    },
+    {
+      id: "jl_make_small_outreach_plan",
+      title: "Make a small outreach plan",
+      actionSummary: "List one or two people who know your work and could help you reconnect with relevant opportunities.",
+      priority: 52,
+      timing: { kind: "general", labelKey: "job_loss.timing.when_ready" },
+      rationaleKey: "job_loss.rationale.practical_momentum",
+      sourceIds: [],
+      verificationLabel: PracticalGuidanceVerificationLabel,
+      guidanceType: "practical_guidance",
+      dependsOn: ["jl_update_resume"]
+    },
+    {
+      id: "jl_consider_support",
+      title: "Consider the support that would help",
+      actionSummary: "Consider whether trusted peers, community support, professional associations, or career support would be useful to you.",
+      priority: 53,
+      timing: { kind: "general", labelKey: "job_loss.timing.when_ready" },
+      rationaleKey: "job_loss.rationale.practical_momentum",
+      sourceIds: [],
+      verificationLabel: PracticalGuidanceVerificationLabel,
+      guidanceType: "practical_guidance",
+      dependsOn: []
+    }
+  ],
+  baseTaskIds: ["jl_update_resume", "jl_refresh_professional_presence", "jl_make_small_outreach_plan", "jl_consider_support"],
+  rules: [
+    { id: "jl_include_salaried_claim_route", priority: 10, when: { all: [{ fact: "employment_stage", equals: "ended" }, { fact: "work_arrangement", equals: "salaried" }] }, effect: { includeTaskIds: ["jl_review_unemployment_claim_route", "jl_prepare_claim_route_information"] } },
+    { id: "jl_include_registration_prompt", priority: 10, when: { all: [{ fact: "employment_stage", equals: "ended" }, { fact: "work_arrangement", equals: "salaried" }, { fact: "employment_service_registration", equals: "not_registered" }] }, effect: { includeTaskIds: ["jl_register_employment_service"] } },
+    { id: "jl_include_registered_follow_up", priority: 10, when: { all: [{ fact: "employment_stage", equals: "ended" }, { fact: "work_arrangement", equals: "salaried" }, { fact: "employment_service_registration", equals: "registered" }] }, effect: { includeTaskIds: ["jl_follow_employment_service_instructions"] } },
+    { id: "jl_deemphasize_submitted_claim", priority: 20, when: { all: [{ fact: "work_arrangement", equals: "salaried" }, { fact: "unemployment_claim_status", equals: "submitted" }] }, effect: { excludeTaskIds: ["jl_review_unemployment_claim_route"] } },
+    { id: "jl_include_nonstandard_route", priority: 10, when: { all: [{ fact: "employment_stage", equals: "ended" }, { not: { fact: "work_arrangement", equals: "salaried" } }] }, effect: { includeTaskIds: ["jl_verify_nonstandard_benefit_route"] } },
+    { id: "jl_adjust_records_when_end_confirmation_missing", priority: 20, when: { all: [{ fact: "employment_stage", equals: "ended" }, { fact: "work_arrangement", equals: "salaried" }, { fact: "employment_end_confirmation", equals: "does_not_have" }] }, effect: { overrides: [{ taskId: "jl_prepare_claim_route_information", rationaleKey: "job_loss.rationale.missing_end_confirmation" }] } },
+    { id: "jl_adjust_records_when_information_uncertain", priority: 21, when: { all: [{ fact: "employment_stage", equals: "ended" }, { fact: "work_arrangement", equals: "salaried" }, { fact: "employment_information_status", equals: "missing_or_unsure" }] }, effect: { overrides: [{ taskId: "jl_prepare_claim_route_information", rationaleKey: "job_loss.rationale.information_uncertain" }] } },
+    { id: "jl_raise_momentum_for_next_role_focus", priority: 30, when: { fact: "initial_focus", equals: "next_role" }, effect: { overrides: [{ taskId: "jl_update_resume", priority: 30 }, { taskId: "jl_refresh_professional_presence", priority: 31 }, { taskId: "jl_make_small_outreach_plan", priority: 32 }, { taskId: "jl_consider_support", priority: 33 }] } }
+  ],
+  safety: { disclaimerKey: "job_loss.safety.disclaimer", externalLinkNoticeKey: "job_loss.safety.external_link" },
+  demoScenarios: [
+    { id: "jl_ended_salaried_not_registered", labelKey: "job_loss.demo.ended_salaried_not_registered", initialFacts: { facts: { employment_stage: "ended", event_date: "2026-07-17", work_arrangement: "salaried", employment_service_registration: "not_registered", unemployment_claim_status: "not_submitted" } } },
+    { id: "jl_ended_salaried_registered", labelKey: "job_loss.demo.ended_salaried_registered", initialFacts: { facts: { employment_stage: "ended", work_arrangement: "salaried", employment_service_registration: "registered" } } },
+    { id: "jl_ended_nonstandard", labelKey: "job_loss.demo.ended_nonstandard", initialFacts: { facts: { employment_stage: "ended", work_arrangement: "self_employed" } } },
+    { id: "jl_notice_given", labelKey: "job_loss.demo.notice_given", initialFacts: { facts: { employment_stage: "notice_given" } } }
+  ] as EventPack["demoScenarios"]
+} satisfies EventPack;
+
+export const jobLossQuestionPresentation = {
+  jl_employment_stage_question: { prompt: "Has your employment already ended, have you been given notice, or is it not ending yet?", why: "An explicit end is required before this plan can show active official-route tasks.", options: [{ label: "My employment has ended", value: "ended" }, { label: "I have been given notice", value: "notice_given" }, { label: "It is not ending yet", value: "not_ending" }, { label: "I’m not sure" }] },
+  jl_event_date_question: { prompt: "Would you like to add the date your employment ended?", why: "An optional date makes timing clearer after an explicit end; it never establishes that employment ended or changes a route.", options: [], input: { type: "date" as const, submitLabel: "Use this date", skipLabel: "Skip date" } },
+  jl_work_arrangement_question: { prompt: "Was your work salaried, self-employed, or a mix of both?", why: "Only an explicit salaried answer can show the standard claim-route review; other or unknown arrangements stay verification-oriented.", options: [{ label: "Salaried", value: "salaried" }, { label: "Self-employed", value: "self_employed" }, { label: "A mix of both", value: "both" }, { label: "I’m not sure" }] },
+  jl_employment_service_registration_question: { prompt: "Have you registered with the Employment Service?", why: "An explicit answer switches between a registration review and current-instructions review without assuming a reporting schedule.", options: [{ label: "Yes, I have registered", value: "registered" }, { label: "No, not yet", value: "not_registered" }, { label: "I’m not sure" }] },
+  jl_end_confirmation_question: { prompt: "Do you have written confirmation of how and when employment ended?", why: "A missing confirmation changes records guidance to a verification prompt; it does not decide what document is required.", options: [{ label: "Yes", value: "has" }, { label: "No or I’m unsure", value: "does_not_have" }, { label: "Skip for now" }] },
+  jl_claim_status_question: { prompt: "Have you submitted an unemployment-benefit claim?", why: "An explicit submitted answer removes the initial claim-route review without inferring approval, completeness, payment, or outcome.", options: [{ label: "Yes, submitted", value: "submitted" }, { label: "No, not submitted", value: "not_submitted" }, { label: "I’m not sure" }] },
+  jl_initial_focus_question: { prompt: "What would be most helpful to focus on first?", why: "Your focus can reorder practical planning tasks, but it never hides an active official-route task.", options: [{ label: "Rights and paperwork", value: "rights_records" }, { label: "Official route", value: "official_route" }, { label: "Finding my next role", value: "next_role" }, { label: "A bit of everything", value: "everything" }, { label: "Skip for now" }] },
+  jl_information_status_question: { prompt: "Do you have employment-end and recent pay information available?", why: "An uncertain answer changes the records prompt to verification-only wording; it never decides whether your information is sufficient.", options: [{ label: "Yes, I have information", value: "has_end_letter_and_pay_info" }, { label: "Missing or unsure", value: "missing_or_unsure" }, { label: "Skip for now" }] }
+} as const;

@@ -8,6 +8,7 @@ export const MessageKeySchema = z.string().regex(/^[a-z][a-z0-9_.-]*$/, "Use a s
 
 export const FactValueTypeSchema = z.enum(["string", "boolean", "number"]);
 export const FactValueSchema = z.union([z.string().min(1), z.boolean(), z.number().finite()]);
+export const PracticalGuidanceVerificationLabel = "Practical planning guidance — not an official rights claim";
 export const FactDefinitionSchema = z.object({
   id: StableIdSchema,
   valueType: FactValueTypeSchema,
@@ -62,7 +63,7 @@ export const SourceCardSchema = z.object({
   jurisdiction: JurisdictionCodeSchema,
   reviewedOn: z.iso.date(),
   reviewer: z.string().min(1),
-  disposition: z.enum(["approved", "rejected", "needs_review"]),
+  disposition: z.enum(["approved", "approved_for_hackathon", "rejected", "needs_review"]),
   scope: z.string().min(1),
   supportedClaimSummary: z.string().min(1),
   limitations: z.string().min(1),
@@ -88,6 +89,8 @@ export const TaskDefinitionSchema = z.object({
   /** Empty only for generic verification boundaries that make no source claim. */
   sourceIds: z.array(StableIdSchema),
   verificationLabel: z.string().min(1),
+  /** Practical guidance is non-policy planning content and must carry the explicit safety label. */
+  guidanceType: z.enum(["source_backed", "practical_guidance"]).optional(),
   dependsOn: z.array(StableIdSchema),
   /** Presentation-only preview metadata; it never changes active task applicability. */
   preview: z.object({
@@ -245,6 +248,9 @@ export function validateEventPack(input: unknown): ContractValidationResult<Even
   for (const task of pack.tasks) {
     for (const sourceId of task.sourceIds) if (!sourceIds.has(sourceId)) errors.push(`unknown task source ID: ${sourceId}`);
     for (const dependencyId of task.dependsOn) if (!taskIds.has(dependencyId)) errors.push(`unknown task dependency ID: ${dependencyId}`);
+    if (task.guidanceType === "practical_guidance" && task.verificationLabel !== PracticalGuidanceVerificationLabel) {
+      errors.push(`practical guidance task requires the practical guidance verification label: ${task.id}`);
+    }
     if (task.applicability?.kind === "confirmed_transition") {
       const seenRequiredFacts = new Set<string>();
       for (const requiredFact of task.applicability.requiredFacts) {

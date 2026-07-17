@@ -1,9 +1,9 @@
 # Job-loss candidate research dossier and evidence ledger
 
-**Packet status:** `candidate_only` / `needs_human_review`. Access date is
-**2026-07-17**. “Reviewed” below means research inspection only; it is **not**
-a human source-card approval or a finding that the content is current enough
-for the product.
+**Promotion status:** Hackathon-scope runtime promotion authorised on
+**2026-07-17**, subject to the source-card completeness gate below. The product
+owner’s approval is scoped to the bounded claims recorded on cards marked
+`approved_for_hackathon`; it does not determine an individual outcome.
 
 ## Research posture
 
@@ -19,13 +19,13 @@ for the product.
 
 ## Candidate source card: `jl_nii_employment_service_registration_reporting`
 
-- Status: `needs_review` (candidate only; not approved for a product pack)
+- Status: `approved_for_hackathon` (bounded runtime use only)
 - Title: Registration and reporting at the Employment Service — Unemployment
 - Publisher: Bituach Leumi / National Insurance Institute
 - Canonical URL: https://www.btl.gov.il/English%20Homepage/Benefits/Unemployment%20Insurance/Pages/Pleasenote.aspx
 - Authority level: first-party operational source
 - Access / research date: 2026-07-17
-- Review date: not reviewed
+- Review date: 2026-07-17
 - Supported-claim summary: The English NII page says registration and reporting
   at the Employment Service are prerequisites for unemployment benefit and that
   reporting occurs on the days/times determined by the Employment Service.
@@ -36,18 +36,18 @@ for the product.
 - Freshness risk: Employment Service operating instructions can change quickly.
 - Individual verification / advice: Verify the current Employment Service
   instructions; do not infer a personal reporting obligation from this packet.
-- Review owner / status: project owner or named human reviewer / `needs_review`
+- Review owner / status: Hackathon product owner (explicit scope approval) / `approved_for_hackathon`
 - Evidence notes: NII page lead and reporting section, accessed 2026-07-17.
 
 ## Candidate source card: `jl_nii_submit_unemployment_claim`
 
-- Status: `needs_review`
+- Status: `approved_for_hackathon` (bounded runtime use only)
 - Title: How to submit the claim — Unemployment
 - Publisher: Bituach Leumi / National Insurance Institute
 - Canonical URL: https://www.btl.gov.il/English%20Homepage/Benefits/Unemployment%20Insurance/Pages/submit-the-claim.aspx
 - Authority level: first-party operational source
 - Access / research date: 2026-07-17
-- Review date: not reviewed
+- Review date: 2026-07-17
 - Supported-claim summary: The page directs readers to report to the Employment
   Service promptly after employment ends before submitting a claim/documents;
   it identifies registration/reporting as prerequisites in its described route.
@@ -59,18 +59,18 @@ for the product.
   change.
 - Individual verification / advice: Review the current official route before
   acting; ask NII about case-specific requirements.
-- Review owner / status: project owner or named human reviewer / `needs_review`
+- Review owner / status: Hackathon product owner (explicit scope approval) / `approved_for_hackathon`
 - Evidence notes: English page introduction, accessed 2026-07-17.
 
 ## Candidate source card: `jl_nii_unemployment_conditions`
 
-- Status: `needs_review`
+- Status: `approved_for_hackathon` (bounded runtime use only)
 - Title: Conditions of entitlement — Unemployment
 - Publisher: Bituach Leumi / National Insurance Institute
 - Canonical URL: https://www.btl.gov.il/English%20Homepage/Benefits/Unemployment%20Insurance/Conditionsofeligibility/Pages/default.aspx
 - Authority level: first-party general-rights source
 - Access / research date: 2026-07-17
-- Review date: not reviewed
+- Review date: 2026-07-17
 - Supported-claim summary: The page frames unemployment benefit around salaried
   employment and multiple conditions, and says the reason employment stopped
   can affect the payment start date.
@@ -82,19 +82,19 @@ for the product.
 - Freshness risk: Conditions and exceptions are legally/policy sensitive.
 - Individual verification / advice: Verify with NII; seek individual advice if
   the work ending or status is disputed/unclear.
-- Review owner / status: project owner or named human reviewer / `needs_review`
+- Review owner / status: Hackathon product owner (explicit scope approval) / `approved_for_hackathon`
 - Evidence notes: English page opening and work-termination section, accessed
   2026-07-17.
 
 ## Candidate source card: `jl_nii_claim_documents_form100`
 
-- Status: `needs_review`
+- Status: `approved_for_hackathon` (bounded runtime use only)
 - Title: What documents should I attach to the claim for unemployment benefit?
 - Publisher: Bituach Leumi / National Insurance Institute
 - Canonical URL: https://www.btl.gov.il/English%20Homepage/About/Frequent_questions/Coronavirus/Unemployment/Pages/mismacim.aspx
 - Authority level: first-party operational source; legacy/Coronavirus path
 - Access / research date: 2026-07-17
-- Review date: not reviewed
+- Review date: 2026-07-17
 - Supported-claim summary: The page says an employer sends Form 100 (a payroll
   abstract) and names an employer employment/pay certificate as a fallback in
   the stated circumstance.
@@ -105,7 +105,7 @@ for the product.
 - Freshness risk: high — recheck current NII claim instructions before use.
 - Individual verification / advice: Treat records as items to keep/review, not
   a guaranteed complete submission list.
-- Review owner / status: project owner or named human reviewer / `needs_review`
+- Review owner / status: Hackathon product owner (explicit scope approval) / `approved_for_hackathon`
 - Evidence notes: English page’s Form 100 / BL-1514 text, accessed 2026-07-17.
 
 ## Candidate source card: `jl_gov_employment_service_registration`
@@ -253,3 +253,34 @@ English rendering.
   abroad, recent service, training, discrimination, unpaid salary, disputed
   dismissal, unclear final payment, legal complaints, benefit calculations,
   severance calculations, and provider selection.
+
+## Hackathon source-card disposition ledger — 2026-07-17
+
+The four approved cards retain the publisher, title, canonical user-openable
+URL, jurisdiction, review date, scope, bounded claim, and limitations recorded
+above. They are the only source cards translated into `src/event-packs/job-loss.ts`.
+`approved_for_hackathon` means approved for this bounded planning scope, not
+that a person’s eligibility, legal position, documents, deadline, payment, tax,
+pension, severance, or claim outcome is determined.
+
+| Card ID | Disposition | Runtime task mapping / exact blocker |
+| --- | --- | --- |
+| `jl_nii_employment_service_registration_reporting` | `approved_for_hackathon` | `jl_register_employment_service`, `jl_follow_employment_service_instructions`; bounded registration/reporting route review only. |
+| `jl_nii_submit_unemployment_claim` | `approved_for_hackathon` | `jl_register_employment_service`, `jl_review_unemployment_claim_route`; official route review only, no deadline or outcome assertion. |
+| `jl_nii_unemployment_conditions` | `approved_for_hackathon` | `jl_review_unemployment_claim_route`, `jl_verify_nonstandard_benefit_route`; verification-only framing for salaried/nonstandard route distinction. |
+| `jl_nii_claim_documents_form100` | `approved_for_hackathon` | `jl_prepare_claim_route_information`; legacy-path, records-preservation prompt only; never a complete checklist. |
+| `jl_gov_employment_service_registration` | `needs_review` | Explicit supported claim is `unknown`: the supplied URL returned an access error. |
+| `jl_gov_unemployment_benefits_service` | `needs_review` | Explicit supported claim is `unknown`: the supplied URL redirected under construction. |
+| `jl_employment_service_home` | `needs_review` | Explicit supported claim is `unknown`: the page was not retrievable. |
+| `jl_gov_between_jobs` | `excluded_from_runtime` | Search-result-only/Hebrew navigation description; no reviewed English task claim or usable direct evidence. |
+| `jl_gov_advance_notice` | `needs_review` | Access failure; no supported claim may be mapped to a notice task. |
+| `jl_gov_severance` | `needs_review` | Access failure; no supported claim may be mapped to a severance task. |
+| `jl_gov_disciplinary_hearing` | `needs_review` | Access failure; no supported claim may be mapped to a pre-dismissal task. |
+| `jl_kolzchut_unemployment_benefits` | `excluded_from_runtime` | Secondary Hebrew cross-check; not standalone authority for a material route claim. |
+| `jl_kolzchut_employment_service_registration` | `excluded_from_runtime` | Secondary Hebrew cross-check; volatile operational detail requires primary mapping. |
+| `jl_kolzchut_employment_service_reporting` | `excluded_from_runtime` | Secondary Hebrew cross-check; cannot support reporting obligations or consequences. |
+| `jl_kolzchut_employment_end` | `excluded_from_runtime` | Navigation only; exact employment-end claims lack approved primary support. |
+| `jl_kolzchut_advance_notice` | `excluded_from_runtime` | Secondary only; no approved primary mapping for notice claim. |
+| `jl_kolzchut_severance` | `excluded_from_runtime` | Secondary only; no approved primary mapping for severance claim. |
+| `jl_kolzchut_hearing` | `excluded_from_runtime` | Secondary only; no approved primary mapping for hearing claim. |
+| `jl_kolzchut_pension` | `excluded_from_runtime` | Secondary only; no approved primary mapping for pension claim. |

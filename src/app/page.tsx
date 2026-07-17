@@ -47,6 +47,7 @@ export default function Home() {
   const [lastDiff, setLastDiff] = useState<TaskDiff>();
   const [progress, setProgress] = useState<LocalProgress>(emptyProgress);
   const [expandedTaskIds, setExpandedTaskIds] = useState<Set<string>>(new Set());
+  const [typedAnswer, setTypedAnswer] = useState("");
   const [notice, setNotice] = useState("Seeded demo mode is active. No live AI request is made.");
 
   const scenario = findSeededScenario(scenarioId) ?? seededScenarios[0];
@@ -94,6 +95,7 @@ export default function Home() {
     const removedCompleted = Object.entries(progress.progressStatusByTaskId).some(([taskId, status]) => status === "complete" && !activeTaskIds.has(taskId));
 
     setContext(nextContext);
+    setTypedAnswer("");
     setLastDiff(diff);
     setProgress((previous) => ({ progressStatusByTaskId: Object.fromEntries(Object.entries(previous.progressStatusByTaskId).filter(([taskId]) => activeTaskIds.has(taskId))) }));
     setNotice(removedCompleted
@@ -223,7 +225,7 @@ export default function Home() {
               <article className="question-card" key={activeQuestion.id}>
                 <p className="statement-chip">“{statement || scenario.examplePrompt}”</p>
                 <h2>{activeQuestion.prompt}</h2>
-                <div className="answer-list">{activeQuestion.options.map((option) => <button key={option.label} type="button" className="answer-button" onClick={() => answerQuestion(option.value)}>{option.label}</button>)}</div>
+                {activeQuestion.input ? <div className="answer-list"><label className="sr-only" htmlFor={`answer-${activeQuestion.id}`}>Employment end date</label><input id={`answer-${activeQuestion.id}`} type={activeQuestion.input.type} value={typedAnswer} onChange={(event) => setTypedAnswer(event.target.value)} /><button type="button" className="answer-button" disabled={!typedAnswer} onClick={() => answerQuestion(typedAnswer)}>{activeQuestion.input.submitLabel}</button><button type="button" className="answer-button" onClick={() => answerQuestion(undefined)}>{activeQuestion.input.skipLabel}</button></div> : <div className="answer-list">{activeQuestion.options.map((option) => <button key={option.label} type="button" className="answer-button" onClick={() => answerQuestion(option.value)}>{option.label}</button>)}</div>}
                 <details className="why-ask"><summary>Why we ask this</summary><p>{activeQuestion.why}</p></details>
               </article>
             ) : (
