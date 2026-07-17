@@ -31,3 +31,6 @@ pnpm-debug.log*
 
 # Obsidian workspace state
 docs/.obsidian/
+
+.env.local
+.env*.local
