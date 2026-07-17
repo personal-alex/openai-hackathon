@@ -375,3 +375,21 @@ Week submission. It is a concise evidence log, not a transcript.
 - Verification: `git diff --check`, lint, typecheck, 53 Vitest tests, 14
   Chromium journeys, and production build passed. No `/feedback` session ID is
   recorded.
+
+### 2026-07-17 — Active-question focus and answer-gated route prominence
+
+- Task/outcome: Kept the active structured question visible as the conversation
+  advances and surfaced newly added validated route actions within the compact
+  generic route preview.
+- Codex contribution: Added an auto-following bounded transcript viewport,
+  reduced-motion fallback, and generic diff-aware route ordering; added a
+  Chromium journey through the salaried/not-registered path.
+- Human review/decision: Required conversation to remain focused on the current
+  question and requested that next-role practical guidance coexist with
+  answer-gated legal/official route review for job loss.
+- Safety/scope: No job-loss or expecting-child pack data, sources, rules,
+  compiler behavior, contracts, or raw model output changed. The UI only
+  presents validated catalog/compiler data.
+- Verification: `git diff --check`, lint, typecheck, 53 Vitest tests, 15
+  Chromium journeys run serially, and production build passed. No `/feedback`
+  session ID is recorded.

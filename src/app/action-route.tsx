@@ -24,8 +24,8 @@ export function ActionRoute({ roadmap, sourceCards, progress, taskDiff, rational
   const taskTitles = useMemo(() => new Map(roadmap.steps.map((task) => [task.id, task.title])), [roadmap.steps]);
   const grouped = useMemo(() => groupTasksByTimingLane(roadmap.steps), [roadmap.steps]);
   const tasks = grouped.flatMap((group) => group.tasks.map((task) => ({ task, lane: group.label })));
-  const shown = showAll ? tasks : tasks.slice(0, 5);
   const changes = taskDiff?.changes ?? [];
+  const shown = showAll ? tasks : [...tasks].sort((left, right) => Number(Boolean(changeFor(right.task.id, taskDiff))) - Number(Boolean(changeFor(left.task.id, taskDiff)))).slice(0, 5);
 
   useEffect(() => {
     if (!selected) trigger.current?.focus();

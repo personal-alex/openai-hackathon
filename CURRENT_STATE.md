@@ -350,6 +350,25 @@ The repository contains a validated modular-monolith baseline, deterministic com
   test` (53 passed), `npx playwright test` (14 Chromium journeys), and `npm
   run build`.
 
+## 2026-07-17 — Active-question focus and answer-gated route prominence
+
+- The structured conversation now uses a bounded, auto-following turn viewport:
+  when an answer advances the flow, the current allowlisted question is brought
+  into view and prior turns scroll above it. Reduced-motion users receive the
+  same positioning without smooth motion.
+- The compact route preview now gives validated compiler-diff items precedence
+  within its generic five-item limit. This keeps newly added answer-gated
+  official-route steps visible alongside existing practical planning items,
+  without inspecting an event, task, source, jurisdiction, or eligibility
+  condition in the UI.
+- No event-pack task, rule, source card, policy claim, compiler selection, or
+  AI behavior changed. The job-loss catalog continues to supply next-role
+  practical guidance by default and adds official-route review only from its
+  approved, explicit fact rules.
+- Passed: `git diff --check`, `npm run typecheck`, `npm run lint`, `npm run
+  test` (53 passed), `npx playwright test --workers=1` (15 Chromium journeys),
+  and `npm run build`.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

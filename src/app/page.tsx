@@ -22,6 +22,8 @@ const inferScenarioId = (statement: string) => seededScenarios.find((scenario) =
 
 export default function Home() {
   const input = useRef<HTMLInputElement>(null);
+  const conversationThread = useRef<HTMLDivElement>(null);
+  const currentTurn = useRef<HTMLElement>(null);
   const [hydrated, setHydrated] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
   const [introExiting, setIntroExiting] = useState(false);
@@ -44,6 +46,12 @@ export default function Home() {
   /* eslint-enable react-hooks/set-state-in-effect */
   useEffect(() => { if (!hydrated || state !== "planning") return; localStorage.setItem(storageKey, JSON.stringify({ version: 1, scenarioId, statement, context, progress, state } satisfies StoredPlan)); }, [context, hydrated, progress, scenarioId, state, statement]);
   useEffect(() => { if (!showIntro && state === "entry") input.current?.focus(); }, [showIntro, state]);
+  useEffect(() => {
+    if (state !== "planning" || !conversationThread.current || !currentTurn.current) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const frame = window.requestAnimationFrame(() => currentTurn.current?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "nearest", inline: "nearest" }));
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeQuestion?.id, state, transcriptAnswers.length]);
 
   function chooseScenario(next: SeededScenario) { setStatement(next.examplePrompt); setScenarioId(next.id); setError(undefined); }
   function understandEvent() { const id = inferScenarioId(statement); if (!id) { setError("This demonstration currently supports “I’m expecting a child” and “I lost my job.” Choose one below to continue."); return; } setScenarioId(id); setContext({ facts: {} }); setProgress(emptyProgress); setLastDiff(undefined); setTranscriptAnswers([]); setState("understood"); }
@@ -61,11 +69,11 @@ export default function Home() {
     <header className="app-header"><BrandMark />{isSeededDemo && <div className="mode-badge" data-testid="seeded-ai-boundary"><span aria-hidden="true" />Seeded demo · deterministic</div>}</header>
     <p className="sr-only" aria-live="polite">{lastDiff?.changes.length ? "Your route updated from validated answers." : ""}</p>
     <section className="action-workspace" aria-label="Life Navigator Action Route workspace">
-      <section className="conversation-pane" aria-label="Life Navigator conversation"><h1 className="sr-only">Life Navigator</h1><a className="mobile-plan-link" href="#route-title">View your route</a><div className="conversation-thread">
+      <section className="conversation-pane" aria-label="Life Navigator conversation"><h1 className="sr-only">Life Navigator</h1><a className="mobile-plan-link" href="#route-title">View your route</a><div ref={conversationThread} className="conversation-thread">
         <article className="assistant-message">Tell me what changed. I’ll help you organize the next steps and what can wait.</article>
         {state !== "entry" && <article className="user-message">{statement}</article>}
         {state === "understood" && <article className="assistant-message"><p>{scenario.confirmationCopy} Is that right?</p><div className="message-actions"><button className="answer-button answer-button--affirmative" type="button" onClick={confirmEvent}>Yes, that’s right</button><button className="answer-button" type="button" onClick={() => setState("entry")}>Choose a different event</button></div></article>}
-        {state === "planning" && <><article className="assistant-message">Your route is ready to refine. I’ll ask only what can change it.</article>{transcriptAnswers.map((answer) => <article className="user-message user-message--answer" key={answer.questionId}>{answer.value}</article>)}{activeQuestion ? <article className="assistant-message assistant-message--question"><h2>{activeQuestion.presentation.prompt}</h2><QuestionInput question={activeQuestion} onAnswer={answer} /><details className="why-ask"><summary>Why are we asking this?</summary><p>{activeQuestion.presentation.rationale}</p></details></article> : <article className="assistant-message"><h2>{presentation.mode === "preview" ? "Your after-birth preview is ready." : "Your route is ready."}</h2>{presentation.mode === "preview" && <button className="primary-button" type="button" onClick={confirmBirth}>The child has now been born</button>}</article>}</>}
+        {state === "planning" && <><article className="assistant-message">Your route is ready to refine. I’ll ask only what can change it.</article>{transcriptAnswers.map((answer) => <article className="user-message user-message--answer" key={answer.questionId}>{answer.value}</article>)}{activeQuestion ? <article ref={currentTurn} className="assistant-message assistant-message--question"><h2>{activeQuestion.presentation.prompt}</h2><QuestionInput question={activeQuestion} onAnswer={answer} /><details className="why-ask"><summary>Why are we asking this?</summary><p>{activeQuestion.presentation.rationale}</p></details></article> : <article ref={currentTurn} className="assistant-message"><h2>{presentation.mode === "preview" ? "Your after-birth preview is ready." : "Your route is ready."}</h2>{presentation.mode === "preview" && <button className="primary-button" type="button" onClick={confirmBirth}>The child has now been born</button>}</article>}</>}
       </div>
       {state === "entry" && <form className="conversation-composer" onSubmit={(event) => { event.preventDefault(); understandEvent(); }} noValidate><label htmlFor="event-statement">What happened?</label><div><input ref={input} id="event-statement" value={statement} onChange={(event) => { setStatement(event.target.value); setError(undefined); }} placeholder="For example: I lost my job" /><button className="primary-button" type="submit">Continue <span aria-hidden="true">→</span></button></div><p>Supported seeded scenarios</p><div className="prompt-list">{seededScenarios.map((item) => <button key={item.id} type="button" className="prompt-button" onClick={() => chooseScenario(item)}>{item.examplePrompt}</button>)}</div>{error && <p className="input-error" role="alert">{error}</p>}</form>}
       {state === "planning" && <footer className="conversation-footer"><span>General planning support only.</span><button className="text-button" type="button" onClick={reset}>Reset local demo</button></footer>}

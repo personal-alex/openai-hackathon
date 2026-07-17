@@ -26,6 +26,21 @@ test("moves event understanding into the conversation and keeps a sparse route v
   await expect(page.getByRole("button", { name: /Open details for/i }).first()).toBeVisible();
 });
 
+test("keeps the active question visible and surfaces newly added validated route tasks", async ({ page }) => {
+  await enterWorkspace(page, "I lost my job");
+  await page.getByRole("button", { name: "My employment has ended" }).click();
+  await page.getByRole("textbox", { name: /date your employment ended/i }).fill("2026-07-17");
+  await page.locator(".answer-list--typed-reply").getByRole("button", { name: "Continue", exact: true }).click();
+  await page.getByRole("button", { name: "Salaried" }).click();
+  await page.getByRole("button", { name: "No, not yet" }).click();
+
+  const currentQuestion = page.getByRole("heading", { name: /written confirmation of how and when employment ended/i });
+  await expect(currentQuestion).toBeInViewport();
+  expect(await page.locator(".conversation-thread").evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
+  await expect(page.getByRole("button", { name: "Open details for Review Employment Service registration" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Open details for Review the official unemployment-claim route" })).toBeVisible();
+});
+
 test("uses only the assistant welcome and catalog-provided human confirmation copy", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Skip intro" }).click();

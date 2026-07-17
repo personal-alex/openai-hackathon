@@ -11,12 +11,24 @@
 .conversation-pane,
 .route-pane { min-width: 0; }
 
+.conversation-pane {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+}
+
 .mobile-plan-link { display: none; }
 
 .conversation-thread {
   display: grid;
   gap: 12px;
+  max-height: min(52svh, 560px);
   margin-top: clamp(34px, 10vh, 108px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 2px 10px 2px 2px;
+  scrollbar-gutter: stable;
+  scroll-behavior: smooth;
 }
 
 .assistant-message,
@@ -224,7 +236,10 @@
     font-weight: 750;
     text-underline-offset: 3px;
   }
-  .conversation-thread { margin-top: 26px; }
+  .conversation-thread {
+    max-height: min(56svh, 520px);
+    margin-top: 26px;
+  }
   .route-preview-empty { min-height: 280px; }
 }
 
@@ -241,4 +256,8 @@
   }
   .answer-list--typed-reply { grid-template-columns: 1fr 1fr; }
   .answer-list--typed-reply input { grid-column: 1 / -1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .conversation-thread { scroll-behavior: auto; }
 }
