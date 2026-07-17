@@ -110,6 +110,23 @@ No application implementation has been established yet. This bootstrap package d
 - `tests/fixtures/expecting-child-transition.ts` is a non-production, test-only contract proof using `event_stage = birth_occurred`; `validateApprovedEventPack` rejects it, it is not registered, and it contains no approved source or policy content.
 - No approved runtime `expecting_child` pack exists on this branch. Candidate sources remain `needs_review`; applying this contract to any runtime pack remains contingent on human source/content approval.
 
+## 2026-07-17 — Routine Israeli-hospital registration candidate correction
+
+- The `expecting_child` candidate packet records a human-review decision:
+  **Approved with scope: routine birth in an Israeli hospital.** It is backed
+  by four primary Population and Immigration Authority / Ministry of Health
+  source cards and explicitly distinguishes the hospital birth notice from the
+  Authority's Population Registry entry.
+- The candidate/test-only routing proof requires explicit
+  `event_stage = birth_occurred`; a due date or inferred milestone cannot set
+  it. It routes non-hospital or unknown birth location to verification required
+  and keeps birth outside Israel, home/non-recognised-institution birth,
+  disputed parentage, late registration, corrections, adoption, and surrogacy
+  excluded/deferred.
+- This is not an approved or active runtime event pack, source-card registry,
+  or user-facing flow. Remaining candidate sources and all implementation
+  authorization remain subject to review.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

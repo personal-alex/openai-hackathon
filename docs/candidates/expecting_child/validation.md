@@ -21,12 +21,11 @@ added or changed.
 
 ## Why no candidate fixture was passed to runtime validators or compiler
 
-`validateEventPack` is appropriate only after approved data is translated into a
-complete runtime `EventPack`. This packet intentionally includes review metadata
-outside `SourceCardSchema`, uses `needs_review` source cards, and preserves an
-explicitly unresolved post-birth stage-modeling issue. Running it as a runtime
-pack would either require an unauthorized translation/contract decision or
-misrepresent unapproved content as catalog input.
+`validateEventPack` is appropriate only after candidate/reviewed data is
+translated into a complete runtime `EventPack`. This packet intentionally keeps
+review metadata outside `SourceCardSchema` and still contains `needs_review`
+material. Running it as a runtime pack would require an unauthorized catalog
+translation and would misrepresent candidate material as catalog input.
 
 `validateApprovedEventPack` must reject every non-approved source card; that is
 the intended gate, not a test to circumvent for candidate research.
@@ -70,3 +69,21 @@ authorized implementation task supplies approved runtime data.
   `npm run test`: all passed; Vitest reported 6 files and 26 tests passing.
 - Confirmed `expecting_child` is present in the repository's `eventIds` and
   `EventIdSchema`; no contract file was changed.
+
+## Routine Israeli-hospital registration correction — 2026-07-17
+
+- Recorded the dated human-review decision: **Approved with scope: routine
+  birth in an Israeli hospital.** The four reviewed primary cards remain in the
+  candidate packet and are not runtime source cards.
+- Added candidate routing facts/rules and a `testOnly` fixture for the routine
+  hospital route, missing first-name conditional action, and non-hospital or
+  unknown verification-required route.
+- The fixture retains `event_stage = birth_occurred` as an explicit transition
+  gate. It is unregistered and `validateApprovedEventPack` rejects it because
+  it is test-only.
+- Excluded/deferred special cases: birth outside Israel, home or
+  non-recognised-institution birth, disputed parentage, late registration,
+  corrections, adoption, and surrogacy. No correction-consent or household-
+  status claims were added.
+- Passed after the correction: `git diff --check`, `npm run lint`,
+  `npm run typecheck`, `npm run test` (6 files, 27 tests), and `npm run build`.

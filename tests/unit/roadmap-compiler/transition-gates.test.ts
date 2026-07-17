@@ -4,39 +4,52 @@ import { validateApprovedEventPack } from "@/event-packs/review";
 import { compileRoadmap } from "@/roadmap-compiler";
 import { expectingChildTransitionFixture } from "../../fixtures/expecting-child-transition";
 
-describe("confirmed-transition task applicability", () => {
+const taskIds = (facts: Record<string, string | boolean | number>) =>
+  compileRoadmap(expectingChildTransitionFixture, { facts }).steps.map((task) => task.id);
+
+describe("confirmed-transition routine-hospital registration fixture", () => {
   it("accepts the explicitly marked non-production fixture as a valid pack", () => {
     expect(validateEventPack(expectingChildTransitionFixture).success).toBe(true);
   });
 
-  it.each([
-    ["a known date without a confirmed transition", { facts: { due_date: "2026-11-01" } }, ["future_planning_item"]],
-    ["an explicitly non-confirmed transition value", { facts: { due_date: "2026-11-01", event_stage: "planned" } }, ["future_planning_item"]],
-    ["a confirmed transition without timing data", { facts: { event_stage: "birth_occurred" } }, ["future_planning_item", "post_transition_operational_item"]]
-  ])("selects only applicable tasks for %s", (_description, context, expectedTaskIds) => {
-    const roadmap = compileRoadmap(expectingChildTransitionFixture, context);
-    expect(roadmap.steps.map((task) => task.id)).toEqual(expectedTaskIds);
+  it("selects the routine Israeli-hospital route only after an explicit confirmed transition", () => {
+    expect(taskIds({ event_stage: "birth_occurred", birth_in_israeli_hospital: true, newborn_first_name_in_hospital_notice: true }))
+      .toEqual(["future_planning_item", "routine_hospital_registration"]);
+    expect(taskIds({ due_date: "2026-11-01", birth_in_israeli_hospital: true }))
+      .toEqual(["future_planning_item"]);
   });
 
-  it("keeps explicitly authored planning work distinguishable from actionable post-transition work", () => {
-    const [planningTask] = compileRoadmap(expectingChildTransitionFixture, { facts: { due_date: "2026-11-01" } }).steps;
-    expect(planningTask).toMatchObject({
-      id: "future_planning_item",
-      verificationLabel: "Planning only — future work"
-    });
+  it("selects the conditional name action only when the hospital notice is explicitly missing a first name", () => {
+    expect(taskIds({ event_stage: "birth_occurred", birth_in_israeli_hospital: true, newborn_first_name_in_hospital_notice: false }))
+      .toEqual(["future_planning_item", "routine_hospital_registration", "conditional_first_name_registration"]);
+    expect(taskIds({ event_stage: "birth_occurred", birth_in_israeli_hospital: true, newborn_first_name_in_hospital_notice: true }))
+      .not.toContain("conditional_first_name_registration");
+  });
+
+  it.each([
+    ["non-hospital", { event_stage: "birth_occurred", birth_in_israeli_hospital: false }],
+    ["unknown", { event_stage: "birth_occurred" }]
+  ])("routes a %s birth location to verification required without the routine claim", (_description, facts) => {
+    expect(taskIds(facts)).toEqual(["future_planning_item", "special_registration_verification"]);
+  });
+
+  it("keeps future planning distinct and excludes unsupported correction or household-status claims", () => {
+    expect(taskIds({ due_date: "2026-11-01" })).toEqual(["future_planning_item"]);
+    const fixtureText = JSON.stringify(expectingChildTransitionFixture);
+    expect(fixtureText).not.toMatch(/correction|consent|household|family status|adoption|surrogacy/i);
   });
 
   it("rejects malformed or unsafe confirmed-transition applicability definitions", () => {
     expect(EventPackSchema.safeParse({
       ...expectingChildTransitionFixture,
-      tasks: expectingChildTransitionFixture.tasks.map((task) => task.id === "post_transition_operational_item"
+      tasks: expectingChildTransitionFixture.tasks.map((task) => task.id === "routine_hospital_registration"
         ? { ...task, applicability: { kind: "confirmed_transition", requiredFacts: [] } }
         : task)
     }).success).toBe(false);
 
     const unknownFact = validateEventPack({
       ...expectingChildTransitionFixture,
-      tasks: expectingChildTransitionFixture.tasks.map((task) => task.id === "post_transition_operational_item"
+      tasks: expectingChildTransitionFixture.tasks.map((task) => task.id === "routine_hospital_registration"
         ? { ...task, applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "unknown_fact", equals: "birth_occurred" }] } }
         : task)
     });
@@ -44,7 +57,7 @@ describe("confirmed-transition task applicability", () => {
 
     const timingFact = validateEventPack({
       ...expectingChildTransitionFixture,
-      tasks: expectingChildTransitionFixture.tasks.map((task) => task.id === "post_transition_operational_item"
+      tasks: expectingChildTransitionFixture.tasks.map((task) => task.id === "routine_hospital_registration"
         ? { ...task, applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "due_date", equals: "2026-11-01" }] } }
         : task)
     });

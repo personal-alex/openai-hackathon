@@ -8,7 +8,8 @@ pack, approval record, legal/medical/eligibility guidance, or a source of truth.
 - Candidate-only Israel / English `expecting_child` research packet.
 - Decide whether each source, claim boundary, task, fact, question, safety note,
   and future implementation path is accepted, rejected, or needs revision.
-- Current outcome: no approval; every source is `needs_review`.
+- Current outcome: scope-approved primary evidence for the routine
+  Israeli-hospital registration path; no catalog/runtime approval.
 
 ## Slide 2 — Evidence posture and source hierarchy
 
@@ -21,6 +22,9 @@ pack, approval record, legal/medical/eligibility guidance, or a source of truth.
   primary source or mark the claim `unresolved`.
 - Kol Zchut pages used here are Hebrew-language; approve any English rendering
   separately or exclude it.
+- Primary reviewed scope: `ec_piba_birth_registry_procedure`,
+  `ec_piba_newborn_name`, `ec_piba_birth_certificate`, and
+  `ec_moh_birth_certificate_parents`. This is candidate evidence only.
 
 ## Slide 3 — Candidate transition model
 
@@ -33,8 +37,8 @@ pack, approval record, legal/medical/eligibility guidance, or a source of truth.
 - Ordinary prenatal intake does not need to ask whether birth occurred. The
   intended future UX is a user-controlled update such as “Update your life
   event: the birth has occurred”; this is proposal-only, not implemented.
-- Only after explicit confirmation may the neutral name-registration question
-  be asked or post-transition verification tasks be surfaced.
+- Only after explicit confirmation may the hospital-routing question be asked
+  or post-transition verification tasks be surfaced.
 - Review whether the proposed fact/update is appropriate, minimal, and safe.
 
 ## Slide 4 — Candidate task/source relationships
@@ -42,12 +46,16 @@ pack, approval record, legal/medical/eligibility guidance, or a source of truth.
 - Pre-transition: an explicitly recorded `not_shared` contact fact may surface
   an optional, non-urgent qualified-professional planning follow-up; it does
   not characterize care status and needs clinical/safety review.
-- Post-transition: route-neutral Population Authority name-registration
-  verification and narrow NII birth-grant-information review require the
-  confirmed transition fact.
+- Post-transition: ask “Was the child born in an Israeli hospital?” `true`
+  selects the reviewed routine path; `false` or unknown selects only a scoped
+  verification-required state.
+- The routine-path candidate wording distinguishes the hospital birth notice
+  from the Authority’s Population Registry entry. A missing first name selects
+  only a conditional official-service action; birth-certificate follow-up is
+  optional.
 - Kol Zchut is supplemental provenance only; primary cards remain required.
-- Direct primary support for a birth-notification procedure is unresolved and
-  must not become product content without review.
+- The direct primary procedure is approved with scope for a routine birth in an
+  Israeli hospital. Do not generalise it to special paths.
 
 ## Slide 5 — Required human dispositions
 
@@ -56,9 +64,10 @@ pack, approval record, legal/medical/eligibility guidance, or a source of truth.
   sources, and all material claims.
 - Approve/reject task wording, sources, timing, rules, questions, safety copy,
   and scenario boundaries.
-- Confirm that no hospital or other registration-route assumption enters the
-  name-registration candidate, and either review a direct primary procedure or
-  leave that procedure unresolved and excluded.
+- Confirm special-case exclusion/deferment: birth outside Israel, home or
+  non-recognised-institution birth, disputed parentage, late registration,
+  corrections, adoption, and surrogacy. Law-office/embassy sources,
+  correction-consent claims, and household-status updates are excluded.
 - Decide whether the medical-adjacent prompt is retained and who approves it.
 
 ## Slide 6 — Implementation gate

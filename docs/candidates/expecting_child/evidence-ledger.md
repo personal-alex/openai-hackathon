@@ -1,7 +1,9 @@
 # Candidate evidence ledger — `expecting_child`
 
 **Packet status:** `candidate_only` / `needs_human_review`. Access dates are
-recorded per card.
+recorded per card. A dated, scope-limited human review decision below applies
+only to the four primary newborn-registration/certificate cards; it does not
+approve a runtime pack or the rest of this packet.
 All statements below are bounded observations about prospective sources, not
 approved content, current-policy assertions, advice, or eligibility outcomes.
 
@@ -86,31 +88,112 @@ for any such claim; otherwise the claim is `unresolved` and excluded.
 - Follow-up: Re-review each potentially relevant exception and decide whether
   this source should be excluded from the first product pack.
 
+## Candidate source card: `ec_piba_birth_registry_procedure`
+
+- Status: `candidate_only` — reviewed primary evidence; not a product-pack card
+- Title: Procedure for registering a birth in Israel (Procedure 2.2.0001)
+- Publisher: Population and Immigration Authority, State of Israel
+- Canonical URL: https://www.gov.il/BlobFolder/policy/birth_registry_in_israel_procedure/he/2.2.0001.pdf
+- Access date: 2026-07-17
+- Review date: 2026-07-17
+- Supported-claim summary: For the reviewed scope of a routine birth in an
+  Israeli hospital, the hospital submits the live-birth notification. That
+  notification is not itself a Population Registry entry; an authorised
+  Population and Immigration Authority registration clerk completes the entry,
+  after which the newborn receives an ID number.
+- Applicable event IDs: `expecting_child`
+- Applicable task IDs: `ec_register_newborn_population_registry`,
+  `ec_verify_special_registration_path` (verification framing only)
+- Jurisdiction: `IL`
+- Lifecycle state: `candidate_only`; human-reviewed for the stated scope;
+  never mapped to a runtime source card
+- Limitations: The reviewed claim is limited to a routine birth in an Israeli
+  hospital. It does not establish eligibility, parentage, citizenship,
+  residency, documents, service availability, or a process for birth outside
+  Israel, home/non-recognised-institution birth, disputed parentage, late
+  registration, corrections, adoption, or surrogacy.
+- Review owner: Project owner (worktree directive)
+- Review status: `approved` with scope `routine birth in an Israeli hospital`
+- Evidence notes: Procedure §§1.1–1.3 distinguishes a hospital notice from
+  registry entry; §3.1 covers hospital notices; §4.26.2 says only authorised
+  Authority registration makes the newborn an ID-number holder.
+- Follow-up: Keep special-case procedures excluded until separately reviewed.
+
 ## Candidate source card: `ec_piba_newborn_name`
 
-- Status: `needs_review` (candidate only; not approved for a product pack)
-- Title: Register your newborn baby's name
+- Status: `candidate_only` — reviewed primary evidence; not a product-pack card
+- Title: Register the newborn’s name, child born in Israel (free)
 - Publisher: Population and Immigration Authority, State of Israel
-- Canonical URL: https://www.gov.il/en/service/naming_baby
-- Access date: 2026-07-15
-- Review date: not reviewed
-- Supported-claim summary: The service page describes one official newborn-name
-  registration service and identifies pathways, conditions, and documents for
-  the scope stated on that page. This packet does not assume that scope applies
-  to any person or that it is the general birth-notification procedure.
+- Canonical URL: https://www.gov.il/he/service/naming_baby
+- Access date: 2026-07-17
+- Review date: 2026-07-17
+- Supported-claim summary: If a first name was not recorded in the hospital
+  birth notification, the parent(s) may register it through the Authority’s
+  official name-registration service. This is a conditional action, not a
+  default mandatory manual-registration step.
 - Applicable event IDs: `expecting_child`
-- Applicable task IDs: `ec_verify_newborn_name_registration`
-- Limitations: Path, identity, location, relationship, documentation, and
-  language requirements can vary. This card supports only a post-birth
-  verification prompt; it does not establish that any pathway is available,
-  that a person is a parent, or that a registration is complete.
-- Review owner: unassigned
-- Review status: `needs_review`
-- Evidence notes: Page sections “About the service,” “Who can only register
-  their child's name in person,” and “What you need to bring.”
-- Follow-up: Human reviewer must verify the English page, accessibility, and
-  route-neutral wording. Locate and review a direct primary birth-notification
-  / registration procedure before supporting any general process claim.
+- Applicable task IDs: `ec_register_missing_newborn_first_name`
+- Jurisdiction: `IL`
+- Lifecycle state: `candidate_only`; human-reviewed for the stated scope;
+  never mapped to a runtime source card
+- Limitations: This card does not establish that a given person can use an
+  online route, is a parent, meets a documentation requirement, or has a
+  completed registration. It does not support a general birth-registration
+  process claim.
+- Review owner: Project owner (worktree directive)
+- Review status: `approved` with scope `conditional first-name action after a routine Israeli-hospital notice`
+- Evidence notes: Official service title and its stated conditional service
+  scope.
+- Follow-up: Review any special route separately before adding process detail.
+
+## Candidate source card: `ec_piba_birth_certificate`
+
+- Status: `candidate_only` — reviewed primary evidence; not a product-pack card
+- Title: Issue a birth certificate for people born in Israel (free)
+- Publisher: Population and Immigration Authority, State of Israel
+- Canonical URL: https://www.gov.il/he/service/birth_certificate
+- Access date: 2026-07-17
+- Review date: 2026-07-17
+- Supported-claim summary: Once the hospital notice is received, parents may
+  obtain a free birth certificate through the official service. This is an
+  optional follow-up, not a prerequisite to the child’s registry entry.
+- Applicable event IDs: `expecting_child`
+- Applicable task IDs: `ec_obtain_birth_certificate_optional`
+- Jurisdiction: `IL`
+- Lifecycle state: `candidate_only`; human-reviewed for the stated scope;
+  never mapped to a runtime source card
+- Limitations: This card does not establish personal access, identity,
+  eligibility, processing time, delivery method, or any use for a certificate.
+- Review owner: Project owner (worktree directive)
+- Review status: `approved` with scope `optional certificate follow-up after notice receipt`
+- Evidence notes: Official service title and no-fee service framing.
+- Follow-up: Do not add a deadline, access-method claim, or prerequisite claim
+  without separate review.
+
+## Candidate source card: `ec_moh_birth_certificate_parents`
+
+- Status: `candidate_only` — reviewed primary evidence; not a product-pack card
+- Title: Birth certificate: what parents need to know
+- Publisher: Ministry of Health, State of Israel
+- Canonical URL: https://me.health.gov.il/parenting/raising-children/after-childbirth/leaving-the-hospital/birth-certificate-parents/
+- Access date: 2026-07-17
+- Review date: 2026-07-17
+- Supported-claim summary: The Ministry page provides supplementary official
+  context that a birth certificate can be obtained after the hospital notice is
+  received; it supports only the optional certificate follow-up.
+- Applicable event IDs: `expecting_child`
+- Applicable task IDs: `ec_obtain_birth_certificate_optional`
+- Jurisdiction: `IL`
+- Lifecycle state: `candidate_only`; human-reviewed for the stated scope;
+  never mapped to a runtime source card
+- Limitations: This supplementary page does not establish registry entry,
+  eligibility, personal access, timing, or a requirement to obtain a
+  certificate.
+- Review owner: Project owner (worktree directive)
+- Review status: `approved` with scope `supplementary optional certificate context`
+- Evidence notes: “What happens immediately after birth” and birth-certificate
+  sections; the official Authority service remains the primary action source.
+- Follow-up: Do not use this page for a registry-process claim.
 
 ## Candidate source card: `ec_moh_prenatal_follow_up`
 
@@ -200,13 +283,9 @@ for any such claim; otherwise the claim is `unresolved` and excluded.
 - Supported-claim summary: Secondary terminology/process map for birth
   notification and population-registration research.
 - Applicable event IDs: `expecting_child`
-- Applicable task IDs: `ec_verify_newborn_name_registration` (supplemental
-  research only; not sufficient task support)
-- Linked official/legal sources where present: The page identifies legislation
-  and procedures, but this research pass did not verify a canonical underlying
-  legal/procedure URL. Related primary-service candidate card:
-  `ec_piba_newborn_name`; direct primary support for a birth-notification claim
-  is `unresolved`.
+- Applicable task IDs: none — excluded from default normal-path content
+- Linked official/legal sources where present: Related reviewed primary cards:
+  `ec_piba_birth_registry_procedure` and `ec_piba_newborn_name`.
 - Limitations: Hebrew-language secondary source and potentially distinct from
   newborn-name registration. It is not an eligibility or legal determination
   and cannot alone support any claim about who must register, documents,
@@ -214,8 +293,8 @@ for any such claim; otherwise the claim is `unresolved` and excluded.
 - Review owner: unassigned
 - Review status: `needs_review`
 - Evidence notes: Page lead and its legislation/procedure references.
-- Follow-up: Locate and review the exact Population and Immigration Authority
-  procedure before proposing any birth-notification claim; otherwise exclude it.
+- Follow-up: Retain only as secondary discovery context; do not re-link it to
+  the routine-hospital task or use it as standalone support.
 
 ## Evidence gaps and exclusions
 
@@ -224,7 +303,10 @@ for any such claim; otherwise the claim is `unresolved` and excluded.
   medical need.
 - No deadline, legal requirement, medical schedule, personal recommendation,
   or Hebrew-to-English interpretation is proposed as product truth.
-- Hospital, HMO, employer, and complex family-structure paths remain unknown
-  unless an approved source and reviewer disposition later support them.
+- The routine Israeli-hospital registration path is reviewed and scope-approved
+  in this candidate packet. Birth outside Israel, home or non-recognised-
+  institution birth, disputed parentage, late registration, corrections,
+  adoption, and surrogacy remain excluded/deferred rather than unknown normal
+  paths.
 - Kol Zchut pages are discovery aids only in this packet. Their Hebrew-language
   material has no approved English product rendering or standalone claim use.

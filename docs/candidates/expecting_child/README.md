@@ -4,8 +4,10 @@
 
 This packet is a research and curation handoff for the canonical `expecting_child`
 event in Israel (`IL`), in English. It is not a runtime event pack, source-card
-registry, implementation specification, or user-facing content. Nothing here is
-approved, current enough for production, or an eligibility conclusion.
+registry, implementation specification, or user-facing content. Four primary
+newborn-registration/certificate cards have a dated, scope-limited candidate
+review decision; that does not approve this packet for production or create an
+eligibility conclusion.
 
 ## Contents
 
