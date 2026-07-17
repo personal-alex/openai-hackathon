@@ -56,9 +56,9 @@ Notice given / not yet ended
 2. The NII Form 100 page sits under a Coronavirus FAQ path. It is retained as a
    narrow information-preservation clue, not a complete current document list.
 3. Kol Zchut is an approved authoritative public-rights source for this
-   Hackathon packet, with its own publisher provenance retained. Its
-   Hebrew-language material still needs a separately approved English rendering
-   before it supports new runtime copy.
+Hackathon packet, with its own publisher provenance retained. Its
+Hebrew-language material needs a documented online translation checked against
+the original before it supports new runtime copy.
 4. NII’s conditions material makes individual circumstances material. The
    candidate resolves this by limiting the UI to route review and verification,
    never a result.

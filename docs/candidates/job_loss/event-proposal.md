@@ -187,7 +187,8 @@ All prompt copy is draft-only and follows one-question-at-a-time interaction.
 
 1. Disposition and currency check for every evidence card, especially supplied
    inaccessible English `gov.il` URLs and the legacy Form 100 page.
-2. Approval/rejection of each claim, task, timing, rule, English rendering,
+2. Approval/rejection of each claim, task, timing, rule, documented online
+   translation where a source is Hebrew,
    question, rationale key, safety label, and demo scenario.
 3. Decision whether rights/records cards remain generic verification prompts or
    gain separately reviewed official subpage support.

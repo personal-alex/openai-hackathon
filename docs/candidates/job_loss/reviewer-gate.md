@@ -3,8 +3,9 @@
 **Current outcome: approved for bounded Hackathon implementation.** Seven
 official route cards in the disposition ledger are approved-for-hackathon and
 mapped to runtime tasks. Kol Zchut is an approved authoritative cross-check
-with publisher provenance retained; its Hebrew text requires a separately
-reviewed English rendering before it supports new runtime copy.
+with publisher provenance retained; its Hebrew text requires a documented
+online translation checked against the original before it supports new runtime
+copy.
 
 ## Checklist
 
@@ -15,8 +16,9 @@ reviewed English rendering before it supports new runtime copy.
   freshness risk, review owner, and status.
 - [ ] A named reviewer re-opens every primary source and records current,
   bounded support for each material operational/right-to-review claim.
-- [ ] Every Hebrew-source claim, including Kol Zchut content, has a separately
-  approved English rendering before it is shown in the English-only runtime.
+- [ ] Every Hebrew-source claim, including Kol Zchut content, has a documented
+  online translation checked against the original before it is shown in the
+  English-only runtime.
 - [ ] Inaccessible/redirected supplied `gov.il` pages and the legacy Form 100
   page have an explicit keep/reject/revise decision.
 - [ ] Each task/rule has stable IDs, typed facts/timing, source/dependency

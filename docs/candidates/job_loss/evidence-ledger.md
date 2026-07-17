@@ -12,8 +12,8 @@ owner’s approval is scoped to the bounded claims recorded on cards marked
 - Approved public-rights cross-check: Kol Zchut. Product-owner review accepts
   it as an authoritative source for this Hackathon packet; retain its publisher
   as **Kol Zchut** rather than misrepresenting it as a government publisher.
-  Hebrew source text still requires a separately approved English rendering
-  before it supports new English runtime copy.
+  Hebrew source text may use a documented online translation, checked by the
+  reviewer against the original, before it supports new English runtime copy.
 - A current operational claim is proposed only where the cited official source
   supports it. Ambiguity, inaccessible pages, and personal qualification remain
   verification-required or deferred.
@@ -184,8 +184,8 @@ owner’s approval is scoped to the bounded claims recorded on cards marked
   and returning to work.
 - Applicable event/task IDs: `job_loss`; `jl_review_ending_records`,
   `jl_review_notice_and_severance`
-- Limitations / non-claim: Hebrew source; exact English copy and individual
-  rights/content require review. It is not sole support for a material claim.
+- Limitations / non-claim: Hebrew source; an online translation must be checked
+  against the original before it supports English copy or a material claim.
 - Freshness risk: page structure/content may change.
 - Individual verification / advice: Use as navigation only pending review of
   exact primary subpages.
@@ -217,8 +217,8 @@ These pages are approved authoritative public-rights cross-checks for this
 Hackathon packet. Each row retains publisher **Kol Zchut** (not a substituted
 government publisher), applies to `job_loss`, was reviewed 2026-07-17 by the
 Hackathon product owner, and is `approved_for_hackathon`. All are
-Hebrew-language and require a separately approved English rendering before they
-support new English runtime copy.
+Hebrew-language and require a documented online translation checked against the
+original before they support new English runtime copy.
 
 | ID / title | Canonical URL | Candidate contribution / applicable candidate tasks | Limitation / required official mapping |
 | --- | --- | --- | --- |

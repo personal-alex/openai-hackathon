@@ -43,8 +43,9 @@ research packet or establish source currency.
 
 The seven approved cards are bounded route-review/records sources only. Kol
 Zchut is an approved authoritative public-rights cross-check, with its own
-publisher provenance retained; Hebrew source content still requires a separately
-approved English rendering before it supports new runtime copy. No source
+publisher provenance retained; Hebrew source content requires a documented
+online translation checked against the original before it supports new runtime
+copy. No source
 supports an eligibility, deadline, payment, legal, tax, pension, severance, or
 claim-outcome conclusion.
 

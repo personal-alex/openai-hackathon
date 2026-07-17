@@ -221,7 +221,8 @@ The repository contains a validated modular-monolith baseline, deterministic com
   document determination.
 - Kol Zchut is approved as an authoritative public-rights source for this
   packet, with publisher provenance retained as Kol Zchut. Hebrew source text
-  needs a separately approved English rendering before it can add runtime copy.
+  needs a documented online translation checked against the original before it
+  can add runtime copy.
 
 ## Deferred / explicitly out of scope for MVP
 
