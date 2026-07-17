@@ -151,6 +151,31 @@ The repository contains a validated modular-monolith baseline, deterministic com
 - The test-only, unregistered transition fixture remains rejected by
   `validateApprovedEventPack`. No production route depends on candidate content.
 
+## 2026-07-17 — Approved Israel `expecting_child` pack activated
+
+- Human-approved runtime scope is **routine birth in an Israeli hospital** for
+  the intended eligible/registered-parent scenario, plus bounded
+  verification-only routing for birth outside Israel, non-hospital birth, and
+  adoption, surrogacy, or parentage needing verification.
+- `src/event-packs/expecting-child.ts` registers
+  `expecting_child@il-expecting-child-v1` only after approved-pack validation.
+  Its five active official source cards are `ec_piba_birth_registry_procedure`,
+  `ec_piba_newborn_name`, `ec_piba_birth_certificate`,
+  `ec_moh_birth_certificate_parents`, and
+  `ec_piba_birth_abroad_registration`.
+- Post-birth tasks require explicit `event_stage = birth_occurred`; dates,
+  estimates, schedules, elapsed time, and inference cannot establish it. The
+  routine statement applies only where the newborn is eligible for Population
+  Registry entry and does not imply an automatic Israeli ID or any outcome.
+- Deferred: late registration, corrections/correction consent, household or
+  family-status claims, legal interpretations of recognition or parentage,
+  unreviewed document checklists, and any eligibility, citizenship, residency,
+  benefit, or payment claim. The product remains educational planning support
+  only and performs no external action or determination.
+- Passed: `git diff --check`, `npm run lint`, `npm run typecheck`, `npm run
+  test` (7 files, 38 tests), `npm run build`, and `npm run test:e2e` (5
+  deterministic browser journeys).
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

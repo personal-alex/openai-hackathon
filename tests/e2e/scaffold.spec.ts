@@ -8,6 +8,14 @@ async function beginScenario(page: import("@playwright/test").Page, statement: s
   await page.getByRole("button", { name: /continue to questions/i }).click();
 }
 
+async function beginExpectingChild(page: import("@playwright/test").Page) {
+  await page.goto("/");
+  await page.getByRole("button", { name: "I’m expecting a child" }).click();
+  await page.getByRole("button", { name: /continue/i }).click();
+  await page.getByRole("button", { name: /continue to questions/i }).click();
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+}
+
 test("guides the seeded job-loss scenario while keeping the compiler roadmap visible", async ({ page }) => {
   await beginScenario(page, "I lost my job");
 
@@ -19,10 +27,10 @@ test("guides the seeded job-loss scenario while keeping the compiler roadmap vis
   await expect(page.getByText("Shape a planning timeline")).toBeVisible();
   await expect(page.getByText("New", { exact: true })).toBeVisible();
   await page.locator(".task-details summary").first().click();
-  await expect(page.getByText("Source provenance:").first()).toBeVisible();
+  await expect(page.getByText("Synthetic UI demonstration only — not policy content.").first()).toBeVisible();
 });
 
-test("retains confirmation and optional acknowledgement in the seeded expecting-child flow", async ({ page }) => {
+test("guides the approved expecting-child routine path with catalog-derived source details", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "I’m expecting a child" }).click();
   await page.getByRole("button", { name: /continue/i }).click();
@@ -30,8 +38,44 @@ test("retains confirmation and optional acknowledgement in the seeded expecting-
   await page.getByRole("button", { name: /continue to questions/i }).click();
   await expect(page.getByRole("heading", { name: /Congratulations/ })).toBeVisible();
   await page.getByRole("button", { name: "Continue", exact: true }).click();
-  await page.getByRole("button", { name: "I’m not sure yet" }).click();
-  await expect(page.getByRole("button", { name: "Yes, add a checklist" })).toBeVisible();
+  await page.getByRole("button", { name: "Yes, the child has been born" }).click();
+  await page.getByRole("button", { name: "Yes, in Israel" }).click();
+  await page.getByRole("button", { name: "Yes, in an Israeli hospital" }).click();
+  await page.getByRole("button", { name: "Yes, routine birth path" }).click();
+  await page.getByRole("button", { name: "Yes", exact: true }).click();
+  await expect(page.getByText("Register the newborn — Population and Immigration Authority")).toBeVisible();
+  await expect(page.getByText("Get a birth certificate")).toBeVisible();
+  await page.locator(".task-details summary").first().click();
+  await expect(page.getByRole("link", { name: /Open official source/i }).first()).toHaveAttribute("href", "https://www.gov.il/BlobFolder/policy/birth_registry_in_israel_procedure/he/2.2.0001.pdf");
+});
+
+test("replaces the routine roadmap with the bounded birth-abroad route", async ({ page }) => {
+  await beginExpectingChild(page);
+  await page.getByRole("button", { name: "Yes, the child has been born" }).click();
+  await page.getByRole("button", { name: "No, outside Israel" }).click();
+  await expect(page.getByText("Verify the official route for registering a child born outside Israel")).toBeVisible();
+  await expect(page.getByText("Register the newborn — Population and Immigration Authority")).not.toBeVisible();
+  await page.locator(".task-details summary").first().click();
+  await expect(page.getByText(/separate official process/i)).toBeVisible();
+  await page.getByRole("button", { name: "Reset local demo" }).click();
+  await expect(page.getByRole("heading", { name: "Start with what changed." })).toBeVisible();
+});
+
+test("covers non-hospital and conditional-name seeded paths", async ({ page }) => {
+  await beginExpectingChild(page);
+  await page.getByRole("button", { name: "Yes, the child has been born" }).click();
+  await page.getByRole("button", { name: "Yes, in Israel" }).click();
+  await page.getByRole("button", { name: "No, another setting" }).click();
+  await expect(page.getByText("Verify the official registration and newborn-name route for a non-hospital birth")).toBeVisible();
+
+  await page.getByRole("button", { name: "Reset local demo" }).click();
+  await beginExpectingChild(page);
+  await page.getByRole("button", { name: "Yes, the child has been born" }).click();
+  await page.getByRole("button", { name: "Yes, in Israel" }).click();
+  await page.getByRole("button", { name: "Yes, in an Israeli hospital" }).click();
+  await page.getByRole("button", { name: "Yes, routine birth path" }).click();
+  await page.getByRole("button", { name: "No", exact: true }).click();
+  await expect(page.getByText("Register the child’s first name")).toBeVisible();
 });
 
 test("works at a narrow mobile viewport with keyboard-reachable flow", async ({ page }) => {

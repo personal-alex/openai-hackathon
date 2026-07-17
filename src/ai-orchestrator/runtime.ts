@@ -1,10 +1,15 @@
 import "server-only";
 import { InMemoryAiRateGuard, LifeNavigatorAi, NoopTelemetry, createHttpSharedAiRateGuard, createResponsesApiTransport, type AiRateGuard, type EventCandidate } from "@/ai-orchestrator";
+import { activeEventPacks } from "@/event-packs/registry";
 
 const localGuard = new InMemoryAiRateGuard();
 
-/** No reviewed packs exist yet. Routes fail closed until a future approved registry supplies candidates. */
-export function getReviewedAiCandidates(): readonly EventCandidate[] { return []; }
+/** Only facts from runtime-validated packs may be offered to the model boundary. */
+export function getReviewedAiCandidates(): readonly EventCandidate[] {
+  return activeEventPacks.flatMap((pack) =>
+    pack.id === "expecting_child" || pack.id === "job_loss" ? [{ id: pack.id, facts: pack.facts }] : []
+  );
+}
 
 export function getServerAi(): LifeNavigatorAi {
   const apiKey = process.env.OPENAI_API_KEY;

@@ -56,13 +56,18 @@ export const QuestionDefinitionSchema = z.object({
 
 export const SourceCardSchema = z.object({
   id: StableIdSchema,
+  title: z.string().min(1),
   publisher: z.string().min(1),
   canonicalUrl: z.url(),
+  jurisdiction: JurisdictionCodeSchema,
   reviewedOn: z.iso.date(),
   reviewer: z.string().min(1),
   disposition: z.enum(["approved", "rejected", "needs_review"]),
   scope: z.string().min(1),
-  supportedClaimSummary: z.string().min(1)
+  supportedClaimSummary: z.string().min(1),
+  limitations: z.string().min(1),
+  verificationWording: z.string().min(1),
+  safetyClassification: z.enum(["verification_required", "informational"])
 }).strict();
 
 export const TaskApplicabilitySchema = z.discriminatedUnion("kind", [
@@ -80,7 +85,8 @@ export const TaskDefinitionSchema = z.object({
   priority: z.number().int(),
   timing: TimingSchema,
   rationaleKey: MessageKeySchema,
-  sourceIds: z.array(StableIdSchema).min(1),
+  /** Empty only for generic verification boundaries that make no source claim. */
+  sourceIds: z.array(StableIdSchema),
   verificationLabel: z.string().min(1),
   dependsOn: z.array(StableIdSchema),
   /** Omitted applicability means the task is always eligible for rule selection. */

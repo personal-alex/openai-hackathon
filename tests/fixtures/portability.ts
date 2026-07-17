@@ -6,7 +6,7 @@ export const ilContractFixture = {
   metadata: { title: "Contract fixture only" },
   facts: [{ id: "anchor_known", valueType: "boolean" as const, labelKey: "fixture.anchor", sensitive: false }],
   questions: [],
-  sourceCards: [{ id: "fixture_source", publisher: "Fixture publisher", canonicalUrl: "https://example.invalid/fixture", reviewedOn: "2026-07-15", reviewer: "Fixture reviewer", disposition: "approved" as const, scope: "Schema proof only", supportedClaimSummary: "No real claim." }],
+  sourceCards: [{ id: "fixture_source", title: "Fixture source", publisher: "Fixture publisher", canonicalUrl: "https://example.invalid/fixture", jurisdiction: "IL", reviewedOn: "2026-07-15", reviewer: "Fixture reviewer", disposition: "approved" as const, scope: "Schema proof only", supportedClaimSummary: "No real claim.", limitations: "Synthetic fixture only.", verificationWording: "Verify with an official source.", safetyClassification: "verification_required" as const }],
   tasks: [{ id: "fixture_task", title: "Fixture task", actionSummary: "Contract-only fixture.", priority: 1, timing: { kind: "general" as const, labelKey: "fixture.general" }, rationaleKey: "fixture.rationale", sourceIds: ["fixture_source"], verificationLabel: "Verify", dependsOn: [] }],
   baseTaskIds: ["fixture_task"], rules: [],
   safety: { disclaimerKey: "fixture.disclaimer", externalLinkNoticeKey: "fixture.external" }, demoScenarios: []

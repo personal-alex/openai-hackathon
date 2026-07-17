@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { CatalogTask, LocalProgress, TaskDiff, UserContext } from "@/domain-contracts";
+import type { CatalogTask, EventPack, LocalProgress, TaskDiff, UserContext } from "@/domain-contracts";
 import { compileRoadmap, diffRoadmaps } from "@/roadmap-compiler";
 import { findSeededScenario, seededScenarios, type SeededScenario, type SeededValue } from "@/test-fixtures/seeded-scenarios";
 import { BrandMark } from "./brand";
@@ -18,6 +18,10 @@ function inferScenarioId(statement: string): SeededScenario["id"] | undefined {
 }
 
 function timingLabel(task: CatalogTask): string {
+  if (task.timing.labelKey === "expecting_child.timing.immediately_after_birth") return "Immediately after birth";
+  if (task.timing.labelKey === "expecting_child.timing.optional_after_notice") return "Optional — after notice receipt";
+  if (task.timing.labelKey === "expecting_child.timing.update_when_ready") return "When you are ready";
+  if (task.timing.labelKey === "expecting_child.timing.verify_when_ready") return "Verify when you are ready";
   const { timing } = task;
   if (timing.kind === "planned") return "Plan around the date you provided";
   if (timing.kind === "event_relative") return "Start from the date you provided";
@@ -37,7 +41,6 @@ export default function Home() {
   const [statement, setStatement] = useState("");
   const [scenarioId, setScenarioId] = useState<SeededScenario["id"]>("expecting_child");
   const [context, setContext] = useState<UserContext>({ facts: {} });
-  const [questionIndex, setQuestionIndex] = useState(0);
   const [inputError, setInputError] = useState<string>();
   const [lastDiff, setLastDiff] = useState<TaskDiff>();
   const [progress, setProgress] = useState<LocalProgress>(emptyProgress);
@@ -45,8 +48,9 @@ export default function Home() {
 
   const scenario = findSeededScenario(scenarioId) ?? seededScenarios[0];
   const roadmap = useMemo(() => compileRoadmap(scenario.pack, context), [scenario, context]);
-  const activeQuestion = scenario.questions[questionIndex];
-  const answeredQuestionCount = scenario.questions.filter((question) => question.factId in context.facts).length;
+  const visibleQuestions = scenario.questions.filter((question) => question.isApplicable?.(context.facts) ?? true);
+  const activeQuestion = visibleQuestions.find((question) => !(question.factId in context.facts));
+  const answeredQuestionCount = visibleQuestions.filter((question) => question.factId in context.facts).length;
   const changeCount = lastDiff?.changes.length ?? 0;
 
   function chooseScenario(nextScenario: SeededScenario) {
@@ -64,7 +68,6 @@ export default function Home() {
     setScenarioId(detected);
     setContext({ facts: {} });
     setProgress(emptyProgress);
-    setQuestionIndex(0);
     setLastDiff(undefined);
     setScreen("confirmation");
   }
@@ -72,7 +75,7 @@ export default function Home() {
   function beginGuidedFlow() {
     if (scenario.id === "expecting_child") setScreen("acknowledgement");
     else setScreen("guided");
-    setNotice("Your initial fixture roadmap is ready. Answering a question updates it deterministically.");
+    setNotice(`${scenario.catalogKind === "approved" ? "Your approved catalog roadmap" : "Your initial fixture roadmap"} is ready. Answering a question updates it deterministically.`);
   }
 
   function answerQuestion(value: SeededValue | undefined) {
@@ -89,13 +92,12 @@ export default function Home() {
 
     setContext(nextContext);
     setLastDiff(diff);
-    setQuestionIndex((index) => Math.min(index + 1, scenario.questions.length));
     setProgress((previous) => ({ progressStatusByTaskId: Object.fromEntries(Object.entries(previous.progressStatusByTaskId).filter(([taskId]) => activeTaskIds.has(taskId))) }));
     setNotice(removedCompleted
       ? "Your roadmap changed. A completed local task is no longer in the current fixture plan; your previous progress remains valid."
       : diff.changes.length > 0
         ? `Your roadmap updated: ${diff.changes.filter((change) => change.kind === "added").length} new and ${diff.changes.filter((change) => change.kind === "changed").length} adjusted task${diff.changes.length === 1 ? "" : "s"}.`
-        : "Your answer was recorded. The current fixture roadmap did not need to change.");
+        : "Your answer was recorded. The current roadmap did not need to change.");
   }
 
   function cycleProgress(taskId: string) {
@@ -109,12 +111,21 @@ export default function Home() {
     });
   }
 
+  function changeBirthDetails() {
+    if (scenario.id !== "expecting_child" || context.facts.event_stage !== "birth_occurred") return;
+    const nextContext = { facts: { event_stage: "birth_occurred" } };
+    const nextRoadmap = compileRoadmap(scenario.pack, nextContext);
+    setLastDiff(diffRoadmaps(roadmap, nextRoadmap));
+    setContext(nextContext);
+    setProgress(emptyProgress);
+    setNotice("Birth details are ready to update. The routine path was removed until you confirm the new routing facts.");
+  }
+
   function resetDemo() {
     setScreen("entry");
     setStatement("");
     setScenarioId("expecting_child");
     setContext({ facts: {} });
-    setQuestionIndex(0);
     setLastDiff(undefined);
     setProgress(emptyProgress);
     setInputError(undefined);
@@ -169,7 +180,7 @@ export default function Home() {
             <p className="section-kicker">Confirm the event</p>
             <h1 id="confirmation-title">We heard: {scenario.label}.</h1>
             <p>{scenario.confirmationCopy}</p>
-            <p className="fixture-notice">This is a test-only seeded scenario. It uses no live model call and no reviewed policy content.</p>
+            <p className="fixture-notice">{scenario.catalogKind === "approved" ? "This seeded demonstration uses the reviewed, validated catalog and no live model call." : "This is a test-only seeded scenario. It uses no live model call and no reviewed policy content."}</p>
             <div className="button-row"><button className="primary-button" type="button" onClick={beginGuidedFlow}>Continue to questions <span aria-hidden="true">→</span></button><button className="text-button" type="button" onClick={() => setScreen("entry")}>Choose a different event</button></div>
           </div>
         </section>
@@ -189,11 +200,11 @@ export default function Home() {
       {screen === "guided" && (
         <section className="workspace" aria-label="Guided planning workspace">
           <aside className="question-column" aria-labelledby="question-title">
-            <p className="section-kicker">Seeded plan · {scenario.label}</p>
+            <p className="section-kicker">{scenario.catalogKind === "approved" ? "Reviewed catalog plan" : "Seeded fixture plan"} · {scenario.label}</p>
             <h1 id="question-title">Let’s map what comes next.</h1>
-            <div className="question-progress" aria-label={`${Math.min(questionIndex + 1, scenario.questions.length)} of ${scenario.questions.length} fixture questions`}>
-              <span>{questionIndex < scenario.questions.length ? `Question ${questionIndex + 1} of ${scenario.questions.length}` : "Fixture questions complete"}</span>
-              <div className="progress-track">{scenario.questions.map((question, index) => <i key={question.id} className={index <= questionIndex ? "is-complete" : ""} />)}</div>
+            <div className="question-progress" aria-label={`${activeQuestion ? answeredQuestionCount + 1 : answeredQuestionCount} of ${visibleQuestions.length} questions`}>
+              <span>{activeQuestion ? `Question ${answeredQuestionCount + 1} of ${visibleQuestions.length}` : "Questions complete"}</span>
+              <div className="progress-track">{visibleQuestions.map((question) => <i key={question.id} className={question.factId in context.facts ? "is-complete" : ""} />)}</div>
             </div>
             {activeQuestion ? (
               <article className="question-card" key={activeQuestion.id}>
@@ -203,16 +214,16 @@ export default function Home() {
                 <details className="why-ask"><summary>Why we ask this</summary><p>{activeQuestion.why}</p></details>
               </article>
             ) : (
-              <article className="question-card question-card--complete"><BrandMark compact /><h2>Your fixture roadmap is ready.</h2><p>Review any answer to see how the deterministic compiler adjusts the roadmap.</p><button className="text-button" type="button" onClick={() => setQuestionIndex(0)}>Review answers</button></article>
+              <article className="question-card question-card--complete"><BrandMark compact /><h2>Your roadmap is ready.</h2><p>Change your answers to see how the deterministic compiler replaces affected tasks.</p>{scenario.id === "expecting_child" && context.facts.event_stage === "birth_occurred" && <button className="text-button" type="button" onClick={changeBirthDetails}>Change birth details</button>}</article>
             )}
-            <div className="answer-summary" aria-label="Current fixture context"><span>Context</span><strong>{answeredQuestionCount} recorded · {scenario.questions.length - answeredQuestionCount} unknown</strong></div>
+            <div className="answer-summary" aria-label="Current context"><span>Context</span><strong>{answeredQuestionCount} recorded · {visibleQuestions.length - answeredQuestionCount} unknown</strong></div>
           </aside>
 
           <section className="roadmap-column" aria-labelledby="roadmap-title">
-            <div className="roadmap-topline"><div><p className="section-kicker">Live fixture roadmap</p><h2 id="roadmap-title">Your next considerations</h2></div><div className={changeCount ? "update-notice is-active" : "update-notice"} role="status"><span aria-hidden="true">✓</span>{changeCount ? "Roadmap updated" : "Ready to update"}</div></div>
+            <div className="roadmap-topline"><div><p className="section-kicker">Live deterministic roadmap</p><h2 id="roadmap-title">Your next considerations</h2></div><div className={changeCount ? "update-notice is-active" : "update-notice"} role="status"><span aria-hidden="true">✓</span>{changeCount ? "Roadmap updated" : "Ready to update"}</div></div>
             <p className="roadmap-disclaimer">{scenario.explanation}</p>
             <ol className="task-list">{roadmap.steps.map((task, index) => {
-              const sourceCards = task.sourceIds.map((sourceId) => scenario.pack.sourceCards.find((source) => source.id === sourceId)).filter(Boolean);
+              const sourceCards = task.sourceIds.map((sourceId) => scenario.pack.sourceCards.find((source) => source.id === sourceId)).filter((source): source is EventPack["sourceCards"][number] => Boolean(source));
               const status: "not started" | "reviewed" | "complete" = Object.hasOwn(progress.progressStatusByTaskId, task.id)
                 ? progress.progressStatusByTaskId[task.id]!
                 : "not started";
@@ -220,7 +231,7 @@ export default function Home() {
               return <li className={`task-card task-card--${label.toLowerCase()}`} key={task.id}>
                 <div className="task-card-main"><p className="task-number">Step {index + 1}</p><h3>{task.title}</h3><p className="task-summary">{task.actionSummary}</p><dl className="task-meta"><div><dt>Timing</dt><dd>{timingLabel(task)}</dd></div><div><dt>Status</dt><dd className="local-status">{status}</dd></div><div><dt>Verification</dt><dd>{task.verificationLabel}</dd></div></dl></div>
                 <div className="task-aside"><span className="change-label"><b aria-hidden="true" />{label}</span><div className="source-pills">{sourceCards.map((source) => source && <span key={source.id}>{source.publisher}</span>)}</div></div>
-                <details className="task-details"><summary>Why this appears <span aria-hidden="true">⌄</span></summary><div><p>{task.rationale}</p><p className="source-detail">Source provenance: {sourceCards.map((source) => source && `${source.publisher} · reviewed ${source.reviewedOn} · ${source.scope}`).join(" ")}</p><p className="source-detail">{sourceCards.map((source) => source?.supportedClaimSummary).join(" ")}</p><button type="button" className="progress-button" onClick={() => cycleProgress(task.id)}>Local status: {status} · {status === "not started" ? "mark reviewed" : status === "reviewed" ? "mark complete" : "clear status"}</button></div></details>
+                <details className="task-details"><summary>Why this appears <span aria-hidden="true">⌄</span></summary><div><p>{scenario.rationaleByKey?.[task.rationale] ?? "This task is selected by the validated catalog and deterministic compiler."}</p>{sourceCards.length > 0 ? sourceCards.map((source) => <section className="source-detail" key={source.id}><p><strong>Source:</strong> {source.title} · {source.publisher} · reviewed {source.reviewedOn} · {source.disposition}</p><p>{source.supportedClaimSummary}</p><p><strong>Scope:</strong> {source.scope}</p><p><strong>Limits:</strong> {source.limitations}</p><p><strong>Verification:</strong> {source.verificationWording}</p><p><strong>Safety:</strong> {source.safetyClassification.replaceAll("_", " ")}</p><a href={source.canonicalUrl} target="_blank" rel="noreferrer">Open official source <span className="sr-only">for {source.title}</span></a></section>) : <p className="source-detail">No source is claimed for this generic verification boundary.</p>}<button type="button" className="progress-button" onClick={() => cycleProgress(task.id)}>Local status: {status} · {status === "not started" ? "mark reviewed" : status === "reviewed" ? "mark complete" : "clear status"}</button></div></details>
               </li>;
             })}</ol>
             <div className="workspace-footer"><p>General planning support only. Verify current information with an appropriate reviewed source before acting.</p><button type="button" className="text-button" onClick={resetDemo}>Reset local demo</button></div>

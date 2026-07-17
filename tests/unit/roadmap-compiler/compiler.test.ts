@@ -4,7 +4,7 @@ import { compileRoadmap, diffRoadmaps } from "@/roadmap-compiler";
 const pack = {
   id: "job_loss" as const, version: "fixture-1", jurisdiction: "IL" as const, metadata: { title: "Fixture" },
   facts: [{ id: "event_date", valueType: "string" as const, labelKey: "fact.event_date", sensitive: false }, { id: "eligible", valueType: "boolean" as const, labelKey: "fact.eligible", sensitive: false }],
-  questions: [], sourceCards: [{ id: "source_fixture", publisher: "Fixture", canonicalUrl: "https://example.invalid/source", reviewedOn: "2026-07-15", reviewer: "Fixture reviewer", disposition: "approved" as const, scope: "Fixture", supportedClaimSummary: "No policy claim." }],
+  questions: [], sourceCards: [{ id: "source_fixture", title: "Fixture source", publisher: "Fixture", canonicalUrl: "https://example.invalid/source", jurisdiction: "IL", reviewedOn: "2026-07-15", reviewer: "Fixture reviewer", disposition: "approved" as const, scope: "Fixture", supportedClaimSummary: "No policy claim.", limitations: "Synthetic fixture only.", verificationWording: "Verify with an official source.", safetyClassification: "verification_required" as const }],
   tasks: [
     { id: "base_task", title: "Base", actionSummary: "Fixture", priority: 2, timing: { kind: "event_relative" as const, anchor: "event_date" as const, window: "immediate" as const, labelKey: "timing.immediate" }, rationaleKey: "task.base", sourceIds: ["source_fixture"], verificationLabel: "Verify", dependsOn: [] },
     { id: "included_task", title: "Included", actionSummary: "Fixture", priority: 1, timing: { kind: "general" as const, labelKey: "timing.general" }, rationaleKey: "task.included", sourceIds: ["source_fixture"], verificationLabel: "Verify", dependsOn: [] }

@@ -182,3 +182,23 @@ Week submission. It is a concise evidence log, not a transcript.
 - Scope/review: Added only `.agents/skills/life-event-authoring/` instructions, review templates, and a clearly fictional/unapproved example. The review found no runtime packs, registry entries, shared-contract changes, source URLs, policy claims, compiler changes, or user-facing content; outcome: approved.
 - Human review/decision: All generated material remains candidate-only. Source-card dispositions, claim/task/rule/question/safety approval, any contract change, and a separately authorized approved-pack implementation remain mandatory gates.
 - Verification: Manual frontmatter/metadata and safety-content inspection passed; `npm run lint`, `npm run typecheck`, `npm run test` (4 files, 13 tests), `npm run build`, and `npm run test:e2e` (1 passed) passed in the worktree. The supplied skill validator was not runnable because both available Python runtimes lack PyYAML; no environment dependency was added.
+
+### 2026-07-17 — Approved `expecting_child` runtime-pack promotion
+
+- Task/outcome: Promoted only the explicitly approved Israel `expecting_child`
+  content into active catalog pack `il-expecting-child-v1` and wired it through
+  the deterministic seeded interaction.
+- Codex contribution: Added runtime registration validation, five canonical
+  first-party source cards, explicit post-birth and special-path rules,
+  catalog-derived task/source detail rendering, and focused unit/browser
+  coverage.
+- Human review/decision: Approved the routine Israeli-hospital scope, with the
+  eligibility qualifier that Population Registry entry is not automatic for
+  every newborn; approved bounded verification-only routing rather than
+  special-case workflows.
+- Safety boundary: Explicit `birth_occurred` is required; no model defines
+  tasks or sources, no eligibility/legal/medical/tax/financial/citizenship/
+  parentage/registration determination is made, and no external action occurs.
+- Evidence: `git diff --check`, `npm run lint`, `npm run typecheck`, `npm run
+  test` (7 files, 38 tests), `npm run build`, and `npm run test:e2e` (5 passed)
+  all passed locally. No `/feedback` session ID is recorded.

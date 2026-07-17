@@ -20,23 +20,33 @@ export const expectingChildTransitionFixture = {
   sourceCards: [
     {
       id: "test_only_piba_birth_registry_procedure",
+      title: "Test-only birth-registration fixture source",
       publisher: "Population and Immigration Authority — test-only fixture",
       canonicalUrl: "https://www.gov.il/BlobFolder/policy/birth_registry_in_israel_procedure/he/2.2.0001.pdf",
+      jurisdiction: "IL",
       reviewedOn: "2026-07-17",
       reviewer: "Test fixture",
       disposition: "approved",
       scope: "Test-only proof of the reviewed routine Israeli-hospital candidate route; not runtime content.",
-      supportedClaimSummary: "The fixture exercises only the candidate distinction between hospital notice and Authority registry entry."
+      supportedClaimSummary: "The fixture exercises only the candidate distinction between hospital notice and Authority registry entry.",
+      limitations: "This is not a reviewed runtime source card or active policy content.",
+      verificationWording: "Verify current information on an official source.",
+      safetyClassification: "verification_required"
     },
     {
       id: "test_only_piba_newborn_name",
+      title: "Test-only newborn-name fixture source",
       publisher: "Population and Immigration Authority — test-only fixture",
       canonicalUrl: "https://www.gov.il/he/service/naming_baby",
+      jurisdiction: "IL",
       reviewedOn: "2026-07-17",
       reviewer: "Test fixture",
       disposition: "approved",
       scope: "Test-only proof of a conditional first-name action; not runtime content.",
-      supportedClaimSummary: "The fixture exercises selection only when a first name was not included in a hospital notice."
+      supportedClaimSummary: "The fixture exercises selection only when a first name was not included in a hospital notice.",
+      limitations: "This is not a reviewed runtime source card or active policy content.",
+      verificationWording: "Verify current information on an official source.",
+      safetyClassification: "verification_required"
     }
   ],
   tasks: [

@@ -17,7 +17,7 @@ const validPack = {
   metadata: { title: "Contract fixture" },
   facts: [{ id: "has_anchor", valueType: "boolean", labelKey: "fact.has_anchor", sensitive: false }],
   questions: [{ id: "ask_anchor", factId: "has_anchor", promptKey: "question.anchor", rationaleKey: "why.anchor", answerType: "boolean", allowSkip: true }],
-  sourceCards: [{ id: "fixture_source", publisher: "Fixture publisher", canonicalUrl: "https://example.invalid/source", reviewedOn: "2026-07-15", reviewer: "Fixture reviewer", disposition: "approved", scope: "Schema fixture only", supportedClaimSummary: "No policy claim." }],
+  sourceCards: [{ id: "fixture_source", title: "Fixture source", publisher: "Fixture publisher", canonicalUrl: "https://example.invalid/source", jurisdiction: "IL", reviewedOn: "2026-07-15", reviewer: "Fixture reviewer", disposition: "approved", scope: "Schema fixture only", supportedClaimSummary: "No policy claim.", limitations: "Synthetic fixture only.", verificationWording: "Verify with an official source.", safetyClassification: "verification_required" }],
   tasks: [{ id: "fixture_task", title: "Fixture task", actionSummary: "Validate contracts.", priority: 1, timing: { kind: "general", labelKey: "timing.general" }, rationaleKey: "task.fixture", sourceIds: ["fixture_source"], verificationLabel: "Verify", dependsOn: [] }],
   baseTaskIds: ["fixture_task"],
   rules: [],
