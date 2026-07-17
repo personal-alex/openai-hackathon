@@ -219,3 +219,20 @@ Week submission. It is a concise evidence log, not a transcript.
 - Evidence: `git diff --check`, `npm run lint`, `npm run typecheck`, `npm run
   test` (41 passed), `npm run build`, and `npm run test:e2e` (6 passed) all
   passed locally; no `/feedback` session ID is recorded.
+
+### 2026-07-17 — First-load editorial introduction
+
+- Task/outcome: Added a calm, first-load-only editorial introduction that
+  resolves the approved motto before handing into the action-oriented landing
+  entry point.
+- Codex contribution: Implemented the restrained glyph-resolution animation,
+  transition, Skip intro control, reduced-motion/no-script behavior, input
+  focus handoff, mobile word-wrap protection, and focused browser coverage.
+- Human review/decision: Requested the first-load message, warm visual
+  direction, action-oriented landing copy, and non-flashy interaction posture.
+- Changed artifacts: `src/app/landing-intro.tsx`;
+  `src/app/landing-intro.css`; `src/app/page.tsx`; seeded browser tests; this
+  collaboration record and `CURRENT_STATE.md`.
+- Verification: `git diff --check`, `npm run lint`, `npm run typecheck`,
+  `npm run test` (41 passed), `npm run build`, and 8 Chromium journeys against
+  the fresh production build passed; no `/feedback` session ID is recorded.

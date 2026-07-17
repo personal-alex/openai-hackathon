@@ -1,7 +1,14 @@
 import { expect, test } from "@playwright/test";
 
-async function beginScenario(page: import("@playwright/test").Page, statement: string) {
+async function openLanding(page: import("@playwright/test").Page) {
   await page.goto("/");
+  await expect(page.getByTestId("landing-intro")).toBeVisible();
+  await page.getByRole("button", { name: "Skip intro" }).click();
+  await expect(page.getByRole("heading", { name: "Tell us what changed." })).toBeVisible();
+}
+
+async function beginScenario(page: import("@playwright/test").Page, statement: string) {
+  await openLanding(page);
   await expect(page.getByTestId("seeded-ai-boundary")).toBeVisible();
   await page.getByLabel("What happened?").fill(statement);
   await page.getByRole("button", { name: /continue/i }).click();
@@ -9,12 +16,24 @@ async function beginScenario(page: import("@playwright/test").Page, statement: s
 }
 
 async function beginExpectingChild(page: import("@playwright/test").Page) {
-  await page.goto("/");
+  await openLanding(page);
   await page.getByLabel("What happened?").fill("I’m expecting a child");
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await expect(page.getByRole("heading", { name: "We heard: Expecting a child." })).toBeVisible();
   await page.getByRole("button", { name: /continue to questions/i }).click();
 }
+
+test("presents a first-load intro and immediately reaches the keyboard-ready landing page when skipped", async ({ page }) => {
+  await openLanding(page);
+  await expect(page.getByLabel("What happened?")).toBeFocused();
+});
+
+test("moves directly to the landing page when reduced motion is requested", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await expect(page.getByRole("heading", { name: "Tell us what changed." })).toBeVisible();
+  await expect(page.getByTestId("landing-intro")).toHaveCount(0);
+});
 
 test("guides the seeded job-loss scenario while keeping the compiler roadmap visible", async ({ page }) => {
   await beginScenario(page, "I lost my job");
@@ -56,7 +75,7 @@ test("replaces the routine roadmap with the bounded birth-abroad route", async (
   await page.getByRole("button", { name: /Toggle details for Verify the official route/i }).click();
   await expect(page.getByText(/separate official process/i)).toBeVisible();
   await page.getByRole("button", { name: "Reset local demo" }).click();
-  await expect(page.getByRole("heading", { name: "Life doesn’t come with instructions. Now it does." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Tell us what changed." })).toBeVisible();
 });
 
 test("covers non-hospital and conditional-name seeded paths", async ({ page }) => {
@@ -78,8 +97,7 @@ test("covers non-hospital and conditional-name seeded paths", async ({ page }) =
 
 test("works at a narrow mobile viewport with keyboard-reachable flow", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Start with what changed." })).toBeVisible();
+  await openLanding(page);
   await page.getByLabel("What happened?").press("Tab");
   await expect(page.getByRole("button", { name: /continue/i })).toBeFocused();
 });

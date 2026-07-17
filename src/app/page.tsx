@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { CatalogTask, EventPack, LocalProgress, TaskDiff, UserContext } from "@/domain-contracts";
 import { diffRoadmaps } from "@/roadmap-compiler";
 import { compileRoadmapPresentation } from "@/roadmap-compiler/presentation";
 import { findSeededScenario, seededScenarios, type SeededScenario, type SeededValue } from "@/test-fixtures/seeded-scenarios";
 import { BrandMark } from "./brand";
+import { LandingIntro } from "./landing-intro";
+import "./landing-intro.css";
 import "./roadmap-disclosure.css";
 
 type Screen = "entry" | "confirmation" | "guided";
@@ -39,6 +41,8 @@ function changeLabel(taskId: string, diff: TaskDiff | undefined): "New" | "Adjus
 }
 
 export default function Home() {
+  const eventInputRef = useRef<HTMLInputElement>(null);
+  const [showIntro, setShowIntro] = useState(true);
   const [screen, setScreen] = useState<Screen>("entry");
   const [statement, setStatement] = useState("");
   const [scenarioId, setScenarioId] = useState<SeededScenario["id"]>("expecting_child");
@@ -56,6 +60,10 @@ export default function Home() {
   const activeQuestion = visibleQuestions.find((question) => !(question.factId in context.facts));
   const answeredQuestionCount = visibleQuestions.filter((question) => question.factId in context.facts).length;
   const changeCount = lastDiff?.changes.length ?? 0;
+
+  useEffect(() => {
+    if (!showIntro && screen === "entry") eventInputRef.current?.focus();
+  }, [screen, showIntro]);
 
   function chooseScenario(nextScenario: SeededScenario) {
     setStatement(nextScenario.examplePrompt);
@@ -155,8 +163,14 @@ export default function Home() {
     setNotice("The local seeded demonstration was reset. No server data was stored.");
   }
 
+  function finishIntro() {
+    setShowIntro(false);
+  }
+
   return (
-    <main className={`app-shell app-shell--${screen}`}>
+    <main className={`app-shell app-shell--${screen}${showIntro && screen === "entry" ? " intro-pending" : ""}`}>
+      {showIntro && <LandingIntro onComplete={finishIntro} />}
+      <noscript><style>{`.landing-intro{display:none!important}.app-shell--entry.intro-pending .app-header,.app-shell--entry.intro-pending .entry-layout{opacity:1!important;pointer-events:auto!important;transform:none!important}`}</style></noscript>
       <header className="app-header">
         <BrandMark />
         <div className="mode-badge" data-testid="seeded-ai-boundary"><span aria-hidden="true" />Seeded demo · deterministic</div>
@@ -168,15 +182,15 @@ export default function Home() {
         <section className="entry-layout" aria-labelledby="entry-title">
           <div className="entry-copy">
             <p className="section-kicker">Planning companion · Israel · English</p>
-            <h1 id="entry-title">Start with what changed.</h1>
-            <p className="entry-lede">Tell us about a life event. We’ll ask only the questions that can shape your next steps.</p>
+            <h1 id="entry-title">Tell us what changed.</h1>
+            <p className="entry-lede">We’ll ask only what shapes your next steps.</p>
           </div>
           <div className="entry-stage">
             <form className="event-input-card" onSubmit={(event) => { event.preventDefault(); continueFromEntry(); }} noValidate>
               <label htmlFor="event-statement">What happened?</label>
               <p>Begin in your own words. The roadmap stays source-aware and explainable.</p>
               <div className="input-row">
-                <input id="event-statement" name="event-statement" value={statement} onChange={(event) => { setStatement(event.target.value); setInputError(undefined); }} placeholder="For example: I lost my job" aria-describedby={inputError ? "event-error" : "event-helper"} />
+                <input ref={eventInputRef} id="event-statement" name="event-statement" value={statement} onChange={(event) => { setStatement(event.target.value); setInputError(undefined); }} placeholder="For example: I lost my job" aria-describedby={inputError ? "event-error" : "event-helper"} />
                 <button className="primary-button" type="submit">Continue <span aria-hidden="true">→</span></button>
               </div>
               <p className="input-helper" id="event-helper">Supported fixture scenarios</p>

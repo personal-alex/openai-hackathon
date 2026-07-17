@@ -197,6 +197,20 @@ The repository contains a validated modular-monolith baseline, deterministic com
   test` (7 files, 41 tests), `npm run build`, and `npm run test:e2e` (6
   deterministic browser journeys).
 
+## 2026-07-17 — First-load editorial introduction
+
+- The main entry route now opens with a presentation-only Life Navigator
+  introduction: a restrained character-resolution reveal for “Life doesn’t
+  come with instructions.” followed by “Now it does.” It fades and lifts into
+  the action-oriented landing heading, “Tell us what changed.”
+- The overlay has a visible Skip intro control, hands keyboard focus to the
+  event input, respects reduced motion by opening the landing immediately, and
+  includes a no-JavaScript escape path. It does not alter deterministic
+  scenario, compiler, AI, event-pack, or safety behavior.
+- Passed: `git diff --check`, `npm run lint`, `npm run typecheck`, `npm run
+  test` (7 files, 41 tests), `npm run build`, and 8 production-build Chromium
+  journeys, including skip, reduced-motion, and narrow-mobile flow coverage.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations
