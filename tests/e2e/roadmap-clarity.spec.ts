@@ -27,6 +27,7 @@ test("renders generic roadmap groups, task inspection, source metadata, local st
   await page.getByRole("button", { name: "Yes", exact: true }).click();
 
   await expect(page.locator(".timing-group").first()).toBeVisible();
+  await expect(page.locator(".timing-group > h3").first()).toHaveText(/Immediate|Preparation|Ongoing|Later|When ready/);
   const taskCard = page.locator(".roadmap-panel .task-card").first();
   const taskToggle = taskCard.locator(".task-card-toggle");
   await taskToggle.click();

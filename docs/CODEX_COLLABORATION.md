@@ -254,3 +254,18 @@ Week submission. It is a concise evidence log, not a transcript.
 - Verification: `git diff --check`, lint, typecheck, 41 Vitest tests, build,
   and 11 fresh-production Chromium journeys passed; no `/feedback` session ID
   is recorded.
+
+### 2026-07-17 — Shared timing lanes and intro exit reliability
+
+- Task/outcome: Repaired the landing-intro exit interaction and replaced the
+  roadmap's timing-bucket labels with a pure generic timing-lane mapper.
+- Codex contribution: Kept the fading overlay non-interactive, added Escape
+  handling and deterministic browser waits, and added validated
+  timing/window/priority mapping with unit and browser coverage.
+- Human review/decision: Requested main-thread-only shared presentation work;
+  job-loss candidate content remains isolated and review-required.
+- Safety/scope: No candidate pack was activated, imported, rendered, or
+  changed; no task/source/policy/AI/compiler-selection data changed.
+- Verification: `git diff --check`, lint, typecheck, 44 Vitest tests, build,
+  and 13 fresh-production Chromium journeys passed; no `/feedback` session ID
+  is recorded.

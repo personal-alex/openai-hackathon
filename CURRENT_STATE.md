@@ -227,6 +227,20 @@ The repository contains a validated modular-monolith baseline, deterministic com
   test` (41 tests), `npm run build`, and 11 Chromium journeys against a fresh
   production build.
 
+## 2026-07-17 — Shared timing lanes and intro exit reliability
+
+- The landing intro now marks its overlay non-interactive while it fades, reveals
+  the entry controls at exit start, supports Escape as a visible-equivalent
+  exit, and keeps input focus management intact. Seeded browser helpers wait
+  for actual overlay removal rather than a visually-hidden landing heading.
+- `src/app/timing-lanes.ts` maps only validated `Timing.kind`/`window` into the
+  generic Immediate, Preparation, Ongoing, Later, or When ready presentation
+  lanes; compiler priority remains the within-lane order. No event, pack,
+  source, fixture, rule, policy, or compiler selection data changed.
+- Passed: `git diff --check`, `npm run lint`, `npm run typecheck`, `npm run
+  test` (44 tests), `npm run build`, and 13 Chromium journeys against a fresh
+  production build.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

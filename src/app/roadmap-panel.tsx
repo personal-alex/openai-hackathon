@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { CatalogTask, CompiledRoadmap, EventPack, LocalProgress, TaskDiff, Timing } from "@/domain-contracts";
+import type { CompiledRoadmap, EventPack, LocalProgress, TaskDiff } from "@/domain-contracts";
+import { groupTasksByTimingLane } from "./timing-lanes";
 
 type LocalStatus = "not started" | "reviewed" | "complete";
 
@@ -13,30 +14,6 @@ type RoadmapPanelProps = {
   readOnly?: boolean;
   onCycleProgress: (taskId: string) => void;
 };
-
-type TimingGroup = { id: string; label: string; tasks: CatalogTask[] };
-
-function timingLabel(timing: Timing): string {
-  if (timing.kind === "general") return "General planning";
-  if (timing.kind === "event_relative") return { immediate: "Start now", within_days: "In the coming days", after_days: "Later after the event" }[timing.window];
-  if (timing.kind === "planned") return { before: "Before the planned date", around: "Around the planned date", after: "After the planned date" }[timing.window];
-  return { before: "Before the milestone", around: "Around the milestone", after: "After the milestone" }[timing.window];
-}
-
-function timingGroupId(timing: Timing): string {
-  return timing.kind === "general" ? timing.kind : `${timing.kind}:${timing.window}`;
-}
-
-function groupTasks(tasks: CatalogTask[]): TimingGroup[] {
-  const groups = new Map<string, TimingGroup>();
-  for (const task of tasks) {
-    const id = timingGroupId(task.timing);
-    const existing = groups.get(id);
-    if (existing) existing.tasks.push(task);
-    else groups.set(id, { id, label: timingLabel(task.timing), tasks: [task] });
-  }
-  return Array.from(groups.values());
-}
 
 function localStatus(taskId: string, progress: LocalProgress): LocalStatus {
   return progress.progressStatusByTaskId[taskId] ?? "not started";
@@ -65,7 +42,7 @@ function changeSummary(diff: TaskDiff | undefined): string | undefined {
 /** Shared UI projection for compiler output plus the separate local progress overlay. */
 export function RoadmapPanel({ roadmap, sourceCards, progress, taskDiff, readOnly = false, onCycleProgress }: RoadmapPanelProps) {
   const [expandedTaskIds, setExpandedTaskIds] = useState<Set<string>>(new Set());
-  const groups = useMemo(() => groupTasks(roadmap.steps), [roadmap.steps]);
+  const groups = useMemo(() => groupTasksByTimingLane(roadmap.steps), [roadmap.steps]);
   const sourcesById = useMemo(() => new Map(sourceCards.map((source) => [source.id, source])), [sourceCards]);
   const taskTitlesById = useMemo(() => new Map(roadmap.steps.map((task) => [task.id, task.title])), [roadmap.steps]);
   const summary = changeSummary(taskDiff);
@@ -93,7 +70,7 @@ export function RoadmapPanel({ roadmap, sourceCards, progress, taskDiff, readOnl
         const expanded = expandedTaskIds.has(task.id);
         return <li className={`task-card task-card--${label.toLowerCase()}`} key={task.id}>
           <button type="button" className="task-card-toggle" aria-label={`Toggle details for ${task.title}`} aria-expanded={expanded} aria-controls={`task-details-${task.id}`} onClick={() => toggleTask(task.id)}>
-            <div className="task-card-main"><h4>{task.title}</h4><p className="task-summary">{task.actionSummary}</p><dl className="task-meta"><div><dt>Timing</dt><dd>{timingLabel(task.timing)}</dd></div><div><dt>Local status</dt><dd className="local-status">{readOnly ? "Preview only" : status}</dd></div><div><dt>Verification</dt><dd>{task.verificationLabel}</dd></div></dl></div>
+            <div className="task-card-main"><h4>{task.title}</h4><p className="task-summary">{task.actionSummary}</p><dl className="task-meta"><div><dt>Timing lane</dt><dd>{group.label}</dd></div><div><dt>Local status</dt><dd className="local-status">{readOnly ? "Preview only" : status}</dd></div><div><dt>Verification</dt><dd>{task.verificationLabel}</dd></div></dl></div>
             <div className="task-aside"><span className="change-label"><b aria-hidden="true" />{label}</span><span className="task-inspect-label">View details</span><span className="disclosure-arrow" aria-hidden="true">⌄</span></div>
           </button>
           <div id={`task-details-${task.id}`} className="task-details-panel" data-expanded={expanded}><div className="task-details-content">

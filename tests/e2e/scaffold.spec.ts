@@ -4,6 +4,7 @@ async function openLanding(page: import("@playwright/test").Page) {
   await page.goto("/");
   await expect(page.getByTestId("landing-intro")).toBeVisible();
   await page.getByRole("button", { name: "Skip intro" }).click();
+  await expect(page.getByTestId("landing-intro")).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "Tell us what changed." })).toBeVisible();
 }
 

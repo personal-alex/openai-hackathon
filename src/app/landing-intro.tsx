@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const firstLine = "Life doesn’t come with instructions.";
 const firstLineCharacters = Array.from(firstLine.replaceAll(" ", ""));
@@ -11,6 +11,7 @@ const completedHoldMs = 2500;
 const exitDurationMs = 420;
 
 type LandingIntroProps = {
+  onExitStart: () => void;
   onComplete: () => void;
 };
 
@@ -19,18 +20,23 @@ function transientGlyph(index: number, tick: number) {
 }
 
 /** A calm first-load statement; it never supplies roadmap content or application state. */
-export function LandingIntro({ onComplete }: LandingIntroProps) {
+export function LandingIntro({ onExitStart, onComplete }: LandingIntroProps) {
   const [revealedCharacters, setRevealedCharacters] = useState(0);
   const [glyphTick, setGlyphTick] = useState(0);
   const [phase, setPhase] = useState<"revealing" | "line_resolved" | "complete" | "leaving">("revealing");
+  const exitRequested = useRef(false);
 
   const leaveIntro = useCallback((immediate = false) => {
+    if (exitRequested.current) return;
+    exitRequested.current = true;
+    onExitStart();
     setPhase("leaving");
     window.setTimeout(onComplete, immediate ? 120 : exitDurationMs);
-  }, [onComplete]);
+  }, [onComplete, onExitStart]);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      onExitStart();
       onComplete();
       return;
     }
@@ -51,7 +57,15 @@ export function LandingIntro({ onComplete }: LandingIntroProps) {
       window.clearInterval(glyphTimer);
       window.clearInterval(revealTimer);
     };
-  }, [onComplete]);
+  }, [onComplete, onExitStart]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") leaveIntro(true);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [leaveIntro]);
 
   useEffect(() => {
     if (phase !== "line_resolved") return;

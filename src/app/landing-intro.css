@@ -13,6 +13,7 @@
 
 .landing-intro--leaving {
   opacity: 0;
+  pointer-events: none;
   transform: translateY(-0.75rem);
   transition: opacity 420ms ease, transform 420ms ease;
 }
@@ -109,6 +110,13 @@
   opacity: 0;
   pointer-events: none;
   transform: translateY(0.75rem);
+}
+
+.app-shell--entry.intro-exiting .app-header,
+.app-shell--entry.intro-exiting .entry-layout {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
 }
 
 .app-shell--entry .app-header,

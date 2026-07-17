@@ -26,6 +26,7 @@ function inferScenarioId(statement: string): SeededScenario["id"] | undefined {
 export default function Home() {
   const eventInputRef = useRef<HTMLInputElement>(null);
   const [showIntro, setShowIntro] = useState(true);
+  const [introExiting, setIntroExiting] = useState(false);
   const [screen, setScreen] = useState<Screen>("entry");
   const [statement, setStatement] = useState("");
   const [scenarioId, setScenarioId] = useState<SeededScenario["id"]>("expecting_child");
@@ -44,8 +45,8 @@ export default function Home() {
   const changeCount = lastDiff?.changes.length ?? 0;
 
   useEffect(() => {
-    if (!showIntro && screen === "entry") eventInputRef.current?.focus();
-  }, [screen, showIntro]);
+    if ((!showIntro || introExiting) && screen === "entry") eventInputRef.current?.focus();
+  }, [introExiting, screen, showIntro]);
 
   function chooseScenario(nextScenario: SeededScenario) {
     setStatement(nextScenario.examplePrompt);
@@ -138,9 +139,13 @@ export default function Home() {
     setShowIntro(false);
   }
 
+  function beginIntroExit() {
+    setIntroExiting(true);
+  }
+
   return (
-    <main className={`app-shell app-shell--${screen}${showIntro && screen === "entry" ? " intro-pending" : ""}`}>
-      {showIntro && <LandingIntro onComplete={finishIntro} />}
+    <main className={`app-shell app-shell--${screen}${showIntro && screen === "entry" ? introExiting ? " intro-exiting" : " intro-pending" : ""}`}>
+      {showIntro && <LandingIntro onExitStart={beginIntroExit} onComplete={finishIntro} />}
       <noscript><style>{`.landing-intro{display:none!important}.app-shell--entry.intro-pending .app-header,.app-shell--entry.intro-pending .entry-layout{opacity:1!important;pointer-events:auto!important;transform:none!important}`}</style></noscript>
       <header className="app-header">
         <BrandMark />

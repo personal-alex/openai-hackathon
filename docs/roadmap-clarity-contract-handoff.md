@@ -26,3 +26,13 @@ timing, source, verification, dependency, local-status, and count-based diff
 data; it explicitly identifies unavailable explanations instead of generating
 or inferring them. This handoff does not authorize any event-pack, source,
 rule, or policy change.
+
+## Timing-lane decision
+
+No contract change is required for generic timing-lane presentation. The
+validated `Timing.kind` and `Timing.window` discriminants provide enough
+metadata to map tasks into a fixed, event-agnostic presentation configuration;
+task `priority` orders tasks within a lane. The configuration does not infer a
+task-specific category such as “Gather” from text or policy content. A future
+pack-authored custom lane label would require a separately approved contract
+field and is out of scope.
