@@ -1,6 +1,7 @@
 import { type EventId, type EventPack } from "@/domain-contracts";
 import { validateApprovedEventPack } from "./review";
 import { expectingChildPack } from "./expecting-child";
+import { jobLossPack } from "./job-loss";
 
 function registerApprovedPack(pack: EventPack): EventPack {
   const validation = validateApprovedEventPack(pack);
@@ -9,7 +10,10 @@ function registerApprovedPack(pack: EventPack): EventPack {
 }
 
 /** Deliberately registered runtime catalog. Candidate and test-only packets never enter this map. */
-export const activeEventPacks = [registerApprovedPack(expectingChildPack)];
+export const activeEventPacks = [
+  registerApprovedPack(expectingChildPack),
+  registerApprovedPack(jobLossPack)
+];
 export const activeEventPacksById = new Map<EventId, EventPack>(activeEventPacks.map((pack) => [pack.id, pack]));
 export const activeSourceCards = activeEventPacks.flatMap((pack) => pack.sourceCards);
 

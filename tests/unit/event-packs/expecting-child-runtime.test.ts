@@ -8,18 +8,19 @@ const pack = getActiveEventPack("expecting_child")!;
 const taskIds = (facts: Record<string, string>) => compileRoadmap(pack, { facts }).steps.map((task) => task.id);
 
 describe("approved expecting-child runtime catalog", () => {
-  it("registers only the validated active pack and five approved first-party source cards", () => {
+  it("keeps the validated expecting-child pack and its five approved first-party source cards in the active catalog", () => {
     expect(validateApprovedEventPack(pack).success).toBe(true);
-    expect(activeEventPacks).toHaveLength(1);
+    expect(activeEventPacks.map((entry) => entry.id)).toEqual(["expecting_child", "job_loss"]);
     expect(activeEventPacks.every((entry) => !entry.testOnly)).toBe(true);
-    expect(activeSourceCards.map((source) => source.id)).toEqual([
+    const expectingChildSources = activeSourceCards.filter((source) => pack.sourceCards.some((packSource) => packSource.id === source.id));
+    expect(expectingChildSources.map((source) => source.id)).toEqual([
       "ec_piba_birth_registry_procedure",
       "ec_piba_newborn_name",
       "ec_piba_birth_certificate",
       "ec_moh_birth_certificate_parents",
       "ec_piba_birth_abroad_registration"
     ]);
-    expect(activeSourceCards.every((source) => source.disposition === "approved" && source.canonicalUrl.startsWith("https://"))).toBe(true);
+    expect(expectingChildSources.every((source) => source.disposition === "approved" && source.canonicalUrl.startsWith("https://"))).toBe(true);
   });
 
   it("keeps every task source reference in the active catalog and never embeds a URL in task copy", () => {

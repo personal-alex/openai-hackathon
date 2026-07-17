@@ -1,5 +1,6 @@
 import type { EventId, EventPack, FactValue, QuestionDefinition, UserContext } from "@/domain-contracts";
 import { expectingChildPack } from "@/event-packs/expecting-child";
+import { jobLossPack } from "@/event-packs/job-loss";
 
 export type SeededValue = FactValue;
 
@@ -159,12 +160,31 @@ export const seededScenarios: SeededScenario[] = [
     label: "Job loss",
     examplePrompt: "I lost my job",
     statementHints: ["job", "lost", "laid off", "layoff"],
-    confirmationCopy: "A synthetic seeded scenario for demonstrating the shared planning experience.",
-    explanation: "This roadmap uses validated, synthetic fixture data and the deterministic compiler. It is not reviewed event content.",
-    catalogKind: "synthetic",
+    confirmationCopy: "A reviewed Israel event pack can help you review official routes and practical next steps from the facts you choose to share.",
+    explanation: "This roadmap is compiled only from the approved Hackathon-scope catalog. It provides educational planning support, not an eligibility, legal, tax, pension, or payment determination.",
+    catalogKind: "approved",
+    rationaleByKey: {
+      "job_loss.rationale.registration_not_registered": "You explicitly said employment ended, that your work was salaried, and that you had not registered. This raises an official-route review, not an eligibility conclusion.",
+      "job_loss.rationale.salaried_claim_route": "You explicitly described a salaried arrangement after employment ended, so the roadmap includes a review of the official claim route without predicting an outcome.",
+      "job_loss.rationale.registration_confirmed": "You said you had registered, so the initial registration review was replaced with a prompt to check current official instructions.",
+      "job_loss.rationale.nonstandard_arrangement": "Your work arrangement is not confirmed as salaried, so the standard salaried route is not shown. Only a bounded verification task appears.",
+      "job_loss.rationale.prepare_information": "The official source supports keeping employment and pay information available, but does not establish a complete checklist or sufficient documents.",
+      "job_loss.rationale.missing_end_confirmation": "You said confirmation is missing or uncertain, so this records task stays verification-oriented rather than treating any document as required or sufficient.",
+      "job_loss.rationale.information_uncertain": "You said the available information is missing or uncertain, so the roadmap directs you to verify current official requirements rather than assume a checklist is complete.",
+      "job_loss.rationale.practical_momentum": "This is practical planning guidance, not an official benefits or rights claim."
+    },
     context: { facts: {} },
-    pack: fixturePack("job_loss"),
-    questions: fixturePack("job_loss").questions
+    pack: jobLossPack,
+    questions: [
+      jobLossPack.questions[0],
+      { ...jobLossPack.questions[1], isApplicable: (facts) => facts.employment_stage === "ended" },
+      { ...jobLossPack.questions[2], isApplicable: (facts) => facts.employment_stage === "ended" },
+      { ...jobLossPack.questions[3], isApplicable: (facts) => facts.employment_stage === "ended" && facts.work_arrangement === "salaried" },
+      { ...jobLossPack.questions[4], isApplicable: (facts) => facts.employment_stage === "ended" },
+      { ...jobLossPack.questions[5], isApplicable: (facts) => facts.employment_stage === "ended" && facts.work_arrangement === "salaried" },
+      { ...jobLossPack.questions[6], isApplicable: (facts) => facts.employment_stage === "ended" || facts.employment_stage === "notice_given" },
+      { ...jobLossPack.questions[7], isApplicable: (facts) => facts.employment_stage === "ended" && facts.work_arrangement === "salaried" }
+    ]
   }
 ];
 

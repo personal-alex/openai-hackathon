@@ -36,18 +36,25 @@ test("moves directly to the landing page when reduced motion is requested", asyn
   await expect(page.getByTestId("landing-intro")).toHaveCount(0);
 });
 
-test("guides the seeded job-loss scenario while keeping the compiler roadmap visible", async ({ page }) => {
+test("guides the reviewed catalog route while keeping source-backed tasks and diffs visible", async ({ page }) => {
   await beginScenario(page, "I lost my job");
 
   await expect(page.getByRole("heading", { name: "Let’s map what comes next." })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Your next considerations" })).toBeVisible();
-  await page.getByRole("button", { name: "Yes, use a planning date" }).click();
+  const questionCard = page.locator(".question-card");
+  await questionCard.locator(".answer-button").first().click();
+  await page.getByRole("textbox").fill("2026-07-17");
+  await page.getByRole("button", { name: "Continue" }).click();
+  await questionCard.locator(".answer-button").first().click();
+  await questionCard.locator(".answer-button").nth(1).click();
 
   await expect(page.getByRole("status")).toContainText("Roadmap updated");
-  await expect(page.getByText("Shape a planning timeline")).toBeVisible();
+  const registrationDetails = page.locator(".task-card button").first();
+  await expect(registrationDetails).toBeVisible();
   await expect(page.getByText("New", { exact: true })).toBeVisible();
-  await page.getByRole("button", { name: /Toggle details for/i }).first().click();
-  await expect(page.getByText("Synthetic UI demonstration only — not policy content.").first()).toBeVisible();
+  await registrationDetails.click();
+  await expect(page.getByText(/Registration and reporting at the Employment Service/i).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: /Open source \(external\)/i }).first()).toHaveAttribute("href", "https://www.btl.gov.il/English%20Homepage/Benefits/Unemployment%20Insurance/Pages/Pleasenote.aspx");
 });
 
 test("guides the approved expecting-child routine path with catalog-derived source details", async ({ page }) => {
