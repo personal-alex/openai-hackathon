@@ -9,14 +9,17 @@ const pack = getActiveEventPack("job_loss")!;
 const taskIds = (facts: Record<string, string>) => compileRoadmap(pack, { facts }).steps.map((task) => task.id);
 
 describe("approved Hackathon job-loss runtime catalog", () => {
-  it("registers only the four complete approved-for-hackathon NII source cards", () => {
+  it("registers the complete approved-for-hackathon official route source cards", () => {
     expect(validateEventPack(jobLossPack).success).toBe(true);
     expect(validateApprovedEventPack(pack).success).toBe(true);
     expect(pack.sourceCards.map((source) => source.id)).toEqual([
       "jl_nii_employment_service_registration_reporting",
       "jl_nii_submit_unemployment_claim",
       "jl_nii_unemployment_conditions",
-      "jl_nii_claim_documents_form100"
+      "jl_nii_claim_documents_form100",
+      "jl_gov_employment_service_registration",
+      "jl_gov_unemployment_benefits_service",
+      "jl_employment_service_home"
     ]);
     expect(pack.sourceCards.every((source) => source.disposition === "approved_for_hackathon" && source.canonicalUrl.startsWith("https://") && source.supportedClaimSummary.length > 0)).toBe(true);
   });
@@ -78,6 +81,7 @@ describe("approved Hackathon job-loss runtime catalog", () => {
     const after = compileRoadmap(pack, { facts: { employment_stage: "ended", work_arrangement: "salaried", employment_end_confirmation: "does_not_have" } });
     expect(after.steps.find((task) => task.id === "jl_prepare_claim_route_information")?.rationale).toBe("job_loss.rationale.missing_end_confirmation");
     expect(diffRoadmaps(before, after).changes).toEqual(expect.arrayContaining([expect.objectContaining({ taskId: "jl_prepare_claim_route_information", kind: "changed" })]));
-    expect(JSON.stringify(pack)).not.toMatch(/jl_gov_|jl_kolzchut_|jl_employment_service_home/);
+    expect(JSON.stringify(pack)).toMatch(/jl_gov_employment_service_registration|jl_gov_unemployment_benefits_service|jl_employment_service_home/);
+    expect(JSON.stringify(pack)).not.toMatch(/jl_kolzchut_|jl_gov_between_jobs|jl_gov_advance_notice|jl_gov_severance|jl_gov_disciplinary_hearing/);
   });
 });

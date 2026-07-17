@@ -212,6 +212,17 @@ The repository contains a validated modular-monolith baseline, deterministic com
   deterministic diffs, and the educational-planning disclaimer. A complete
   disposition record is in `docs/candidates/job_loss/evidence-ledger.md`.
 
+## 2026-07-17 — Job-loss source-review follow-up
+
+- Product-owner review approved the official Employment Service registration,
+  unemployment-benefit, and Employment Service endpoint cards for bounded
+  Hackathon use. They corroborate existing registration, claim-route, records,
+  and current-instructions tasks; they do not add an outcome, deadline, or
+  document determination.
+- Kol Zchut is approved as an authoritative public-rights source for this
+  packet, with publisher provenance retained as Kol Zchut. Hebrew source text
+  needs a separately approved English rendering before it can add runtime copy.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

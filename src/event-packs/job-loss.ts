@@ -90,6 +90,51 @@ export const jobLossPack = {
       limitations: "Not a complete document checklist; it does not establish who submits what in every case or that a person’s information is sufficient.",
       verificationWording: "Keep available information for review and verify current claim requirements on the official source.",
       safetyClassification: "verification_required"
+    },
+    {
+      id: "jl_gov_employment_service_registration",
+      title: "Register to the Israeli Employment Service online",
+      publisher: "gov.il / Israeli Government",
+      canonicalUrl: "https://www.gov.il/en/service/register_to_employment_services",
+      jurisdiction: "IL",
+      reviewedOn: "2026-07-17",
+      reviewer: "Hackathon product owner (explicit scope approval)",
+      disposition: "approved_for_hackathon",
+      scope: "Bounded registration-route information after an explicit employment end.",
+      supportedClaimSummary: "The official service page describes initial online registration with the Israeli Employment Service and says the online registration does not replace the local-office appointment described on the page.",
+      limitations: "Does not establish a personal appointment, reporting date, eligibility, deadline, payment, or benefit outcome.",
+      verificationWording: "Review the current Employment Service instructions on the official source before acting.",
+      safetyClassification: "verification_required"
+    },
+    {
+      id: "jl_gov_unemployment_benefits_service",
+      title: "Claim unemployment benefit",
+      publisher: "gov.il / Israeli Government",
+      canonicalUrl: "https://www.gov.il/en/service/unemployment_benefits",
+      jurisdiction: "IL",
+      reviewedOn: "2026-07-17",
+      reviewer: "Hackathon product owner (explicit scope approval)",
+      disposition: "approved_for_hackathon",
+      scope: "Bounded unemployment-benefit route and records review after an explicit employment end.",
+      supportedClaimSummary: "The official service page describes applying online for unemployment benefit and lists employment-end and employment/pay information among the materials to review for the route.",
+      limitations: "Does not establish qualification, a complete document checklist, a deadline, payment, or a personal claim outcome.",
+      verificationWording: "Check the current official route and its requirements for your situation.",
+      safetyClassification: "verification_required"
+    },
+    {
+      id: "jl_employment_service_home",
+      title: "Israeli Employment Service",
+      publisher: "Israeli Employment Service",
+      canonicalUrl: "https://www.taasuka.gov.il/",
+      jurisdiction: "IL",
+      reviewedOn: "2026-07-17",
+      reviewer: "Hackathon product owner (explicit scope approval; browser-accessible endpoint confirmed)",
+      disposition: "approved_for_hackathon",
+      scope: "Official Employment Service endpoint for current service instructions after a person says they have registered.",
+      supportedClaimSummary: "The Israeli Employment Service site is the official service endpoint linked by NII for Employment Service job-search and reporting queries.",
+      limitations: "Does not establish a personal reporting schedule, appointment, obligation, eligibility, payment, or benefit outcome.",
+      verificationWording: "Review the current Employment Service instructions on the official source before acting.",
+      safetyClassification: "verification_required"
     }
   ],
   tasks: [
@@ -100,7 +145,7 @@ export const jobLossPack = {
       priority: 10,
       timing: { kind: "event_relative", anchor: "event_date", window: "immediate", labelKey: "job_loss.timing.do_now_after_end" },
       rationaleKey: "job_loss.rationale.registration_not_registered",
-      sourceIds: ["jl_nii_employment_service_registration_reporting", "jl_nii_submit_unemployment_claim"],
+      sourceIds: ["jl_nii_employment_service_registration_reporting", "jl_nii_submit_unemployment_claim", "jl_gov_employment_service_registration"],
       verificationLabel: "Verify the current official route",
       dependsOn: [],
       applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "employment_stage", equals: "ended" }] }
@@ -112,7 +157,7 @@ export const jobLossPack = {
       priority: 20,
       timing: { kind: "event_relative", anchor: "event_date", window: "immediate", labelKey: "job_loss.timing.do_now_after_end" },
       rationaleKey: "job_loss.rationale.salaried_claim_route",
-      sourceIds: ["jl_nii_submit_unemployment_claim", "jl_nii_unemployment_conditions"],
+      sourceIds: ["jl_nii_submit_unemployment_claim", "jl_nii_unemployment_conditions", "jl_gov_unemployment_benefits_service"],
       verificationLabel: "Verification required — no eligibility or payment outcome",
       dependsOn: [],
       applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "employment_stage", equals: "ended" }] }
@@ -124,7 +169,7 @@ export const jobLossPack = {
       priority: 30,
       timing: { kind: "general", labelKey: "job_loss.timing.gather_and_verify" },
       rationaleKey: "job_loss.rationale.prepare_information",
-      sourceIds: ["jl_nii_claim_documents_form100"],
+      sourceIds: ["jl_nii_claim_documents_form100", "jl_gov_unemployment_benefits_service"],
       verificationLabel: "Verify current requirements — not a document checklist",
       dependsOn: [],
       applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "employment_stage", equals: "ended" }] }
@@ -136,7 +181,7 @@ export const jobLossPack = {
       priority: 20,
       timing: { kind: "general", labelKey: "job_loss.timing.ongoing_verify" },
       rationaleKey: "job_loss.rationale.registration_confirmed",
-      sourceIds: ["jl_nii_employment_service_registration_reporting"],
+      sourceIds: ["jl_nii_employment_service_registration_reporting", "jl_employment_service_home"],
       verificationLabel: "Verify current instructions — no reporting schedule is assumed",
       dependsOn: [],
       applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "employment_stage", equals: "ended" }] }

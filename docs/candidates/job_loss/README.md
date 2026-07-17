@@ -33,20 +33,20 @@ practical next-role momentum without promising an outcome.
 
 ## Runtime boundary
 
-Only the four cards recorded as `approved_for_hackathon` in the evidence ledger
-are translated into `src/event-packs/job-loss.ts` and registered after
+Only the seven official route cards recorded as `approved_for_hackathon` in the
+evidence ledger are translated into `src/event-packs/job-loss.ts` and registered after
 `validateApprovedEventPack`. All other candidate material remains outside the
 runtime pack and is not supplied to `compileRoadmap`.
 `validateEventPack` and `validateApprovedEventPack` apply only after a separate,
 authorized translation of dated human-approved data. They do not approve this
 research packet or establish source currency.
 
-The four approved NII cards are bounded route-review/records sources only. In
-particular, Kol Zchut is a
-required secondary rights-navigation cross-check, never sole support for a
-material operational instruction, deadline, document requirement, or rights
-claim. Some supplied English `gov.il` pages were inaccessible or redirected at
-research time; they are explicitly unresolved rather than operationalized.
+The seven approved cards are bounded route-review/records sources only. Kol
+Zchut is an approved authoritative public-rights cross-check, with its own
+publisher provenance retained; Hebrew source content still requires a separately
+approved English rendering before it supports new runtime copy. No source
+supports an eligibility, deadline, payment, legal, tax, pension, severance, or
+claim-outcome conclusion.
 
 ## Remaining review boundary
 

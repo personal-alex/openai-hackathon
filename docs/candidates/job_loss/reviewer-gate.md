@@ -1,8 +1,10 @@
 # Reviewer gate — candidate `job_loss` packet
 
-**Current outcome: approved for bounded Hackathon implementation.** Only the
-four NII cards in the disposition ledger are approved-for-hackathon; excluded
-or needs-review cards remain outside the runtime pack.
+**Current outcome: approved for bounded Hackathon implementation.** Seven
+official route cards in the disposition ledger are approved-for-hackathon and
+mapped to runtime tasks. Kol Zchut is an approved authoritative cross-check
+with publisher provenance retained; its Hebrew text requires a separately
+reviewed English rendering before it supports new runtime copy.
 
 ## Checklist
 
@@ -13,8 +15,8 @@ or needs-review cards remain outside the runtime pack.
   freshness risk, review owner, and status.
 - [ ] A named reviewer re-opens every primary source and records current,
   bounded support for each material operational/right-to-review claim.
-- [ ] Kol Zchut remains secondary: every operational, deadline, document, or
-  material rights claim has separately reviewed first-party support.
+- [ ] Every Hebrew-source claim, including Kol Zchut content, has a separately
+  approved English rendering before it is shown in the English-only runtime.
 - [ ] Inaccessible/redirected supplied `gov.il` pages and the legacy Form 100
   page have an explicit keep/reject/revise decision.
 - [ ] Each task/rule has stable IDs, typed facts/timing, source/dependency
@@ -46,6 +48,10 @@ or needs-review cards remain outside the runtime pack.
 
 ## Required disposition record
 
+The table below is the pre-approval candidate snapshot. The dated final
+dispositions and runtime mappings are maintained in the evidence ledger; they
+supersede `unassigned` and `needs_review` values in this historical snapshot.
+
 | Candidate source ID | Human reviewer | Review date | Disposition | Currency / claim notes |
 | --- | --- | --- | --- | --- |
 | `jl_nii_employment_service_registration_reporting` | unassigned | not reviewed | `needs_review` | — |
@@ -73,8 +79,9 @@ or needs-review cards remain outside the runtime pack.
 - Proposal ID/version: `il-job-loss-candidate-v0.1`
 - Reviewer(s) and roles: Hackathon product owner (explicit scope approval)
 - Review date: 2026-07-17
-- Source-card dispositions: four `approved_for_hackathon`; all others recorded
-  as `needs_review` or `excluded_from_runtime` in the evidence ledger
+- Source-card dispositions: seven official route cards and the approved Kol
+  Zchut cross-check cards are `approved_for_hackathon`; runtime mappings and
+  English-rendering boundaries are recorded in the evidence ledger
 - Catalog-content decision: approved for bounded Hackathon implementation
 - Required contract change: source-card disposition and practical-guidance gate
 - Implementation authorization: granted by product-owner authorization

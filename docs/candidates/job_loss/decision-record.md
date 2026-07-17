@@ -49,15 +49,16 @@ Notice given / not yet ended
 
 ## Source conflicts, gaps, and freshness risks
 
-1. The supplied English `gov.il` pages for registration, advance notice,
-   severance, and hearing were inaccessible/redirected in the research
-   environment. They must be reopened by a human before supporting a material
-   task.
+1. Product-owner review approved the Employment Service registration and
+   unemployment-benefit service pages for bounded runtime corroboration. The
+   remaining Ministry of Labor rights pages need a separate bounded English
+   claim before they can support new legal-rights copy.
 2. The NII Form 100 page sits under a Coronavirus FAQ path. It is retained as a
    narrow information-preservation clue, not a complete current document list.
-3. Kol Zchut points to useful rights/branch terminology but is Hebrew-language
-   and secondary. A human must approve any English rendering and primary-source
-   mapping.
+3. Kol Zchut is an approved authoritative public-rights source for this
+   Hackathon packet, with its own publisher provenance retained. Its
+   Hebrew-language material still needs a separately approved English rendering
+   before it supports new runtime copy.
 4. NII’s conditions material makes individual circumstances material. The
    candidate resolves this by limiting the UI to route review and verification,
    never a result.

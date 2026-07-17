@@ -36,11 +36,12 @@ test("guides the approved job-loss route while keeping source-backed tasks and d
   await page.getByRole("button", { name: "No, not yet" }).click();
 
   await expect(page.getByRole("status")).toContainText("Roadmap updated");
-  await expect(page.getByText("Review Employment Service registration")).toBeVisible();
+  const registrationDetails = page.getByRole("button", { name: /Toggle details for Review Employment Service registration/i });
+  await expect(registrationDetails).toBeVisible();
   await expect(page.getByText("New", { exact: true })).toBeVisible();
-  await page.getByRole("button", { name: /Toggle details for/i }).first().click();
+  await registrationDetails.click();
   await expect(page.getByText(/Registration and reporting at the Employment Service/i).first()).toBeVisible();
-  await expect(page.getByRole("link", { name: /Open official source/i }).first()).toHaveAttribute("href", /btl\.gov\.il/);
+  await expect(page.getByRole("link", { name: /Open official source for Register to the Israeli Employment Service online/i })).toHaveAttribute("href", "https://www.gov.il/en/service/register_to_employment_services");
 });
 
 test("guides the approved expecting-child routine path with catalog-derived source details", async ({ page }) => {

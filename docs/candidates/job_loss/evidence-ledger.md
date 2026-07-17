@@ -9,10 +9,11 @@ owner’s approval is scoped to the bounded claims recorded on cards marked
 
 - Primary operational authority: Bituach Leumi / National Insurance Institute
   (NII), the Israeli Employment Service, and `gov.il` / Ministry of Labor.
-- Required secondary cross-check: Kol Zchut. It is retained for terminology,
-  branch discovery, and plain-language rights navigation; it never stands alone
-  for a material operational instruction, deadline, document requirement, or
-  rights claim.
+- Approved public-rights cross-check: Kol Zchut. Product-owner review accepts
+  it as an authoritative source for this Hackathon packet; retain its publisher
+  as **Kol Zchut** rather than misrepresenting it as a government publisher.
+  Hebrew source text still requires a separately approved English rendering
+  before it supports new English runtime copy.
 - A current operational claim is proposed only where the cited official source
   supports it. Ambiguity, inaccessible pages, and personal qualification remain
   verification-required or deferred.
@@ -110,65 +111,64 @@ owner’s approval is scoped to the bounded claims recorded on cards marked
 
 ## Candidate source card: `jl_gov_employment_service_registration`
 
-- Status: `needs_review`
+- Status: `approved_for_hackathon` (bounded runtime corroboration)
 - Title: Register to Employment Services
 - Publisher: gov.il / Israeli Government
 - Canonical URL: https://www.gov.il/en/service/register_to_employment_services
 - Authority level: first-party operational source
 - Access / research date: 2026-07-17
-- Review date: not reviewed
-- Supported-claim summary: `unknown` — the supplied English URL returned an
-  access error in the research environment.
-- Applicable event/task IDs: `job_loss`; potential corroboration only for
-  `jl_register_employment_service`
-- Limitations / non-claim: Do not operationalize or translate the page until a
-  human reviewer checks its canonical/current content.
-- Freshness risk: unknown due to failed access.
-- Individual verification / advice: Use the NII primary card as the current
-  candidate support; re-open this official route during review.
-- Review owner / status: project owner or named human reviewer / `needs_review`
-- Evidence notes: research environment returned an internal error.
+- Review date: 2026-07-17
+- Supported-claim summary: The official service page describes initial online
+  registration with the Israeli Employment Service and says online registration
+  does not replace the local-office appointment described on the page.
+- Applicable event/task IDs: `job_loss`; `jl_register_employment_service`
+- Limitations / non-claim: Does not establish a personal appointment,
+  reporting date, eligibility, deadline, payment, or benefit outcome.
+- Freshness risk: service instructions can change.
+- Individual verification / advice: Review the current official route before acting.
+- Review owner / status: Hackathon product owner (explicit scope approval) / `approved_for_hackathon`
+- Evidence notes: official English page reviewed 2026-07-17.
 
 ## Candidate source card: `jl_gov_unemployment_benefits_service`
 
-- Status: `needs_review`
+- Status: `approved_for_hackathon` (bounded runtime corroboration)
 - Title: Unemployment benefits service
 - Publisher: gov.il / Israeli Government
 - Canonical URL: https://www.gov.il/en/service/unemployment_benefits
 - Authority level: first-party operational source
 - Access / research date: 2026-07-17
-- Review date: not reviewed
-- Supported-claim summary: `unknown` — the supplied English URL redirected to
-  an under-construction page in the research environment.
-- Applicable event/task IDs: `job_loss`; potential corroboration only for
-  `jl_review_unemployment_claim_route`
-- Limitations / non-claim: It cannot support a claim-route instruction until a
-  human reviewer confirms the current canonical service content.
-- Freshness risk: unknown due to redirect.
-- Individual verification / advice: Use the NII primary sources for the
-  candidate’s bounded current support; re-open the gov.il page during review.
-- Review owner / status: project owner or named human reviewer / `needs_review`
-- Evidence notes: redirect observed on 2026-07-17.
+- Review date: 2026-07-17
+- Supported-claim summary: The official service page describes applying online
+  for unemployment benefit and lists employment-end and employment/pay
+  information among the materials to review for the route.
+- Applicable event/task IDs: `job_loss`; `jl_review_unemployment_claim_route`,
+  `jl_prepare_claim_route_information`
+- Limitations / non-claim: Does not establish qualification, a complete
+  document checklist, a deadline, payment, or a personal claim outcome.
+- Freshness risk: service requirements can change.
+- Individual verification / advice: Check the current official route for your situation.
+- Review owner / status: Hackathon product owner (explicit scope approval) / `approved_for_hackathon`
+- Evidence notes: official English page reviewed 2026-07-17.
 
 ## Candidate source card: `jl_employment_service_home`
 
-- Status: `needs_review`
+- Status: `approved_for_hackathon` (bounded runtime corroboration)
 - Title: Israeli Employment Service
 - Publisher: Israeli Employment Service
 - Canonical URL: https://www.taasuka.gov.il/
 - Authority level: first-party operational source
 - Access / research date: 2026-07-17
-- Review date: not reviewed
-- Supported-claim summary: `unknown` — the home page was not retrievable in
-  the research environment; NII links to it for job-search/reporting queries.
+- Review date: 2026-07-17
+- Supported-claim summary: The Israeli Employment Service site is the official
+  service endpoint linked by NII for Employment Service job-search and
+  reporting queries.
 - Applicable event/task IDs: `job_loss`; `jl_follow_employment_service_instructions`
-- Limitations / non-claim: Do not state appointments, reporting dates, office
-  access, or required follow-up from this unavailable page.
+- Limitations / non-claim: Does not establish appointments, reporting dates,
+  office access, required follow-up, or a personal route/outcome.
 - Freshness risk: high — service instructions may vary.
-- Individual verification / advice: A human reviewer must verify current
-  instructions directly.
-- Review owner / status: project owner or named human reviewer / `needs_review`
-- Evidence notes: direct access error; referenced by NII registration/reporting page.
+- Individual verification / advice: Review the current service instructions directly.
+- Review owner / status: Hackathon product owner (explicit scope approval) / `approved_for_hackathon`
+- Evidence notes: browser-accessible endpoint confirmed by human review; referenced by NII registration/reporting page.
 
 ## Candidate source card: `jl_gov_between_jobs`
 
@@ -211,14 +211,14 @@ freshness risk is high until accessible/current content is confirmed; individual
 verification/advice is appropriate when the timing, reason, process, or final
 settlement is disputed or unclear.
 
-## Candidate secondary source cards: Kol Zchut cross-check
+## Candidate source cards: approved Kol Zchut cross-checks
 
-These pages are required research cross-checks, not standalone operational
-authority. Each row is a candidate source card with publisher **Kol Zchut**,
-applicable event ID `job_loss`, access date 2026-07-17, review date **not
-reviewed**, review owner **project owner or named human reviewer**, and status
-`needs_review`. All are Hebrew-language and require a separately approved
-English rendering.
+These pages are approved authoritative public-rights cross-checks for this
+Hackathon packet. Each row retains publisher **Kol Zchut** (not a substituted
+government publisher), applies to `job_loss`, was reviewed 2026-07-17 by the
+Hackathon product owner, and is `approved_for_hackathon`. All are
+Hebrew-language and require a separately approved English rendering before they
+support new English runtime copy.
 
 | ID / title | Canonical URL | Candidate contribution / applicable candidate tasks | Limitation / required official mapping |
 | --- | --- | --- | --- |
@@ -256,7 +256,7 @@ English rendering.
 
 ## Hackathon source-card disposition ledger — 2026-07-17
 
-The four approved cards retain the publisher, title, canonical user-openable
+The seven runtime-approved cards retain the publisher, title, canonical user-openable
 URL, jurisdiction, review date, scope, bounded claim, and limitations recorded
 above. They are the only source cards translated into `src/event-packs/job-loss.ts`.
 `approved_for_hackathon` means approved for this bounded planning scope, not
@@ -269,18 +269,18 @@ pension, severance, or claim outcome is determined.
 | `jl_nii_submit_unemployment_claim` | `approved_for_hackathon` | `jl_register_employment_service`, `jl_review_unemployment_claim_route`; official route review only, no deadline or outcome assertion. |
 | `jl_nii_unemployment_conditions` | `approved_for_hackathon` | `jl_review_unemployment_claim_route`, `jl_verify_nonstandard_benefit_route`; verification-only framing for salaried/nonstandard route distinction. |
 | `jl_nii_claim_documents_form100` | `approved_for_hackathon` | `jl_prepare_claim_route_information`; legacy-path, records-preservation prompt only; never a complete checklist. |
-| `jl_gov_employment_service_registration` | `needs_review` | Explicit supported claim is `unknown`: the supplied URL returned an access error. |
-| `jl_gov_unemployment_benefits_service` | `needs_review` | Explicit supported claim is `unknown`: the supplied URL redirected under construction. |
-| `jl_employment_service_home` | `needs_review` | Explicit supported claim is `unknown`: the page was not retrievable. |
+| `jl_gov_employment_service_registration` | `approved_for_hackathon` | `jl_register_employment_service`; bounded online-registration route review only. |
+| `jl_gov_unemployment_benefits_service` | `approved_for_hackathon` | `jl_review_unemployment_claim_route`, `jl_prepare_claim_route_information`; route/records review only. |
+| `jl_employment_service_home` | `approved_for_hackathon` | `jl_follow_employment_service_instructions`; current-instructions endpoint only. |
 | `jl_gov_between_jobs` | `excluded_from_runtime` | Search-result-only/Hebrew navigation description; no reviewed English task claim or usable direct evidence. |
 | `jl_gov_advance_notice` | `needs_review` | Access failure; no supported claim may be mapped to a notice task. |
 | `jl_gov_severance` | `needs_review` | Access failure; no supported claim may be mapped to a severance task. |
 | `jl_gov_disciplinary_hearing` | `needs_review` | Access failure; no supported claim may be mapped to a pre-dismissal task. |
-| `jl_kolzchut_unemployment_benefits` | `excluded_from_runtime` | Secondary Hebrew cross-check; not standalone authority for a material route claim. |
-| `jl_kolzchut_employment_service_registration` | `excluded_from_runtime` | Secondary Hebrew cross-check; volatile operational detail requires primary mapping. |
-| `jl_kolzchut_employment_service_reporting` | `excluded_from_runtime` | Secondary Hebrew cross-check; cannot support reporting obligations or consequences. |
-| `jl_kolzchut_employment_end` | `excluded_from_runtime` | Navigation only; exact employment-end claims lack approved primary support. |
-| `jl_kolzchut_advance_notice` | `excluded_from_runtime` | Secondary only; no approved primary mapping for notice claim. |
-| `jl_kolzchut_severance` | `excluded_from_runtime` | Secondary only; no approved primary mapping for severance claim. |
-| `jl_kolzchut_hearing` | `excluded_from_runtime` | Secondary only; no approved primary mapping for hearing claim. |
-| `jl_kolzchut_pension` | `excluded_from_runtime` | Secondary only; no approved primary mapping for pension claim. |
+| `jl_kolzchut_unemployment_benefits` | `approved_for_hackathon` | Approved cross-check; not translated into new English runtime copy. |
+| `jl_kolzchut_employment_service_registration` | `approved_for_hackathon` | Approved cross-check; not translated into new English runtime copy. |
+| `jl_kolzchut_employment_service_reporting` | `approved_for_hackathon` | Approved cross-check; not translated into new English runtime copy. |
+| `jl_kolzchut_employment_end` | `approved_for_hackathon` | Approved cross-check; requires an English claim review before runtime use. |
+| `jl_kolzchut_advance_notice` | `approved_for_hackathon` | Approved cross-check; requires an English claim review before runtime use. |
+| `jl_kolzchut_severance` | `approved_for_hackathon` | Approved cross-check; requires an English claim review before runtime use. |
+| `jl_kolzchut_hearing` | `approved_for_hackathon` | Approved cross-check; requires an English claim review before runtime use. |
+| `jl_kolzchut_pension` | `approved_for_hackathon` | Approved cross-check; requires an English claim review before runtime use. |
