@@ -8,7 +8,7 @@ export const MessageKeySchema = z.string().regex(/^[a-z][a-z0-9_.-]*$/, "Use a s
 
 export const FactValueTypeSchema = z.enum(["string", "boolean", "number"]);
 export const FactValueSchema = z.union([z.string().min(1), z.boolean(), z.number().finite()]);
-export const PracticalGuidanceVerificationLabel = "Practical planning guidance — not an official rights claim";
+export const PracticalGuidanceVerificationLabel = "Practical planning guidance — not an official policy, rights, eligibility, provider, or outcome claim";
 export const FactDefinitionSchema = z.object({
   id: StableIdSchema,
   valueType: FactValueTypeSchema,
@@ -134,7 +134,7 @@ export const TaskDefinitionSchema = z.object({
   /** Empty only for generic verification boundaries that make no source claim. */
   sourceIds: z.array(StableIdSchema),
   verificationLabel: z.string().min(1),
-  /** Practical guidance is non-policy planning content and must carry the explicit safety label. */
+  /** Source-free, non-policy planning content with a fixed safety boundary. */
   guidanceType: z.enum(["source_backed", "practical_guidance"]).optional(),
   dependsOn: z.array(StableIdSchema),
   /** Presentation-only preview metadata; it never changes active task applicability. */
@@ -318,6 +318,9 @@ export function validateEventPack(input: unknown): ContractValidationResult<Even
     for (const dependencyId of task.dependsOn) if (!taskIds.has(dependencyId)) errors.push(`unknown task dependency ID: ${dependencyId}`);
     if (task.guidanceType === "practical_guidance" && task.verificationLabel !== PracticalGuidanceVerificationLabel) {
       errors.push(`practical guidance task requires the practical guidance verification label: ${task.id}`);
+    }
+    if (task.guidanceType === "practical_guidance" && task.sourceIds.length > 0) {
+      errors.push(`practical guidance task cannot reference source cards: ${task.id}`);
     }
     if (task.applicability?.kind === "confirmed_transition") {
       const seenRequiredFacts = new Set<string>();
