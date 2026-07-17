@@ -12,6 +12,14 @@ Week submission. It is a concise evidence log, not a transcript.
 
 ## Entries
 
+### 2026-07-17 — Catalog-driven typed-question capability
+
+- Task/outcome: Replaced the blocked candidate branch’s hard-coded typed-date control with a generic main-thread capability for validated catalog questions.
+- Codex contribution: Added the Zod question-presentation/input boundary, generic accessible renderer and parser, choice-question migration, focused contract/component tests, and ADR 0003.
+- Human review/decision: The shared UI contains no job-loss, employment, or date-specific copy or matcher. Fixture/catalog data owns prompts, descriptions, rationales, typed constraints, validation wording, and seeded statement hints; skipped facts remain absent.
+- Changed artifacts: Domain contract, generic question renderer, approved expecting-child presentation data, seeded fixtures, unit tests, and ADR. No job-loss pack, source card, rule, registry, compiler selection, or policy content changed.
+- Evidence: `git diff --check`, `npm run lint`, `npm run typecheck`, `npm run test` (8 files, 45 tests), `npm run build`, and `npm run test:e2e` (13 Chromium journeys) passed. The candidate integration remains pending a dedicated branch adaptation and merge-readiness review.
+
 ### 2026-07-16 — Judge-ready seeded UX refactor
 
 - Task/outcome: Implemented the approved visual and interaction direction as Linear issues OPE-25, OPE-26, and OPE-27: an independently branded opening experience, compiler-driven guided fixture workspace, and responsive/accessibility proof.
@@ -219,3 +227,53 @@ Week submission. It is a concise evidence log, not a transcript.
 - Evidence: `git diff --check`, `npm run lint`, `npm run typecheck`, `npm run
   test` (41 passed), `npm run build`, and `npm run test:e2e` (6 passed) all
   passed locally; no `/feedback` session ID is recorded.
+
+### 2026-07-17 — First-load editorial introduction
+
+- Task/outcome: Added a calm, first-load-only editorial introduction that
+  resolves the approved motto before handing into the action-oriented landing
+  entry point.
+- Codex contribution: Implemented the restrained glyph-resolution animation,
+  transition, Skip intro control, reduced-motion/no-script behavior, input
+  focus handoff, mobile word-wrap protection, a 0.9-second first-line pause,
+  and focused browser coverage.
+- Human review/decision: Requested the first-load message, warm visual
+  direction, action-oriented landing copy, and non-flashy interaction posture.
+- Changed artifacts: `src/app/landing-intro.tsx`;
+  `src/app/landing-intro.css`; `src/app/page.tsx`; seeded browser tests; this
+  collaboration record and `CURRENT_STATE.md`.
+- Verification: `git diff --check`, `npm run lint`, `npm run typecheck`,
+  `npm run test` (41 passed), `npm run build`, and 8 Chromium journeys against
+  the fresh production build passed; no `/feedback` session ID is recorded.
+
+### 2026-07-17 — Generic roadmap clarity and explainability
+
+- Task/outcome: Added a reusable, compiler-output-only roadmap panel for the
+  guided workspace, with timing groups, detailed inspection, local-progress
+  controls, source metadata, change summaries, and question-rationale access.
+- Codex contribution: Separated shared presentation from the page, removed
+  event-specific timing rendering, preserved deterministic/local-progress
+  boundaries, and added focused browser coverage.
+- Human review/decision: Requested main-session-only generic UI work while the
+  job-loss worktree continues independent event-pack review.
+- Handoff: `docs/roadmap-clarity-contract-handoff.md` records missing resolved
+  rationale/diff/replacement/change-condition fields; no UI-generated policy
+  explanation or event-specific workaround was introduced.
+- Verification: `git diff --check`, lint, typecheck, 41 Vitest tests, build,
+  and 11 fresh-production Chromium journeys passed; no `/feedback` session ID
+  is recorded.
+
+### 2026-07-17 — Shared timing lanes and intro exit reliability
+
+- Task/outcome: Repaired the landing-intro exit interaction and replaced the
+  roadmap's timing-bucket labels with a pure generic timing-lane mapper.
+- Codex contribution: Kept the fading overlay non-interactive, added Escape
+  handling and deterministic browser waits, and added validated
+  timing/window/priority mapping with unit and browser coverage.
+- Human review/decision: Requested main-thread-only shared presentation work;
+  job-loss candidate content remains isolated and review-required.
+- Safety/scope: No candidate pack was activated, imported, rendered, or
+  changed; no task/source/policy/AI/compiler-selection data changed.
+- Verification: `git diff --check`, lint, typecheck, 44 Vitest tests, build,
+  and 13 fresh-production Chromium journeys passed; no `/feedback` session ID
+  is recorded.

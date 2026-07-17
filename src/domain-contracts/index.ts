@@ -46,13 +46,58 @@ export const TimingSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("general"), labelKey: MessageKeySchema }).strict()
 ]);
 
+export const QuestionOptionSchema = z.object({
+  label: z.string().min(1),
+  value: FactValueSchema.optional()
+}).strict();
+
+export const TypedQuestionInputSchema = z.discriminatedUnion("kind", [
+  z.object({
+    kind: z.literal("text"),
+    placeholder: z.string().min(1).optional(),
+    formatHelp: z.string().min(1).optional(),
+    minLength: z.number().int().nonnegative().optional(),
+    maxLength: z.number().int().positive().optional(),
+    validationMessage: z.string().min(1)
+  }).strict(),
+  z.object({
+    kind: z.literal("date"),
+    formatHelp: z.string().min(1).optional(),
+    min: z.iso.date().optional(),
+    max: z.iso.date().optional(),
+    validationMessage: z.string().min(1)
+  }).strict(),
+  z.object({
+    kind: z.literal("number"),
+    placeholder: z.string().min(1).optional(),
+    formatHelp: z.string().min(1).optional(),
+    min: z.number().finite().optional(),
+    max: z.number().finite().optional(),
+    step: z.number().finite().positive().optional(),
+    validationMessage: z.string().min(1)
+  }).strict()
+]);
+
+export const QuestionPresentationSchema = z.object({
+  prompt: z.string().min(1),
+  description: z.string().min(1).optional(),
+  rationale: z.string().min(1),
+  options: z.array(QuestionOptionSchema).min(1).optional(),
+  input: TypedQuestionInputSchema.optional()
+}).strict().superRefine((presentation, context) => {
+  if (Boolean(presentation.options) === Boolean(presentation.input)) {
+    context.addIssue({ code: "custom", message: "Provide exactly one of options or input." });
+  }
+});
+
 export const QuestionDefinitionSchema = z.object({
   id: StableIdSchema,
   factId: StableIdSchema,
   promptKey: MessageKeySchema,
   rationaleKey: MessageKeySchema,
   answerType: FactValueTypeSchema,
-  allowSkip: z.boolean()
+  allowSkip: z.boolean(),
+  presentation: QuestionPresentationSchema
 }).strict();
 
 export const SourceCardSchema = z.object({
@@ -214,6 +259,9 @@ export type TaskDiff = z.infer<typeof TaskDiffSchema>;
 export type LocalProgress = z.infer<typeof LocalProgressSchema>;
 export type Timing = z.infer<typeof TimingSchema>;
 export type CatalogTask = z.infer<typeof CatalogTaskSchema>;
+export type FactValue = z.infer<typeof FactValueSchema>;
+export type QuestionDefinition = z.infer<typeof QuestionDefinitionSchema>;
+export type TypedQuestionInput = z.infer<typeof TypedQuestionInputSchema>;
 
 export type ContractValidationResult<T> =
   | { success: true; data: T }
@@ -244,7 +292,27 @@ export function validateEventPack(input: unknown): ContractValidationResult<Even
   const sourceIds = new Set(pack.sourceCards.map(({ id }) => id));
   const taskIds = new Set(pack.tasks.map(({ id }) => id));
   for (const taskId of pack.baseTaskIds) if (!taskIds.has(taskId)) errors.push(`unknown base task ID: ${taskId}`);
-  for (const question of pack.questions) if (!factIds.has(question.factId)) errors.push(`unknown question fact ID: ${question.factId}`);
+  for (const question of pack.questions) {
+    if (!factIds.has(question.factId)) errors.push(`unknown question fact ID: ${question.factId}`);
+    const presentation = question.presentation;
+    if (presentation.options) {
+      for (const option of presentation.options) {
+        if (option.value !== undefined && typeof option.value !== question.answerType) {
+          errors.push(`invalid question option value for question ID: ${question.id}`);
+        }
+      }
+    }
+    if (presentation.input) {
+      const expectedAnswerType = presentation.input.kind === "number" ? "number" : "string";
+      if (question.answerType !== expectedAnswerType) errors.push(`invalid typed input answer type for question ID: ${question.id}`);
+      if (presentation.input.kind === "text" && presentation.input.minLength !== undefined && presentation.input.maxLength !== undefined && presentation.input.minLength > presentation.input.maxLength) {
+        errors.push(`invalid text input length range for question ID: ${question.id}`);
+      }
+      if ((presentation.input.kind === "date" || presentation.input.kind === "number") && presentation.input.min !== undefined && presentation.input.max !== undefined && presentation.input.min > presentation.input.max) {
+        errors.push(`invalid typed input range for question ID: ${question.id}`);
+      }
+    }
+  }
   for (const task of pack.tasks) {
     for (const sourceId of task.sourceIds) if (!sourceIds.has(sourceId)) errors.push(`unknown task source ID: ${sourceId}`);
     for (const dependencyId of task.dependsOn) if (!taskIds.has(dependencyId)) errors.push(`unknown task dependency ID: ${dependencyId}`);

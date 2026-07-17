@@ -1,16 +1,9 @@
-import type { EventId, EventPack, FactValueSchema, UserContext } from "@/domain-contracts";
-import { expectingChildPack, expectingChildQuestionPresentation } from "@/event-packs/expecting-child";
-import { jobLossPack, jobLossQuestionPresentation } from "@/event-packs/job-loss";
+import type { EventId, EventPack, FactValue, QuestionDefinition, UserContext } from "@/domain-contracts";
+import { expectingChildPack } from "@/event-packs/expecting-child";
 
-export type SeededValue = typeof FactValueSchema._output;
+export type SeededValue = FactValue;
 
-export type SeededQuestion = {
-  id: string;
-  factId: string;
-  prompt: string;
-  why: string;
-  options: ReadonlyArray<{ label: string; value?: SeededValue }>;
-  input?: { type: "date"; submitLabel: string; skipLabel: string };
+export type SeededQuestion = QuestionDefinition & {
   isApplicable?: (facts: UserContext["facts"]) => boolean;
 };
 
@@ -18,6 +11,8 @@ export type SeededScenario = {
   id: "expecting_child" | "job_loss";
   label: string;
   examplePrompt: string;
+  /** Test/demo-only matching hints; shared presentation code contains no event-specific matcher. */
+  statementHints: string[];
   confirmationCopy: string;
   explanation: string;
   catalogKind: "approved" | "synthetic";
@@ -28,7 +23,7 @@ export type SeededScenario = {
   pack: EventPack;
 };
 
-export function fixturePack(id: "expecting_child" | "job_loss"): EventPack {
+function fixturePack(id: "expecting_child" | "job_loss"): EventPack {
   const anchorFact = id === "expecting_child" ? "due_date" : "event_date";
   const timelineTiming = id === "expecting_child"
     ? { kind: "planned" as const, anchor: "due_date" as const, window: "before" as const, labelKey: "timing.fixture_before_anchor" }
@@ -45,9 +40,9 @@ export function fixturePack(id: "expecting_child" | "job_loss"): EventPack {
       { id: "wants_support", valueType: "boolean", labelKey: "fact.wants_support", sensitive: false }
     ],
     questions: [
-      { id: "fixture_anchor_question", factId: anchorFact, promptKey: "question.fixture_anchor", rationaleKey: "rationale.fixture_anchor", answerType: "string", allowSkip: true },
-      { id: "fixture_checklist_question", factId: "wants_checklist", promptKey: "question.fixture_checklist", rationaleKey: "rationale.fixture_checklist", answerType: "boolean", allowSkip: true },
-      { id: "fixture_support_question", factId: "wants_support", promptKey: "question.fixture_support", rationaleKey: "rationale.fixture_support", answerType: "boolean", allowSkip: true }
+      { id: "fixture_anchor_question", factId: anchorFact, promptKey: "question.fixture_anchor", rationaleKey: "rationale.fixture_anchor", answerType: "string", allowSkip: true, presentation: { prompt: "Is there a key date you want this demonstration plan to consider?", rationale: "A date changes the fixture timing and adds a timeline task.", options: [{ label: "Yes, use a planning date", value: "fixture_anchor" }, { label: "I’m not sure yet" }] } },
+      { id: "fixture_checklist_question", factId: "wants_checklist", promptKey: "question.fixture_checklist", rationaleKey: "rationale.fixture_checklist", answerType: "boolean", allowSkip: true, presentation: { prompt: "Would a simple planning checklist help in this demonstration?", rationale: "This answer decides whether the fixture checklist task appears.", options: [{ label: "Yes, add a checklist", value: true }, { label: "Not for now", value: false }, { label: "Skip for now" }] } },
+      { id: "fixture_support_question", factId: "wants_support", promptKey: "question.fixture_support", rationaleKey: "rationale.fixture_support", answerType: "boolean", allowSkip: true, presentation: { prompt: "Would you like to see a support-review step in this demonstration?", rationale: "This answer determines whether the fixture support task is included.", options: [{ label: "Yes, include it", value: true }, { label: "No, leave it out", value: false }, { label: "I don’t know yet" }] } }
     ],
     sourceCards: [{
       id: "fixture_source",
@@ -126,6 +121,7 @@ export const seededScenarios: SeededScenario[] = [
     id: "expecting_child",
     label: "Expecting a child",
     examplePrompt: "I’m expecting a child",
+    statementHints: ["expect", "pregnan", "child", "baby"],
     confirmationCopy: "A reviewed Israel event pack will build a source-aware, deterministic roadmap from the facts you choose to share.",
     explanation: "This roadmap is compiled only from the reviewed, validated Israel catalog. It provides educational planning support, not an official determination.",
     catalogKind: "approved",
@@ -151,42 +147,24 @@ export const seededScenarios: SeededScenario[] = [
     context: { facts: {} },
     pack: expectingChildPack,
     questions: [
-      { id: "ec_has_child_been_born", factId: "event_stage", ...expectingChildQuestionPresentation.ec_has_child_been_born },
-      { id: "ec_birth_location", factId: "birth_location", ...expectingChildQuestionPresentation.ec_birth_location, isApplicable: (facts) => facts.event_stage === "birth_occurred" },
-      { id: "ec_birth_setting", factId: "birth_setting", ...expectingChildQuestionPresentation.ec_birth_setting, isApplicable: (facts) => facts.event_stage === "birth_occurred" && facts.birth_location === "israel" },
-      { id: "ec_family_path", factId: "family_path", ...expectingChildQuestionPresentation.ec_family_path, isApplicable: (facts) => facts.event_stage === "birth_occurred" && facts.birth_location === "israel" && facts.birth_setting === "hospital" },
-      { id: "ec_first_name_in_hospital_notice", factId: "first_name_in_hospital_notice", ...expectingChildQuestionPresentation.ec_first_name_in_hospital_notice, isApplicable: (facts) => facts.event_stage === "birth_occurred" && facts.birth_location === "israel" && facts.birth_setting === "hospital" && facts.family_path === "routine_birth" }
+      expectingChildPack.questions[0],
+      { ...expectingChildPack.questions[1], isApplicable: (facts) => facts.event_stage === "birth_occurred" },
+      { ...expectingChildPack.questions[2], isApplicable: (facts) => facts.event_stage === "birth_occurred" && facts.birth_location === "israel" },
+      { ...expectingChildPack.questions[3], isApplicable: (facts) => facts.event_stage === "birth_occurred" && facts.birth_location === "israel" && facts.birth_setting === "hospital" },
+      { ...expectingChildPack.questions[4], isApplicable: (facts) => facts.event_stage === "birth_occurred" && facts.birth_location === "israel" && facts.birth_setting === "hospital" && facts.family_path === "routine_birth" }
     ]
   },
   {
     id: "job_loss",
     label: "Job loss",
     examplePrompt: "I lost my job",
-    confirmationCopy: "A reviewed Israel event pack can help you review official routes and practical next steps from the facts you choose to share.",
-    explanation: "This roadmap is compiled only from the approved Hackathon-scope catalog. It provides educational planning support, not an eligibility, legal, tax, pension, or payment determination.",
-    catalogKind: "approved",
-    rationaleByKey: {
-      "job_loss.rationale.registration_not_registered": "You explicitly said employment ended, that your work was salaried, and that you had not registered. This raises an official-route review, not an eligibility conclusion.",
-      "job_loss.rationale.salaried_claim_route": "You explicitly described a salaried arrangement after employment ended, so the roadmap includes a review of the official claim route without predicting an outcome.",
-      "job_loss.rationale.registration_confirmed": "You said you had registered, so the initial registration review was replaced with a prompt to check current official instructions.",
-      "job_loss.rationale.nonstandard_arrangement": "Your work arrangement is not confirmed as salaried, so the standard salaried route is not shown. Only a bounded verification task appears.",
-      "job_loss.rationale.prepare_information": "The official source supports keeping employment and pay information available, but does not establish a complete checklist or sufficient documents.",
-      "job_loss.rationale.missing_end_confirmation": "You said confirmation is missing or uncertain, so this records task stays verification-oriented rather than treating any document as required or sufficient.",
-      "job_loss.rationale.information_uncertain": "You said the available information is missing or uncertain, so the roadmap directs you to verify current official requirements rather than assume a checklist is complete.",
-      "job_loss.rationale.practical_momentum": "This is practical planning guidance, not an official benefits or rights claim."
-    },
+    statementHints: ["job", "lost", "laid off", "layoff"],
+    confirmationCopy: "A synthetic seeded scenario for demonstrating the shared planning experience.",
+    explanation: "This roadmap uses validated, synthetic fixture data and the deterministic compiler. It is not reviewed event content.",
+    catalogKind: "synthetic",
     context: { facts: {} },
-    pack: jobLossPack,
-    questions: [
-      { id: "jl_employment_stage_question", factId: "employment_stage", ...jobLossQuestionPresentation.jl_employment_stage_question },
-      { id: "jl_event_date_question", factId: "event_date", ...jobLossQuestionPresentation.jl_event_date_question, isApplicable: (facts) => facts.employment_stage === "ended" },
-      { id: "jl_work_arrangement_question", factId: "work_arrangement", ...jobLossQuestionPresentation.jl_work_arrangement_question, isApplicable: (facts) => facts.employment_stage === "ended" },
-      { id: "jl_employment_service_registration_question", factId: "employment_service_registration", ...jobLossQuestionPresentation.jl_employment_service_registration_question, isApplicable: (facts) => facts.employment_stage === "ended" && facts.work_arrangement === "salaried" },
-      { id: "jl_end_confirmation_question", factId: "employment_end_confirmation", ...jobLossQuestionPresentation.jl_end_confirmation_question, isApplicable: (facts) => facts.employment_stage === "ended" },
-      { id: "jl_claim_status_question", factId: "unemployment_claim_status", ...jobLossQuestionPresentation.jl_claim_status_question, isApplicable: (facts) => facts.employment_stage === "ended" && facts.work_arrangement === "salaried" },
-      { id: "jl_initial_focus_question", factId: "initial_focus", ...jobLossQuestionPresentation.jl_initial_focus_question, isApplicable: (facts) => facts.employment_stage === "ended" || facts.employment_stage === "notice_given" },
-      { id: "jl_information_status_question", factId: "employment_information_status", ...jobLossQuestionPresentation.jl_information_status_question, isApplicable: (facts) => facts.employment_stage === "ended" && facts.work_arrangement === "salaried" }
-    ]
+    pack: fixturePack("job_loss"),
+    questions: fixturePack("job_loss").questions
   }
 ];
 

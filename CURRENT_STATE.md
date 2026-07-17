@@ -197,41 +197,65 @@ The repository contains a validated modular-monolith baseline, deterministic com
   test` (7 files, 41 tests), `npm run build`, and `npm run test:e2e` (6
   deterministic browser journeys).
 
-## 2026-07-17 — Approved Israel `job_loss` Hackathon pack activated
+## 2026-07-17 — First-load editorial introduction
 
-- Product-owner authorization promoted `job_loss@il-job-loss-v1` through an
-  objective source-card completeness gate. Four bounded NII cards are marked
-  `approved_for_hackathon`; all other candidate cards remain needs-review or
-  excluded and are not referenced by runtime tasks.
-- The active pack uses explicit employment-end transition gating, explicit
-  salaried-route selection, bounded nonstandard-route verification, date-aware
-  timing only when a user supplies an end date, and clearly labelled practical
-  planning tasks. It does not determine eligibility, rights, documents,
-  deadlines, benefit amounts/duration, payment, severance, pension, or tax.
-- The product retains visible source metadata, rationale, verification labels,
-  deterministic diffs, and the educational-planning disclaimer. A complete
-  disposition record is in `docs/candidates/job_loss/evidence-ledger.md`.
+- The main entry route now opens with a presentation-only Life Navigator
+  introduction: a restrained character-resolution reveal for “Life doesn’t
+  come with instructions.” followed by “Now it does.” It fades and lifts into
+  the action-oriented landing heading, “Tell us what changed.”
+- The resolved first line holds for approximately 0.9 seconds before the final
+  statement enters, so the opening problem is given clear focus.
+- The overlay has a visible Skip intro control, hands keyboard focus to the
+  event input, respects reduced motion by opening the landing immediately, and
+  includes a no-JavaScript escape path. It does not alter deterministic
+  scenario, compiler, AI, event-pack, or safety behavior.
+- Passed: `git diff --check`, `npm run lint`, `npm run typecheck`, `npm run
+  test` (7 files, 41 tests), `npm run build`, and 8 production-build Chromium
+  journeys, including skip, reduced-motion, and narrow-mobile flow coverage.
 
-## 2026-07-17 — Job-loss source-review follow-up
+## 2026-07-17 — Generic roadmap clarity and explainability
 
-- Product-owner review approved the official Employment Service registration,
-  unemployment-benefit, and Employment Service endpoint cards for bounded
-  Hackathon use. They corroborate existing registration, claim-route, records,
-  and current-instructions tasks; they do not add an outcome, deadline, or
-  document determination.
-- Kol Zchut is approved as an authoritative public-rights source for this
-  packet, with publisher provenance retained as Kol Zchut. Hebrew source text
-  needs a documented online translation checked against the original before it
-  can add runtime copy.
-- For Hackathon scope, the product owner authorized documented online
-  translation and automatic `approved_for_hackathon` disposition for the
-  remaining job-loss candidate cards. Approval alone does not create a runtime
-  task: each future use still needs a bounded task mapping and the existing
-  no-determination safety wording.
-- The explicit `notice_given` state now adds bounded official-topic reviews for
-  notice/severance and, if relevant, a disciplinary hearing. It does not show
-  post-employment registration, claim, or document-route tasks and makes no
-  legal, severance, pension, tax, or payment determination.
+- The guided experience now uses a reusable, event-agnostic roadmap panel that
+  groups validated compiler tasks by typed timing window, exposes task/source/
+  verification/local-status details, and gives `TaskDiff` changes a concise,
+  non-colour-only summary and task markers.
+- No event-pack, source, rule, fixture, policy, compiler, or AI data changed.
+  The main-thread handoff in `docs/roadmap-clarity-contract-handoff.md` records
+  the generic resolved-rationale, diff-reason, removed-task, and task-change
+  fields still required for fuller authoritative explanations.
+- Passed: `git diff --check`, `npm run lint`, `npm run typecheck`, `npm run
+  test` (41 tests), `npm run build`, and 11 Chromium journeys against a fresh
+  production build.
+
+## 2026-07-17 — Shared timing lanes and intro exit reliability
+
+- The landing intro now marks its overlay non-interactive while it fades, reveals
+  the entry controls at exit start, supports Escape as a visible-equivalent
+  exit, and keeps input focus management intact. Seeded browser helpers wait
+  for actual overlay removal rather than a visually-hidden landing heading.
+- `src/app/timing-lanes.ts` maps only validated `Timing.kind`/`window` into the
+  generic Immediate, Preparation, Ongoing, Later, or When ready presentation
+  lanes; compiler priority remains the within-lane order. No event, pack,
+  source, fixture, rule, policy, or compiler selection data changed.
+- Passed: `git diff --check`, `npm run lint`, `npm run typecheck`, `npm run
+  test` (44 tests), `npm run build`, and 13 Chromium journeys against a fresh
+  production build.
+
+## 2026-07-17 — Catalog-driven typed-question capability
+
+- `QuestionDefinition` now validates catalog-owned prompt/rationale,
+  choice-or-typed presentation, typed constraints, format help, and
+  validation wording. The shared renderer supports text, date, and number
+  inputs without event-specific labels or conditions; skipped values remain
+  absent and invalid values do not update context.
+- Existing `expecting_child` choices now use the same validated presentation
+  shape with unchanged facts, tasks, rules, sources, and selection behavior.
+  GPT question selection remains limited to allowlisted IDs/fact IDs/rationale
+  keys and never receives presentation text.
+- ADR 0003 records this durable catalog/UI boundary. This capability is a
+  prerequisite for a future reviewed pack to supply typed-question metadata;
+  it does not activate or change `job_loss` content. Shared entry matching is
+  likewise fixture-driven rather than event-specific React logic.
 
 ## Deferred / explicitly out of scope for MVP
 

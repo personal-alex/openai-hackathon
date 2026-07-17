@@ -1,11 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import type { CatalogTask, EventPack, LocalProgress, TaskDiff, UserContext } from "@/domain-contracts";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { LocalProgress, TaskDiff, UserContext } from "@/domain-contracts";
 import { diffRoadmaps } from "@/roadmap-compiler";
 import { compileRoadmapPresentation } from "@/roadmap-compiler/presentation";
 import { findSeededScenario, seededScenarios, type SeededScenario, type SeededValue } from "@/test-fixtures/seeded-scenarios";
 import { BrandMark } from "./brand";
+import { LandingIntro } from "./landing-intro";
+import "./landing-intro.css";
+import { QuestionInput } from "./question-input";
+import { RoadmapPanel } from "./roadmap-panel";
+import "./roadmap-panel.css";
 import "./roadmap-disclosure.css";
 
 type Screen = "entry" | "confirmation" | "guided";
@@ -14,31 +19,13 @@ const emptyProgress: LocalProgress = { progressStatusByTaskId: {} };
 
 function inferScenarioId(statement: string): SeededScenario["id"] | undefined {
   const normalized = statement.toLowerCase();
-  if (/\b(job|lost|laid off|layoff)\b/.test(normalized)) return "job_loss";
-  if (/\b(expect|pregnan|child|baby)\b/.test(normalized)) return "expecting_child";
-  return undefined;
-}
-
-function timingLabel(task: CatalogTask): string {
-  if (task.timing.labelKey === "expecting_child.timing.immediately_after_birth") return "Immediately after birth";
-  if (task.timing.labelKey === "expecting_child.timing.optional_after_notice") return "Optional — after notice receipt";
-  if (task.timing.labelKey === "expecting_child.timing.update_when_ready") return "When you are ready";
-  if (task.timing.labelKey === "expecting_child.timing.verify_when_ready") return "Verify when you are ready";
-  const { timing } = task;
-  if (timing.kind === "planned") return "Plan around the date you provided";
-  if (timing.kind === "event_relative") return "Start from the date you provided";
-  if (timing.kind === "milestone") return "Plan around a milestone";
-  return "Consider when it is useful for you";
-}
-
-function changeLabel(taskId: string, diff: TaskDiff | undefined): "New" | "Adjusted" | "Current" {
-  const change = diff?.changes.find((entry) => entry.taskId === taskId);
-  if (change?.kind === "added") return "New";
-  if (change?.kind === "changed") return "Adjusted";
-  return "Current";
+  return seededScenarios.find((scenario) => scenario.statementHints.some((hint) => normalized.includes(hint)))?.id;
 }
 
 export default function Home() {
+  const eventInputRef = useRef<HTMLInputElement>(null);
+  const [showIntro, setShowIntro] = useState(true);
+  const [introExiting, setIntroExiting] = useState(false);
   const [screen, setScreen] = useState<Screen>("entry");
   const [statement, setStatement] = useState("");
   const [scenarioId, setScenarioId] = useState<SeededScenario["id"]>("expecting_child");
@@ -46,8 +33,6 @@ export default function Home() {
   const [inputError, setInputError] = useState<string>();
   const [lastDiff, setLastDiff] = useState<TaskDiff>();
   const [progress, setProgress] = useState<LocalProgress>(emptyProgress);
-  const [expandedTaskIds, setExpandedTaskIds] = useState<Set<string>>(new Set());
-  const [typedAnswer, setTypedAnswer] = useState("");
   const [notice, setNotice] = useState("Seeded demo mode is active. No live AI request is made.");
 
   const scenario = findSeededScenario(scenarioId) ?? seededScenarios[0];
@@ -57,6 +42,10 @@ export default function Home() {
   const activeQuestion = visibleQuestions.find((question) => !(question.factId in context.facts));
   const answeredQuestionCount = visibleQuestions.filter((question) => question.factId in context.facts).length;
   const changeCount = lastDiff?.changes.length ?? 0;
+
+  useEffect(() => {
+    if ((!showIntro || introExiting) && screen === "entry") eventInputRef.current?.focus();
+  }, [introExiting, screen, showIntro]);
 
   function chooseScenario(nextScenario: SeededScenario) {
     setStatement(nextScenario.examplePrompt);
@@ -95,7 +84,6 @@ export default function Home() {
     const removedCompleted = Object.entries(progress.progressStatusByTaskId).some(([taskId, status]) => status === "complete" && !activeTaskIds.has(taskId));
 
     setContext(nextContext);
-    setTypedAnswer("");
     setLastDiff(diff);
     setProgress((previous) => ({ progressStatusByTaskId: Object.fromEntries(Object.entries(previous.progressStatusByTaskId).filter(([taskId]) => activeTaskIds.has(taskId))) }));
     setNotice(removedCompleted
@@ -116,15 +104,6 @@ export default function Home() {
     });
   }
 
-  function toggleTaskDetails(taskId: string) {
-    setExpandedTaskIds((previous) => {
-      const next = new Set(previous);
-      if (next.has(taskId)) next.delete(taskId);
-      else next.add(taskId);
-      return next;
-    });
-  }
-
   function changeBirthDetails() {
     if (scenario.id !== "expecting_child" || context.facts.event_stage !== "birth_occurred") return;
     const nextContext = { facts: { event_stage: "birth_occurred" } };
@@ -132,7 +111,6 @@ export default function Home() {
     setLastDiff(diffRoadmaps(roadmap, nextRoadmap));
     setContext(nextContext);
     setProgress(emptyProgress);
-    setExpandedTaskIds(new Set());
     setNotice("Birth details are ready to update. The routine path was removed until you confirm the new routing facts.");
   }
 
@@ -152,13 +130,22 @@ export default function Home() {
     setContext({ facts: {} });
     setLastDiff(undefined);
     setProgress(emptyProgress);
-    setExpandedTaskIds(new Set());
     setInputError(undefined);
     setNotice("The local seeded demonstration was reset. No server data was stored.");
   }
 
+  function finishIntro() {
+    setShowIntro(false);
+  }
+
+  function beginIntroExit() {
+    setIntroExiting(true);
+  }
+
   return (
-    <main className={`app-shell app-shell--${screen}`}>
+    <main className={`app-shell app-shell--${screen}${showIntro && screen === "entry" ? introExiting ? " intro-exiting" : " intro-pending" : ""}`}>
+      {showIntro && <LandingIntro onExitStart={beginIntroExit} onComplete={finishIntro} />}
+      <noscript><style>{`.landing-intro{display:none!important}.app-shell--entry.intro-pending .app-header,.app-shell--entry.intro-pending .entry-layout{opacity:1!important;pointer-events:auto!important;transform:none!important}`}</style></noscript>
       <header className="app-header">
         <BrandMark />
         <div className="mode-badge" data-testid="seeded-ai-boundary"><span aria-hidden="true" />Seeded demo · deterministic</div>
@@ -170,15 +157,15 @@ export default function Home() {
         <section className="entry-layout" aria-labelledby="entry-title">
           <div className="entry-copy">
             <p className="section-kicker">Planning companion · Israel · English</p>
-            <h1 id="entry-title">Start with what changed.</h1>
-            <p className="entry-lede">Tell us about a life event. We’ll ask only the questions that can shape your next steps.</p>
+            <h1 id="entry-title">Tell us what changed.</h1>
+            <p className="entry-lede">We’ll ask only what shapes your next steps.</p>
           </div>
           <div className="entry-stage">
             <form className="event-input-card" onSubmit={(event) => { event.preventDefault(); continueFromEntry(); }} noValidate>
               <label htmlFor="event-statement">What happened?</label>
               <p>Begin in your own words. The roadmap stays source-aware and explainable.</p>
               <div className="input-row">
-                <input id="event-statement" name="event-statement" value={statement} onChange={(event) => { setStatement(event.target.value); setInputError(undefined); }} placeholder="For example: I lost my job" aria-describedby={inputError ? "event-error" : "event-helper"} />
+                <input ref={eventInputRef} id="event-statement" name="event-statement" value={statement} onChange={(event) => { setStatement(event.target.value); setInputError(undefined); }} placeholder="For example: I lost my job" aria-describedby={inputError ? "event-error" : "event-helper"} />
                 <button className="primary-button" type="submit">Continue <span aria-hidden="true">→</span></button>
               </div>
               <p className="input-helper" id="event-helper">Supported fixture scenarios</p>
@@ -224,9 +211,9 @@ export default function Home() {
             {activeQuestion ? (
               <article className="question-card" key={activeQuestion.id}>
                 <p className="statement-chip">“{statement || scenario.examplePrompt}”</p>
-                <h2>{activeQuestion.prompt}</h2>
-                {activeQuestion.input ? <div className="answer-list"><label className="sr-only" htmlFor={`answer-${activeQuestion.id}`}>Employment end date</label><input id={`answer-${activeQuestion.id}`} type={activeQuestion.input.type} value={typedAnswer} onChange={(event) => setTypedAnswer(event.target.value)} /><button type="button" className="answer-button" disabled={!typedAnswer} onClick={() => answerQuestion(typedAnswer)}>{activeQuestion.input.submitLabel}</button><button type="button" className="answer-button" onClick={() => answerQuestion(undefined)}>{activeQuestion.input.skipLabel}</button></div> : <div className="answer-list">{activeQuestion.options.map((option) => <button key={option.label} type="button" className="answer-button" onClick={() => answerQuestion(option.value)}>{option.label}</button>)}</div>}
-                <details className="why-ask"><summary>Why we ask this</summary><p>{activeQuestion.why}</p></details>
+                <h2>{activeQuestion.presentation.prompt}</h2>
+                <QuestionInput question={activeQuestion} onAnswer={answerQuestion} />
+                <details className="why-ask"><summary>Why are we asking this?</summary><p>{activeQuestion.presentation.rationale}</p></details>
               </article>
             ) : (
               <article className="question-card question-card--complete"><BrandMark compact /><h2>{roadmapPresentation.mode === "preview" ? "Your after-birth preview is ready." : "Your roadmap is ready."}</h2><p>{roadmapPresentation.mode === "preview" ? "When the birth occurs, confirm it here and this plan will adapt to the routing facts you choose to share." : "Change your answers to see how the deterministic compiler replaces affected tasks."}</p>{scenario.id === "expecting_child" && roadmapPresentation.mode === "preview" && <button className="primary-button" type="button" onClick={confirmBirthFromPreview}>The child has now been born <span aria-hidden="true">→</span></button>}{scenario.id === "expecting_child" && context.facts.event_stage === "birth_occurred" && <button className="text-button" type="button" onClick={changeBirthDetails}>Change birth details</button>}</article>
@@ -237,18 +224,7 @@ export default function Home() {
           <section className="roadmap-column" aria-labelledby="roadmap-title">
             <div className="roadmap-topline"><div><p className="section-kicker">Live deterministic roadmap</p><h2 id="roadmap-title">Your next considerations</h2></div><div className={changeCount ? "update-notice is-active" : "update-notice"} role="status"><span aria-hidden="true">✓</span>{changeCount ? "Roadmap updated" : "Ready to update"}</div></div>
             {roadmapPresentation.mode === "preview" && scenario.preBirthPreview ? <div className="preview-notice" role="status"><strong>Preview · After birth</strong><p>{scenario.preBirthPreview.lead}</p><p>{scenario.preBirthPreview.detail}</p></div> : <p className="roadmap-disclaimer">{scenario.explanation}</p>}
-            <ol className="task-list">{roadmap.steps.map((task, index) => {
-              const sourceCards = task.sourceIds.map((sourceId) => scenario.pack.sourceCards.find((source) => source.id === sourceId)).filter((source): source is EventPack["sourceCards"][number] => Boolean(source));
-              const status: "not started" | "reviewed" | "complete" = Object.hasOwn(progress.progressStatusByTaskId, task.id)
-                ? progress.progressStatusByTaskId[task.id]!
-                : "not started";
-              const label = roadmapPresentation.mode === "preview" ? "Preview" : changeLabel(task.id, lastDiff);
-              const expanded = expandedTaskIds.has(task.id);
-              return <li className={`task-card task-card--${label.toLowerCase()}`} key={task.id}>
-                <button type="button" className="task-card-toggle" aria-label={`Toggle details for ${task.title}`} aria-expanded={expanded} aria-controls={`task-details-${task.id}`} onClick={() => toggleTaskDetails(task.id)}><div className="task-card-main"><p className="task-number">{roadmapPresentation.mode === "preview" ? "After birth preview" : `Step ${index + 1}`}</p><h3>{task.title}</h3><p className="task-summary">{task.actionSummary}</p><dl className="task-meta"><div><dt>Timing</dt><dd>{roadmapPresentation.mode === "preview" ? "After birth · conditional" : timingLabel(task)}</dd></div><div><dt>Status</dt><dd className="local-status">{roadmapPresentation.mode === "preview" ? "preview only" : status}</dd></div><div><dt>Verification</dt><dd>{task.verificationLabel}</dd></div></dl></div><div className="task-aside"><span className="change-label"><b aria-hidden="true" />{label}</span><div className="source-pills">{sourceCards.map((source) => <span key={source.id}>{source.publisher}</span>)}</div><span className="disclosure-arrow" aria-hidden="true">⌄</span></div></button>
-                <div id={`task-details-${task.id}`} className="task-details-panel" data-expanded={expanded}><div className="task-details-content"><p>{scenario.rationaleByKey?.[task.rationale] ?? "This task is selected by the validated catalog and deterministic compiler."}</p>{sourceCards.length > 0 ? sourceCards.map((source) => <section className="source-detail" key={source.id}><p><strong>Source:</strong> {source.title} · {source.publisher} · reviewed {source.reviewedOn} · {source.disposition}</p><p>{source.supportedClaimSummary}</p><p><strong>Scope:</strong> {source.scope}</p><p><strong>Limits:</strong> {source.limitations}</p><p><strong>Verification:</strong> {source.verificationWording}</p><p><strong>Safety:</strong> {source.safetyClassification.replaceAll("_", " ")}</p><a href={source.canonicalUrl} target="_blank" rel="noreferrer">Open official source <span className="sr-only">for {source.title}</span></a></section>) : <p className="source-detail">No source is claimed for this generic verification boundary.</p>}{roadmapPresentation.mode === "active" && <button type="button" className="progress-button" onClick={() => cycleProgress(task.id)}>Local status: {status} · {status === "not started" ? "mark reviewed" : status === "reviewed" ? "mark complete" : "clear status"}</button>}</div></div>
-              </li>;
-            })}</ol>
+            <RoadmapPanel roadmap={roadmap} sourceCards={scenario.pack.sourceCards} progress={progress} taskDiff={lastDiff} readOnly={roadmapPresentation.mode === "preview"} onCycleProgress={cycleProgress} />
             <div className="workspace-footer"><p>General planning support only. Verify current information with an appropriate reviewed source before acting.</p><button type="button" className="text-button" onClick={resetDemo}>Reset local demo</button></div>
           </section>
         </section>
