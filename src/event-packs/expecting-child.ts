@@ -1,5 +1,13 @@
 import type { EventPack } from "@/domain-contracts";
 
+const expectingChildQuestionPresentation = {
+  ec_has_child_been_born: { prompt: "Has the child already been born?", rationale: "A post-birth answer is required before this plan can show any active post-birth route.", options: [{ label: "Yes, the child has been born", value: "birth_occurred" }, { label: "Not yet", value: "not_yet_born" }, { label: "I’m not sure" }] },
+  ec_birth_location: { prompt: "Was the child born in Israel?", rationale: "A birth outside Israel follows a separate official route and cannot use the Israeli-hospital pathway.", options: [{ label: "Yes, in Israel", value: "israel" }, { label: "No, outside Israel", value: "outside_israel" }, { label: "I’m not sure", value: "unknown" }] },
+  ec_birth_setting: { prompt: "Was the child born in an Israeli hospital?", rationale: "Only a confirmed Israeli-hospital birth can be considered for the reviewed routine hospital-notice path.", options: [{ label: "Yes, in an Israeli hospital", value: "hospital" }, { label: "No, another setting", value: "home_or_other" }, { label: "I’m not sure", value: "unknown" }] },
+  ec_family_path: { prompt: "Does the routine birth path describe your situation?", rationale: "A special family situation must remove the routine hospital guidance rather than assume it applies.", options: [{ label: "Yes, routine birth path", value: "routine_birth" }, { label: "Adoption", value: "adoption" }, { label: "Surrogacy", value: "surrogacy" }, { label: "Parentage needs verification", value: "parentage_needs_verification" }, { label: "I’m not sure", value: "unknown" }] },
+  ec_first_name_in_hospital_notice: { prompt: "Was the child’s first name included in the hospital notice?", rationale: "A “no” answer adds the approved conditional naming route; it does not imply a registration outcome.", options: [{ label: "Yes", value: "yes" }, { label: "No", value: "no" }, { label: "I’m not sure", value: "unknown" }] }
+};
+
 /**
  * Reviewed IL catalog content. It intentionally covers only the approved
  * post-birth routing boundary; unknown and special situations never inherit
@@ -18,11 +26,11 @@ export const expectingChildPack = {
     { id: "family_path", valueType: "string", labelKey: "expecting_child.fact.family_path", sensitive: false }
   ],
   questions: [
-    { id: "ec_has_child_been_born", factId: "event_stage", promptKey: "expecting_child.question.has_child_been_born", rationaleKey: "expecting_child.why.birth_stage", answerType: "string", allowSkip: true },
-    { id: "ec_birth_location", factId: "birth_location", promptKey: "expecting_child.question.birth_location", rationaleKey: "expecting_child.why.birth_location", answerType: "string", allowSkip: true },
-    { id: "ec_birth_setting", factId: "birth_setting", promptKey: "expecting_child.question.birth_setting", rationaleKey: "expecting_child.why.birth_setting", answerType: "string", allowSkip: true },
-    { id: "ec_family_path", factId: "family_path", promptKey: "expecting_child.question.family_path", rationaleKey: "expecting_child.why.family_path", answerType: "string", allowSkip: true },
-    { id: "ec_first_name_in_hospital_notice", factId: "first_name_in_hospital_notice", promptKey: "expecting_child.question.first_name_in_hospital_notice", rationaleKey: "expecting_child.why.first_name", answerType: "string", allowSkip: true }
+    { id: "ec_has_child_been_born", factId: "event_stage", promptKey: "expecting_child.question.has_child_been_born", rationaleKey: "expecting_child.why.birth_stage", answerType: "string", allowSkip: true, presentation: expectingChildQuestionPresentation.ec_has_child_been_born },
+    { id: "ec_birth_location", factId: "birth_location", promptKey: "expecting_child.question.birth_location", rationaleKey: "expecting_child.why.birth_location", answerType: "string", allowSkip: true, presentation: expectingChildQuestionPresentation.ec_birth_location },
+    { id: "ec_birth_setting", factId: "birth_setting", promptKey: "expecting_child.question.birth_setting", rationaleKey: "expecting_child.why.birth_setting", answerType: "string", allowSkip: true, presentation: expectingChildQuestionPresentation.ec_birth_setting },
+    { id: "ec_family_path", factId: "family_path", promptKey: "expecting_child.question.family_path", rationaleKey: "expecting_child.why.family_path", answerType: "string", allowSkip: true, presentation: expectingChildQuestionPresentation.ec_family_path },
+    { id: "ec_first_name_in_hospital_notice", factId: "first_name_in_hospital_notice", promptKey: "expecting_child.question.first_name_in_hospital_notice", rationaleKey: "expecting_child.why.first_name", answerType: "string", allowSkip: true, presentation: expectingChildQuestionPresentation.ec_first_name_in_hospital_notice }
   ],
   sourceCards: [
     {
@@ -249,11 +257,3 @@ export const expectingChildPack = {
     { id: "ec_non_hospital_birth", labelKey: "expecting_child.demo.non_hospital_birth", initialFacts: { facts: { event_stage: "birth_occurred", birth_location: "israel", birth_setting: "home_or_other" } } }
   ] as EventPack["demoScenarios"]
 } satisfies EventPack;
-
-export const expectingChildQuestionPresentation = {
-  ec_has_child_been_born: { prompt: "Has the child already been born?", why: "A post-birth answer is required before this plan can show any active post-birth route.", options: [{ label: "Yes, the child has been born", value: "birth_occurred" }, { label: "Not yet", value: "not_yet_born" }, { label: "I’m not sure" }] },
-  ec_birth_location: { prompt: "Was the child born in Israel?", why: "A birth outside Israel follows a separate official route and cannot use the Israeli-hospital pathway.", options: [{ label: "Yes, in Israel", value: "israel" }, { label: "No, outside Israel", value: "outside_israel" }, { label: "I’m not sure", value: "unknown" }] },
-  ec_birth_setting: { prompt: "Was the child born in an Israeli hospital?", why: "Only a confirmed Israeli-hospital birth can be considered for the reviewed routine hospital-notice path.", options: [{ label: "Yes, in an Israeli hospital", value: "hospital" }, { label: "No, another setting", value: "home_or_other" }, { label: "I’m not sure", value: "unknown" }] },
-  ec_family_path: { prompt: "Does the routine birth path describe your situation?", why: "A special family situation must remove the routine hospital guidance rather than assume it applies.", options: [{ label: "Yes, routine birth path", value: "routine_birth" }, { label: "Adoption", value: "adoption" }, { label: "Surrogacy", value: "surrogacy" }, { label: "Parentage needs verification", value: "parentage_needs_verification" }, { label: "I’m not sure", value: "unknown" }] },
-  ec_first_name_in_hospital_notice: { prompt: "Was the child’s first name included in the hospital notice?", why: "A “no” answer adds the approved conditional naming route; it does not imply a registration outcome.", options: [{ label: "Yes", value: "yes" }, { label: "No", value: "no" }, { label: "I’m not sure", value: "unknown" }] }
-} as const;

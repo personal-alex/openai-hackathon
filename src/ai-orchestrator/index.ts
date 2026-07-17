@@ -1,8 +1,9 @@
 import { z } from "zod";
-import { EventIdSchema, FactDefinitionSchema, FactValueSchema, QuestionDefinitionSchema, type EventId, type UserContext } from "@/domain-contracts";
+import { EventIdSchema, FactDefinitionSchema, FactValueSchema, type EventId, type QuestionDefinition as CatalogQuestionDefinition, type UserContext } from "@/domain-contracts";
 
 export type FactDefinition = z.infer<typeof FactDefinitionSchema>;
-export type QuestionDefinition = z.infer<typeof QuestionDefinitionSchema>;
+/** The model receives only allowlist metadata, never catalog presentation copy. */
+export type QuestionDefinition = Pick<CatalogQuestionDefinition, "id" | "factId" | "rationaleKey">;
 
 const LIVE_EVENT_IDS = ["expecting_child", "job_loss"] as const;
 const LiveEventIdSchema = z.enum(LIVE_EVENT_IDS);

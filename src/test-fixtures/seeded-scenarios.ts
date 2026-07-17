@@ -1,14 +1,9 @@
-import type { EventId, EventPack, FactValueSchema, UserContext } from "@/domain-contracts";
-import { expectingChildPack, expectingChildQuestionPresentation } from "@/event-packs/expecting-child";
+import type { EventId, EventPack, FactValue, QuestionDefinition, UserContext } from "@/domain-contracts";
+import { expectingChildPack } from "@/event-packs/expecting-child";
 
-export type SeededValue = typeof FactValueSchema._output;
+export type SeededValue = FactValue;
 
-export type SeededQuestion = {
-  id: string;
-  factId: string;
-  prompt: string;
-  why: string;
-  options: ReadonlyArray<{ label: string; value?: SeededValue }>;
+export type SeededQuestion = QuestionDefinition & {
   isApplicable?: (facts: UserContext["facts"]) => boolean;
 };
 
@@ -43,9 +38,9 @@ function fixturePack(id: "expecting_child" | "job_loss"): EventPack {
       { id: "wants_support", valueType: "boolean", labelKey: "fact.wants_support", sensitive: false }
     ],
     questions: [
-      { id: "fixture_anchor_question", factId: anchorFact, promptKey: "question.fixture_anchor", rationaleKey: "rationale.fixture_anchor", answerType: "string", allowSkip: true },
-      { id: "fixture_checklist_question", factId: "wants_checklist", promptKey: "question.fixture_checklist", rationaleKey: "rationale.fixture_checklist", answerType: "boolean", allowSkip: true },
-      { id: "fixture_support_question", factId: "wants_support", promptKey: "question.fixture_support", rationaleKey: "rationale.fixture_support", answerType: "boolean", allowSkip: true }
+      { id: "fixture_anchor_question", factId: anchorFact, promptKey: "question.fixture_anchor", rationaleKey: "rationale.fixture_anchor", answerType: "string", allowSkip: true, presentation: { prompt: "Is there a key date you want this demonstration plan to consider?", rationale: "A date changes the fixture timing and adds a timeline task.", options: [{ label: "Yes, use a planning date", value: "fixture_anchor" }, { label: "I’m not sure yet" }] } },
+      { id: "fixture_checklist_question", factId: "wants_checklist", promptKey: "question.fixture_checklist", rationaleKey: "rationale.fixture_checklist", answerType: "boolean", allowSkip: true, presentation: { prompt: "Would a simple planning checklist help in this demonstration?", rationale: "This answer decides whether the fixture checklist task appears.", options: [{ label: "Yes, add a checklist", value: true }, { label: "Not for now", value: false }, { label: "Skip for now" }] } },
+      { id: "fixture_support_question", factId: "wants_support", promptKey: "question.fixture_support", rationaleKey: "rationale.fixture_support", answerType: "boolean", allowSkip: true, presentation: { prompt: "Would you like to see a support-review step in this demonstration?", rationale: "This answer determines whether the fixture support task is included.", options: [{ label: "Yes, include it", value: true }, { label: "No, leave it out", value: false }, { label: "I don’t know yet" }] } }
     ],
     sourceCards: [{
       id: "fixture_source",
@@ -149,11 +144,11 @@ export const seededScenarios: SeededScenario[] = [
     context: { facts: {} },
     pack: expectingChildPack,
     questions: [
-      { id: "ec_has_child_been_born", factId: "event_stage", ...expectingChildQuestionPresentation.ec_has_child_been_born },
-      { id: "ec_birth_location", factId: "birth_location", ...expectingChildQuestionPresentation.ec_birth_location, isApplicable: (facts) => facts.event_stage === "birth_occurred" },
-      { id: "ec_birth_setting", factId: "birth_setting", ...expectingChildQuestionPresentation.ec_birth_setting, isApplicable: (facts) => facts.event_stage === "birth_occurred" && facts.birth_location === "israel" },
-      { id: "ec_family_path", factId: "family_path", ...expectingChildQuestionPresentation.ec_family_path, isApplicable: (facts) => facts.event_stage === "birth_occurred" && facts.birth_location === "israel" && facts.birth_setting === "hospital" },
-      { id: "ec_first_name_in_hospital_notice", factId: "first_name_in_hospital_notice", ...expectingChildQuestionPresentation.ec_first_name_in_hospital_notice, isApplicable: (facts) => facts.event_stage === "birth_occurred" && facts.birth_location === "israel" && facts.birth_setting === "hospital" && facts.family_path === "routine_birth" }
+      expectingChildPack.questions[0],
+      { ...expectingChildPack.questions[1], isApplicable: (facts) => facts.event_stage === "birth_occurred" },
+      { ...expectingChildPack.questions[2], isApplicable: (facts) => facts.event_stage === "birth_occurred" && facts.birth_location === "israel" },
+      { ...expectingChildPack.questions[3], isApplicable: (facts) => facts.event_stage === "birth_occurred" && facts.birth_location === "israel" && facts.birth_setting === "hospital" },
+      { ...expectingChildPack.questions[4], isApplicable: (facts) => facts.event_stage === "birth_occurred" && facts.birth_location === "israel" && facts.birth_setting === "hospital" && facts.family_path === "routine_birth" }
     ]
   },
   {
@@ -165,11 +160,7 @@ export const seededScenarios: SeededScenario[] = [
     catalogKind: "synthetic",
     context: { facts: {} },
     pack: fixturePack("job_loss"),
-    questions: [
-      { id: "fixture_anchor_question", factId: "event_date", prompt: "Is there a key date you want this demonstration plan to consider?", why: "A date changes the fixture timing and adds a timeline task.", options: [{ label: "Yes, use a planning date", value: "fixture_anchor" }, { label: "I’m not sure yet" }] },
-      { id: "fixture_checklist_question", factId: "wants_checklist", prompt: "Would a simple planning checklist help in this demonstration?", why: "This answer decides whether the fixture checklist task appears.", options: [{ label: "Yes, add a checklist", value: true }, { label: "Not for now", value: false }, { label: "Skip for now" }] },
-      { id: "fixture_support_question", factId: "wants_support", prompt: "Would you like to see a support-review step in this demonstration?", why: "This answer determines whether the fixture support task is included.", options: [{ label: "Yes, include it", value: true }, { label: "No, leave it out", value: false }, { label: "I don’t know yet" }] }
-    ]
+    questions: fixturePack("job_loss").questions
   }
 ];
 

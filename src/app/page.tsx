@@ -8,6 +8,7 @@ import { findSeededScenario, seededScenarios, type SeededScenario, type SeededVa
 import { BrandMark } from "./brand";
 import { LandingIntro } from "./landing-intro";
 import "./landing-intro.css";
+import { QuestionInput } from "./question-input";
 import { RoadmapPanel } from "./roadmap-panel";
 import "./roadmap-panel.css";
 import "./roadmap-disclosure.css";
@@ -212,9 +213,9 @@ export default function Home() {
             {activeQuestion ? (
               <article className="question-card" key={activeQuestion.id}>
                 <p className="statement-chip">“{statement || scenario.examplePrompt}”</p>
-                <h2>{activeQuestion.prompt}</h2>
-                <div className="answer-list">{activeQuestion.options.map((option) => <button key={option.label} type="button" className="answer-button" onClick={() => answerQuestion(option.value)}>{option.label}</button>)}</div>
-                <details className="why-ask"><summary>Why are we asking this?</summary><p>{activeQuestion.why}</p></details>
+                <h2>{activeQuestion.presentation.prompt}</h2>
+                <QuestionInput question={activeQuestion} onAnswer={answerQuestion} />
+                <details className="why-ask"><summary>Why are we asking this?</summary><p>{activeQuestion.presentation.rationale}</p></details>
               </article>
             ) : (
               <article className="question-card question-card--complete"><BrandMark compact /><h2>{roadmapPresentation.mode === "preview" ? "Your after-birth preview is ready." : "Your roadmap is ready."}</h2><p>{roadmapPresentation.mode === "preview" ? "When the birth occurs, confirm it here and this plan will adapt to the routing facts you choose to share." : "Change your answers to see how the deterministic compiler replaces affected tasks."}</p>{scenario.id === "expecting_child" && roadmapPresentation.mode === "preview" && <button className="primary-button" type="button" onClick={confirmBirthFromPreview}>The child has now been born <span aria-hidden="true">→</span></button>}{scenario.id === "expecting_child" && context.facts.event_stage === "birth_occurred" && <button className="text-button" type="button" onClick={changeBirthDetails}>Change birth details</button>}</article>

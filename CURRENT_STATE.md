@@ -241,6 +241,21 @@ The repository contains a validated modular-monolith baseline, deterministic com
   test` (44 tests), `npm run build`, and 13 Chromium journeys against a fresh
   production build.
 
+## 2026-07-17 — Catalog-driven typed-question capability
+
+- `QuestionDefinition` now validates catalog-owned prompt/rationale,
+  choice-or-typed presentation, typed constraints, format help, and
+  validation wording. The shared renderer supports text, date, and number
+  inputs without event-specific labels or conditions; skipped values remain
+  absent and invalid values do not update context.
+- Existing `expecting_child` choices now use the same validated presentation
+  shape with unchanged facts, tasks, rules, sources, and selection behavior.
+  GPT question selection remains limited to allowlisted IDs/fact IDs/rationale
+  keys and never receives presentation text.
+- ADR 0003 records this durable catalog/UI boundary. This capability is a
+  prerequisite for a future reviewed pack to supply typed-question metadata;
+  it does not activate or change `job_loss` content.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations
