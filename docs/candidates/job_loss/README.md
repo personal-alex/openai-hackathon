@@ -33,7 +33,7 @@ practical next-role momentum without promising an outcome.
 
 ## Runtime boundary
 
-Only the seven official route cards recorded as `approved_for_hackathon` in the
+Only the ten official route cards recorded as `approved_for_hackathon` in the
 evidence ledger are translated into `src/event-packs/job-loss.ts` and registered after
 `validateApprovedEventPack`. All other candidate material remains outside the
 runtime pack and is not supplied to `compileRoadmap`.
@@ -41,7 +41,7 @@ runtime pack and is not supplied to `compileRoadmap`.
 authorized translation of dated human-approved data. They do not approve this
 research packet or establish source currency.
 
-The seven approved cards are bounded route-review/records sources only. Kol
+The ten approved cards are bounded route-review/records sources only. Kol
 Zchut is an approved authoritative public-rights cross-check, with its own
 publisher provenance retained; Hebrew source content requires a documented
 online translation checked against the original before it supports new runtime

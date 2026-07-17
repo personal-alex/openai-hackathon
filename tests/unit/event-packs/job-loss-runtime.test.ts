@@ -19,7 +19,10 @@ describe("approved Hackathon job-loss runtime catalog", () => {
       "jl_nii_claim_documents_form100",
       "jl_gov_employment_service_registration",
       "jl_gov_unemployment_benefits_service",
-      "jl_employment_service_home"
+      "jl_employment_service_home",
+      "jl_gov_advance_notice",
+      "jl_gov_severance",
+      "jl_gov_disciplinary_hearing"
     ]);
     expect(pack.sourceCards.every((source) => source.disposition === "approved_for_hackathon" && source.canonicalUrl.startsWith("https://") && source.supportedClaimSummary.length > 0)).toBe(true);
   });
@@ -52,8 +55,11 @@ describe("approved Hackathon job-loss runtime catalog", () => {
       "jl_prepare_claim_route_information",
       "jl_update_resume"
     ]));
-    expect(taskIds({ employment_stage: "notice_given" })).not.toContain("jl_register_employment_service");
-    expect(taskIds({ employment_stage: "notice_given" })).not.toContain("jl_review_unemployment_claim_route");
+    const noticeGiven = taskIds({ employment_stage: "notice_given" });
+    expect(noticeGiven).not.toContain("jl_register_employment_service");
+    expect(noticeGiven).not.toContain("jl_review_unemployment_claim_route");
+    expect(noticeGiven).not.toContain("jl_prepare_claim_route_information");
+    expect(noticeGiven).toEqual(expect.arrayContaining(["jl_review_notice_and_severance", "jl_review_disciplinary_hearing_if_relevant"]));
   });
 
   it("replaces initial registration and de-emphasizes a submitted claim without inferring an outcome", () => {
@@ -76,12 +82,13 @@ describe("approved Hackathon job-loss runtime catalog", () => {
     expect(unknown).not.toContain("jl_review_unemployment_claim_route");
   });
 
-  it("changes records rationale and emits explainable diffs without surfacing excluded candidate cards", () => {
+  it("changes records rationale and emits explainable diffs without surfacing unrelated candidate cards", () => {
     const before = compileRoadmap(pack, { facts: { employment_stage: "ended", work_arrangement: "salaried" } });
     const after = compileRoadmap(pack, { facts: { employment_stage: "ended", work_arrangement: "salaried", employment_end_confirmation: "does_not_have" } });
     expect(after.steps.find((task) => task.id === "jl_prepare_claim_route_information")?.rationale).toBe("job_loss.rationale.missing_end_confirmation");
     expect(diffRoadmaps(before, after).changes).toEqual(expect.arrayContaining([expect.objectContaining({ taskId: "jl_prepare_claim_route_information", kind: "changed" })]));
     expect(JSON.stringify(pack)).toMatch(/jl_gov_employment_service_registration|jl_gov_unemployment_benefits_service|jl_employment_service_home/);
-    expect(JSON.stringify(pack)).not.toMatch(/jl_kolzchut_|jl_gov_between_jobs|jl_gov_advance_notice|jl_gov_severance|jl_gov_disciplinary_hearing/);
+    expect(JSON.stringify(pack)).toMatch(/jl_gov_advance_notice|jl_gov_severance|jl_gov_disciplinary_hearing/);
+    expect(JSON.stringify(pack)).not.toMatch(/jl_kolzchut_|jl_gov_between_jobs/);
   });
 });

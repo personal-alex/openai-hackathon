@@ -44,6 +44,18 @@ test("guides the approved job-loss route while keeping source-backed tasks and d
   await expect(page.getByRole("link", { name: /Open official source for Register to the Israeli Employment Service online/i })).toHaveAttribute("href", "https://www.gov.il/en/service/register_to_employment_services");
 });
 
+test("shows bounded notice-period reviews before employment ends", async ({ page }) => {
+  await beginScenario(page, "I lost my job");
+
+  await page.getByRole("button", { name: "I have been given notice" }).click();
+  const noticeDetails = page.getByRole("button", { name: /Toggle details for Review official notice and severance information/i });
+  await expect(noticeDetails).toBeVisible();
+  await expect(page.getByRole("button", { name: /Toggle details for Review official hearing information if relevant/i })).toBeVisible();
+  await noticeDetails.click();
+  await expect(page.getByRole("link", { name: /Open official source for Notice of dismissal and resignation/i })).toHaveAttribute("href", "https://www.gov.il/en/pages/notice-of-dismissal-and-resignation");
+  await expect(page.getByText("Review Employment Service registration")).toBeHidden();
+});
+
 test("guides the approved expecting-child routine path with catalog-derived source details", async ({ page }) => {
   await beginExpectingChild(page);
   await expect(page.getByText(/Congratulations\. Tell us a little about where you are/i)).toBeVisible();
@@ -94,7 +106,7 @@ test("works at a narrow mobile viewport with keyboard-reachable flow", async ({ 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await dismissIntro(page);
-  await expect(page.getByRole("heading", { name: "Tell us what changed." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Start with what changed." })).toBeVisible();
   await page.getByLabel("What happened?").press("Tab");
   await expect(page.getByRole("button", { name: /continue/i })).toBeFocused();
 });

@@ -257,7 +257,7 @@ original before they support new English runtime copy.
 
 ## Hackathon source-card disposition ledger — 2026-07-17
 
-The seven runtime-approved cards retain the publisher, title, canonical user-openable
+The ten runtime-approved cards retain the publisher, title, canonical user-openable
 URL, jurisdiction, review date, scope, bounded claim, and limitations recorded
 above. They are the only source cards translated into `src/event-packs/job-loss.ts`.
 `approved_for_hackathon` means approved for this bounded planning scope, not
@@ -274,9 +274,9 @@ pension, severance, or claim outcome is determined.
 | `jl_gov_unemployment_benefits_service` | `approved_for_hackathon` | `jl_review_unemployment_claim_route`, `jl_prepare_claim_route_information`; route/records review only. |
 | `jl_employment_service_home` | `approved_for_hackathon` | `jl_follow_employment_service_instructions`; current-instructions endpoint only. |
 | `jl_gov_between_jobs` | `approved_for_hackathon` | Approved translated navigation card; not yet mapped to a runtime task. |
-| `jl_gov_advance_notice` | `approved_for_hackathon` | Approved official-topic card; not yet mapped to a runtime task. |
-| `jl_gov_severance` | `approved_for_hackathon` | Approved official-topic card; not yet mapped to a runtime task. |
-| `jl_gov_disciplinary_hearing` | `approved_for_hackathon` | Approved official-topic card; not yet mapped to a runtime task. |
+| `jl_gov_advance_notice` | `approved_for_hackathon` | `jl_review_notice_and_severance` when `employment_stage = notice_given`; topic review only. |
+| `jl_gov_severance` | `approved_for_hackathon` | `jl_review_notice_and_severance` when `employment_stage = notice_given`; topic review only. |
+| `jl_gov_disciplinary_hearing` | `approved_for_hackathon` | `jl_review_disciplinary_hearing_if_relevant` when `employment_stage = notice_given`; conditional topic review only. |
 | `jl_kolzchut_unemployment_benefits` | `approved_for_hackathon` | Approved cross-check; not translated into new English runtime copy. |
 | `jl_kolzchut_employment_service_registration` | `approved_for_hackathon` | Approved cross-check; not translated into new English runtime copy. |
 | `jl_kolzchut_employment_service_reporting` | `approved_for_hackathon` | Approved cross-check; not translated into new English runtime copy. |

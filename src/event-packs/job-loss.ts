@@ -135,6 +135,51 @@ export const jobLossPack = {
       limitations: "Does not establish a personal reporting schedule, appointment, obligation, eligibility, payment, or benefit outcome.",
       verificationWording: "Review the current Employment Service instructions on the official source before acting.",
       safetyClassification: "verification_required"
+    },
+    {
+      id: "jl_gov_advance_notice",
+      title: "Notice of dismissal and resignation",
+      publisher: "gov.il / Ministry of Labor",
+      canonicalUrl: "https://www.gov.il/en/pages/notice-of-dismissal-and-resignation",
+      jurisdiction: "IL",
+      reviewedOn: "2026-07-17",
+      reviewer: "Hackathon product owner (auto-approval instruction)",
+      disposition: "approved_for_hackathon",
+      scope: "Bounded official-topic review during an explicit notice period before employment ends.",
+      supportedClaimSummary: "The official Ministry of Labor page provides information on its named topic: notice of dismissal and resignation.",
+      limitations: "Does not establish a notice period, entitlement, legal compliance, employment-end date, or personal outcome.",
+      verificationWording: "Review the current official information for your situation before acting.",
+      safetyClassification: "verification_required"
+    },
+    {
+      id: "jl_gov_severance",
+      title: "Severance package",
+      publisher: "gov.il / Ministry of Labor",
+      canonicalUrl: "https://www.gov.il/en/pages/severance-package",
+      jurisdiction: "IL",
+      reviewedOn: "2026-07-17",
+      reviewer: "Hackathon product owner (auto-approval instruction)",
+      disposition: "approved_for_hackathon",
+      scope: "Bounded official-topic review during an explicit notice period before employment ends.",
+      supportedClaimSummary: "The official Ministry of Labor page provides information on its named severance topic.",
+      limitations: "Does not establish severance eligibility, amount, payment, pension treatment, tax treatment, or a personal outcome.",
+      verificationWording: "Review the current official information for your situation before acting.",
+      safetyClassification: "verification_required"
+    },
+    {
+      id: "jl_gov_disciplinary_hearing",
+      title: "Disciplinary hearing",
+      publisher: "gov.il / Ministry of Labor",
+      canonicalUrl: "https://www.gov.il/en/pages/disciplinary-hearing",
+      jurisdiction: "IL",
+      reviewedOn: "2026-07-17",
+      reviewer: "Hackathon product owner (auto-approval instruction)",
+      disposition: "approved_for_hackathon",
+      scope: "Bounded official-topic review when a person says they have notice but employment has not ended.",
+      supportedClaimSummary: "The official Ministry of Labor page provides information on its named disciplinary-hearing topic.",
+      limitations: "Does not establish that a hearing applies, was required, was mishandled, or that a legal remedy applies.",
+      verificationWording: "Review the current official information if a hearing or dismissal process is relevant to you.",
+      safetyClassification: "verification_required"
     }
   ],
   tasks: [
@@ -199,6 +244,30 @@ export const jobLossPack = {
       applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "employment_stage", equals: "ended" }] }
     },
     {
+      id: "jl_review_notice_and_severance",
+      title: "Review official notice and severance information",
+      actionSummary: "Because your employment has not ended yet, keep the written notice available and review the current official information on notice and severance. This roadmap does not determine whether either topic applies to you or what you may receive.",
+      priority: 10,
+      timing: { kind: "general", labelKey: "job_loss.timing.gather_and_verify" },
+      rationaleKey: "job_loss.rationale.notice_period_rights_review",
+      sourceIds: ["jl_gov_advance_notice", "jl_gov_severance"],
+      verificationLabel: "Verification required — no legal or payment outcome",
+      dependsOn: [],
+      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "employment_stage", equals: "notice_given" }] }
+    },
+    {
+      id: "jl_review_disciplinary_hearing_if_relevant",
+      title: "Review official hearing information if relevant",
+      actionSummary: "If a hearing or another dismissal-process question is still relevant before your last day, review the current official information. This roadmap does not determine whether a hearing was required or handled correctly.",
+      priority: 20,
+      timing: { kind: "general", labelKey: "job_loss.timing.gather_and_verify" },
+      rationaleKey: "job_loss.rationale.notice_period_hearing_review",
+      sourceIds: ["jl_gov_disciplinary_hearing"],
+      verificationLabel: "Verification required — no legal conclusion",
+      dependsOn: [],
+      applicability: { kind: "confirmed_transition", requiredFacts: [{ factId: "employment_stage", equals: "notice_given" }] }
+    },
+    {
       id: "jl_update_resume",
       title: "Update your resume",
       actionSummary: "Capture your latest role, achievements, skills, and references while details are fresh. A focused first draft is enough.",
@@ -249,6 +318,7 @@ export const jobLossPack = {
   ],
   baseTaskIds: ["jl_update_resume", "jl_refresh_professional_presence", "jl_make_small_outreach_plan", "jl_consider_support"],
   rules: [
+    { id: "jl_include_notice_period_rights_reviews", priority: 10, when: { fact: "employment_stage", equals: "notice_given" }, effect: { includeTaskIds: ["jl_review_notice_and_severance", "jl_review_disciplinary_hearing_if_relevant"] } },
     { id: "jl_include_salaried_claim_route", priority: 10, when: { all: [{ fact: "employment_stage", equals: "ended" }, { fact: "work_arrangement", equals: "salaried" }] }, effect: { includeTaskIds: ["jl_review_unemployment_claim_route", "jl_prepare_claim_route_information"] } },
     { id: "jl_include_registration_prompt", priority: 10, when: { all: [{ fact: "employment_stage", equals: "ended" }, { fact: "work_arrangement", equals: "salaried" }, { fact: "employment_service_registration", equals: "not_registered" }] }, effect: { includeTaskIds: ["jl_register_employment_service"] } },
     { id: "jl_include_registered_follow_up", priority: 10, when: { all: [{ fact: "employment_stage", equals: "ended" }, { fact: "work_arrangement", equals: "salaried" }, { fact: "employment_service_registration", equals: "registered" }] }, effect: { includeTaskIds: ["jl_follow_employment_service_instructions"] } },

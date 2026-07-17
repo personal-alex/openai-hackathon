@@ -81,7 +81,7 @@ supersede `unassigned` and `needs_review` values in this historical snapshot.
 - Proposal ID/version: `il-job-loss-candidate-v0.1`
 - Reviewer(s) and roles: Hackathon product owner (explicit scope approval)
 - Review date: 2026-07-17
-- Source-card dispositions: seven official route cards and the approved Kol
+- Source-card dispositions: ten official route cards and the approved Kol
   Zchut cross-check cards are `approved_for_hackathon`; runtime mappings and
   English-rendering boundaries are recorded in the evidence ledger
 - Catalog-content decision: approved for bounded Hackathon implementation

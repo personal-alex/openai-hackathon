@@ -228,6 +228,10 @@ The repository contains a validated modular-monolith baseline, deterministic com
   remaining job-loss candidate cards. Approval alone does not create a runtime
   task: each future use still needs a bounded task mapping and the existing
   no-determination safety wording.
+- The explicit `notice_given` state now adds bounded official-topic reviews for
+  notice/severance and, if relevant, a disciplinary hearing. It does not show
+  post-employment registration, claim, or document-route tasks and makes no
+  legal, severance, pension, tax, or payment determination.
 
 ## Deferred / explicitly out of scope for MVP
 
