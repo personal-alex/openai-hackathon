@@ -1,15 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { PracticalGuidanceVerificationLabel, validateEventPack } from "@/domain-contracts";
 import { jobLossPack } from "@/event-packs/job-loss";
-import { getActiveEventPack } from "@/event-packs/registry";
 import { validateApprovedEventPack } from "@/event-packs/review";
 import { compileRoadmap, diffRoadmaps } from "@/roadmap-compiler";
 
-const pack = getActiveEventPack("job_loss")!;
+const pack = jobLossPack;
 const taskIds = (facts: Record<string, string>) => compileRoadmap(pack, { facts }).steps.map((task) => task.id);
 
-describe("approved Hackathon job-loss runtime catalog", () => {
-  it("registers the complete approved-for-hackathon official route source cards", () => {
+describe("reviewed Hackathon job-loss catalog", () => {
+  it("validates the complete approved-for-hackathon official route source cards", () => {
     expect(validateEventPack(jobLossPack).success).toBe(true);
     expect(validateApprovedEventPack(pack).success).toBe(true);
     expect(pack.sourceCards.map((source) => source.id)).toEqual([
