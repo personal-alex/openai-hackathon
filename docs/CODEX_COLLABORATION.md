@@ -12,6 +12,29 @@ Week submission. It is a concise evidence log, not a transcript.
 
 ## Entries
 
+### 2026-07-17 — Routine Israeli-hospital newborn-registration candidate correction
+
+- Task/outcome: Updated the `expecting_child` candidate/review artifacts with a
+  dated, human-directed scope decision: **Approved with scope: routine birth in
+  an Israeli hospital.**
+- Codex contribution: Inspected the provided primary Authority procedure and
+  official Authority/Ministry pages; revised the candidate evidence ledger,
+  proposal, reviewer gate, review-deck outline, and validation record. Added a
+  clearly `testOnly` routing fixture and deterministic compiler checks for
+  routine hospital, conditional missing-first-name, and non-hospital/unknown
+  verification routes.
+- Human review/decision: The supplied worktree directive approved only the
+  stated normal-path source scope. It retained explicit `birth_occurred`
+  confirmation, kept special cases excluded/deferred, and prohibited runtime
+  activation.
+- Changed artifacts: Candidate packet, `CURRENT_STATE.md`,
+  `tests/fixtures/expecting-child-transition.ts`, and
+  `tests/unit/roadmap-compiler/transition-gates.test.ts`; commit
+  `877b8c1af58c707126b1db3cc12e23f55d80b650`.
+- Verification: `git diff --check`, `npm run lint`, `npm run typecheck`,
+  `npm run test` (6 files, 27 tests), and `npm run build` passed. The
+  approved-runtime validator rejects the fixture because it is test-only.
+
 ### 2026-07-15 23:05 IDT — Delegated candidate IL event-pack authoring worktree
 
 - Purpose: Prepare the first evidence-backed, candidate-only Israel Life Navigator event template/pack for human review using the repository-local `life-event-authoring` skill.
