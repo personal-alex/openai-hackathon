@@ -9,8 +9,13 @@ import { InMemoryClassificationTelemetry, type ClassificationTelemetryEvent } fr
 const config: ClassificationControlConfig = {
   maxInputChars: 32,
   sessionClassificationCap: 3,
+  sessionClassificationHourlyCap: 6,
   sessionTotalCap: 5,
-  ipClassificationCap: 8
+  sessionTotalHourlyCap: 10,
+  ipClassificationCap: 8,
+  ipClassificationHourlyCap: 16,
+  ipTotalCap: 12,
+  ipTotalHourlyCap: 24
 };
 
 function controls(): InMemoryClassificationControls {
@@ -29,7 +34,7 @@ describe("classification request controls", () => {
     const blocked = await runWithClassificationControls(limiter, input, provider);
 
     expect(provider).toHaveBeenCalledTimes(3);
-    expect(blocked).toEqual({ kind: "blocked", decision: { allowed: false, reason: "session_classification_cap" } });
+    expect(blocked).toEqual({ kind: "blocked", decision: { allowed: false, reason: "session_classification_cap", retryAfterSeconds: 600 } });
   });
 
   it("rejects oversized input before it consumes an allowance", () => {
@@ -47,7 +52,18 @@ describe("classification request controls", () => {
     const second = limiter.consume({ identity: { sessionId: "session-b", ip: "203.0.113.9" }, inputLength: 12 });
 
     expect(first).toEqual({ allowed: true });
-    expect(second).toEqual({ allowed: false, reason: "ip_classification_cap" });
+    expect(second).toEqual({ allowed: false, reason: "ip_classification_cap", retryAfterSeconds: 600 });
+  });
+
+  it("restores a session allowance after the ten-minute sliding window", () => {
+    let now = 0;
+    const limiter = new InMemoryClassificationControls(config, () => now);
+    const input = { identity: { sessionId: "opaque-session" }, inputLength: 12 };
+
+    for (let index = 0; index < 3; index += 1) expect(limiter.consume(input)).toEqual({ allowed: true });
+    expect(limiter.consume(input)).toMatchObject({ allowed: false, reason: "session_classification_cap" });
+    now = 600_001;
+    expect(limiter.consume(input)).toEqual({ allowed: true });
   });
 });
 

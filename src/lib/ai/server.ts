@@ -26,14 +26,24 @@ export function getClassificationCandidates(): readonly ClassificationCandidate[
 export function getClassificationGateway(config = getLlmConfig(), telemetrySink: ClassificationTelemetrySink = telemetry): LlmGateway {
   const primary = providerGateway(config, config.provider);
   const fallback = config.provider === "openai" && config.fallbackProvider === "gemini" ? providerGateway(config, "gemini") : undefined;
-  const controlKey = `${config.maxInputChars}:${config.sessionClassificationCap}:${config.sessionTotalCap}:${config.ipClassificationCap}`;
-  const controls = controlsByConfig.get(controlKey) ?? new InMemoryClassificationControls({ maxInputChars: config.maxInputChars, sessionClassificationCap: config.sessionClassificationCap, sessionTotalCap: config.sessionTotalCap, ipClassificationCap: config.ipClassificationCap });
+  const controlKey = `${config.maxInputChars}:${config.sessionClassificationCap}:${config.sessionClassificationHourlyCap}:${config.sessionTotalCap}:${config.sessionTotalHourlyCap}:${config.ipClassificationCap}:${config.ipClassificationHourlyCap}:${config.ipTotalCap}:${config.ipTotalHourlyCap}`;
+  const controls = controlsByConfig.get(controlKey) ?? new InMemoryClassificationControls({
+    maxInputChars: config.maxInputChars,
+    sessionClassificationCap: config.sessionClassificationCap,
+    sessionClassificationHourlyCap: config.sessionClassificationHourlyCap,
+    sessionTotalCap: config.sessionTotalCap,
+    sessionTotalHourlyCap: config.sessionTotalHourlyCap,
+    ipClassificationCap: config.ipClassificationCap,
+    ipClassificationHourlyCap: config.ipClassificationHourlyCap,
+    ipTotalCap: config.ipTotalCap,
+    ipTotalHourlyCap: config.ipTotalHourlyCap
+  });
   controlsByConfig.set(controlKey, controls);
   return {
     async classifyEvent(input: ClassifyEventInput): Promise<ClassificationResult> {
       const started = Date.now();
-      const controlled = await runWithClassificationControls(controls, { identity: { sessionId: input.sessionId ?? input.requestId, ip: input.clientIp ?? "local" }, inputLength: input.text.length }, () => primary.classifyEvent(input));
-      let result = controlled.kind === "blocked" ? { kind: "clarification", reason: "rate_limited" } as const : controlled.value;
+      const controlled = await runWithClassificationControls(controls, { identity: { sessionId: input.sessionId ?? input.requestId, ...(input.clientIp ? { ip: input.clientIp } : {}) }, inputLength: input.text.length }, () => primary.classifyEvent(input));
+      let result = controlled.kind === "blocked" ? { kind: "clarification", reason: "rate_limited", ...(controlled.decision.retryAfterSeconds ? { retryAfterSeconds: controlled.decision.retryAfterSeconds } : {}) } as const : controlled.value;
       let provider = config.provider;
       const fallbackReason = result.kind === "clarification" ? result.reason : undefined;
       if (fallback && isTransientClassificationFailure(result)) {

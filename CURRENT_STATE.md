@@ -401,6 +401,16 @@ The repository contains a validated modular-monolith baseline, deterministic com
 - Passed: `git diff --check`, typecheck, lint, 74 Vitest tests, 17 serial
   Chromium journeys, and production build.
 
+## 2026-07-18 — Local classifier-limit feedback and sliding windows
+
+- Local live-classifier controls now apply the approved ten-minute sliding and
+  hourly windows rather than retaining a session count forever. The browser
+  shows a distinct calm rate-limit message instead of treating a local `429` as
+  an unsupported event.
+- The exact ordinary statement “We’re having a baby” is covered in the
+  browser-level classifier fixture and expecting-child journey. It still reaches
+  the live classification boundary in normal product operation.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

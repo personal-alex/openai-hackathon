@@ -424,3 +424,19 @@ Week submission. It is a concise evidence log, not a transcript.
 - Verification: `git diff --check`, typecheck, lint, 74 Vitest tests, 17 serial
   Chromium journeys, and production build passed. No `/feedback` session ID is
   recorded.
+
+### 2026-07-18 — Classifier-limit feedback and local sliding-window repair
+
+- Task/outcome: Diagnosed a live test report as a local classifier quota state,
+  not an unsupported `expecting_child` phrase; repaired development controls so
+  their approved time windows expire and made the `429` outcome visible.
+- Codex contribution: Added bounded ten-minute/hourly classifier controls with
+  retry timing, kept untrusted local IP data out of the IP limiter, and covered
+  ordinary baby wording in the browser classifier fixture.
+- Safety/scope: No fallback infers an event. A rejected request does not reach a
+  provider and is presented as a calm local limit state rather than as model
+  knowledge or policy content.
+- Verification: `git diff --check`, typecheck, lint, and 75 Vitest tests
+  passed. Existing port-3000 development process was serving a Next 404 page,
+  so Chromium/build must be rerun after that process is restarted; no
+  `/feedback` session ID is recorded.

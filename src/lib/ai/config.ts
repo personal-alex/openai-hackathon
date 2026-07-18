@@ -13,8 +13,13 @@ export type LlmConfig = {
   maxOutputTokens: number;
   maxRetries: number;
   sessionClassificationCap: number;
+  sessionClassificationHourlyCap: number;
   sessionTotalCap: number;
+  sessionTotalHourlyCap: number;
   ipClassificationCap: number;
+  ipClassificationHourlyCap: number;
+  ipTotalCap: number;
+  ipTotalHourlyCap: number;
 };
 
 function positiveInt(value: string | undefined, fallback: number): number {
@@ -48,7 +53,12 @@ export function getLlmConfig(env: NodeJS.ProcessEnv = process.env): LlmConfig {
     maxOutputTokens: positiveInt(env.LLM_MAX_OUTPUT_TOKENS, 300),
     maxRetries: nonNegativeInt(env.LLM_MAX_RETRIES, 1),
     sessionClassificationCap: positiveInt(env.LLM_SESSION_CLASSIFICATION_CAP, 3),
-    sessionTotalCap: positiveInt(env.LLM_SESSION_TOTAL_CAP, 5),
-    ipClassificationCap: positiveInt(env.LLM_IP_CLASSIFICATION_CAP, 30)
+    sessionClassificationHourlyCap: positiveInt(env.LLM_SESSION_CLASSIFICATION_HOURLY_CAP, 6),
+    sessionTotalCap: positiveInt(env.LLM_SESSION_TOTAL_CAP, 15),
+    sessionTotalHourlyCap: positiveInt(env.LLM_SESSION_TOTAL_HOURLY_CAP, 40),
+    ipClassificationCap: positiveInt(env.LLM_IP_CLASSIFICATION_CAP, 60),
+    ipClassificationHourlyCap: positiveInt(env.LLM_IP_CLASSIFICATION_HOURLY_CAP, 150),
+    ipTotalCap: positiveInt(env.LLM_IP_TOTAL_CAP, 100),
+    ipTotalHourlyCap: positiveInt(env.LLM_IP_TOTAL_HOURLY_CAP, 250)
   };
 }

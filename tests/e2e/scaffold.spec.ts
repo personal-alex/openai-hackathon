@@ -87,7 +87,7 @@ test("opens route detail with reviewed source metadata and returns focus on Esca
 });
 
 test("keeps the approved expecting-child route generic and supports its after-birth transition", async ({ page }) => {
-  await enterWorkspace(page, "I’m expecting a child");
+  await enterWorkspace(page, "We’re having a baby");
   await page.getByRole("button", { name: "Not yet" }).click();
   await expect(page.getByRole("button", { name: /Open details for/i }).first()).toBeVisible();
   await page.getByRole("button", { name: /The child has now been born/i }).click();
