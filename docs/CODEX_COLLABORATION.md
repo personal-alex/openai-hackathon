@@ -409,3 +409,18 @@ Week submission. It is a concise evidence log, not a transcript.
 - Verification: `git diff --check`, lint, typecheck, 73 Vitest tests, 17 serial
   Chromium journeys, and production build passed. OPE-36 remains a human ADR
   decision; no `/feedback` session ID is recorded.
+
+### 2026-07-18 — Natural-language event-classification recognition hints
+
+- Task/outcome: Corrected a verified live-classifier recognition gap where “We’re
+  having a baby” was not described to the classifier as an `expecting_child`
+  expression.
+- Codex contribution: Added an optional, bounded generic event-pack metadata
+  field and catalog-owned natural-language recognition hints; the Ollama
+  structured request test now proves the phrase reaches the `/no_think` prompt.
+- Safety/scope: Hints only guide allowlisted event-ID recognition. They do not
+  create facts or alter tasks, sources, rules, timing, verification, or
+  eligibility; the deterministic compiler remains authoritative.
+- Verification: `git diff --check`, typecheck, lint, 74 Vitest tests, 17 serial
+  Chromium journeys, and production build passed. No `/feedback` session ID is
+  recorded.

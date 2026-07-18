@@ -3,24 +3,24 @@ import { getLlmConfig } from "@/lib/ai/config";
 import { createOllamaGateway } from "@/lib/ai/providers/ollama";
 
 const candidates = [{
-  id: "job_loss",
-  label: "Job loss",
-  recognitionHints: ["lost my job"],
-  facts: [{ id: "employment_ended", valueType: "boolean" as const }]
+  id: "expecting_child",
+  label: "Expecting a child",
+  recognitionHints: ["having a baby"],
+  facts: [{ id: "event_stage", valueType: "string" as const }]
 }];
 
-const input = { text: "I lost my job.", requestId: "test-request", candidates };
+const input = { text: "We're having a baby.", requestId: "test-request", candidates };
 
 describe("Ollama classification adapter", () => {
   it("uses native structured JSON with no-think mode", async () => {
     const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify({
-      message: { content: JSON.stringify({ eventId: "job_loss", facts: [{ factId: "employment_ended", value: true }] }) }
+      message: { content: JSON.stringify({ eventId: "expecting_child", facts: [{ factId: "event_stage", value: "expecting" }] }) }
     }), { status: 200, headers: { "content-type": "application/json" } }));
     const config = getLlmConfig({ OLLAMA_BASE_URL: "http://127.0.0.1:11434" });
 
     await expect(createOllamaGateway(config, { fetch: fetcher, isVercel: false }).classifyEvent(input)).resolves.toEqual({
       kind: "classified",
-      classification: { eventId: "job_loss", facts: [{ factId: "employment_ended", value: true }] }
+      classification: { eventId: "expecting_child", facts: [{ factId: "event_stage", value: "expecting" }] }
     });
 
     const [url, request] = fetcher.mock.calls[0] as [URL, RequestInit];
@@ -30,6 +30,7 @@ describe("Ollama classification adapter", () => {
     expect(body.think).toBe(false);
     expect(body.format.type).toBe("object");
     expect(body.messages[0].content).toContain("/no_think");
+    expect(body.messages[0].content).toContain("having a baby");
   });
 
   it("returns typed unavailable without fetch for Vercel or non-local URLs", async () => {

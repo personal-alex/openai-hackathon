@@ -8,6 +8,10 @@ const pack = getActiveEventPack("expecting_child")!;
 const taskIds = (facts: Record<string, string>) => compileRoadmap(pack, { facts }).steps.map((task) => task.id);
 
 describe("approved expecting-child runtime catalog", () => {
+  it("supplies bounded, non-policy recognition hints to the classification boundary", () => {
+    expect(pack.metadata.recognitionHints).toEqual(expect.arrayContaining(["having a baby", "pregnant"]));
+  });
+
   it("keeps the validated expecting-child pack and its five approved first-party source cards in the active catalog", () => {
     expect(validateApprovedEventPack(pack).success).toBe(true);
     expect(activeEventPacks.map((entry) => entry.id)).toEqual(["expecting_child", "job_loss"]);

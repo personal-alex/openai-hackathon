@@ -197,7 +197,7 @@ export const EventPackSchema = z.object({
   id: EventIdSchema,
   version: z.string().min(1),
   jurisdiction: JurisdictionCodeSchema,
-  metadata: z.object({ title: z.string().min(1) }).strict(),
+  metadata: z.object({ title: z.string().min(1), recognitionHints: z.array(z.string().trim().min(1).max(80)).max(8).optional() }).strict(),
   facts: z.array(FactDefinitionSchema),
   questions: z.array(QuestionDefinitionSchema),
   sourceCards: z.array(SourceCardSchema),

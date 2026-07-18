@@ -389,6 +389,18 @@ The repository contains a validated modular-monolith baseline, deterministic com
   AI Gateway versus the direct adapters. Passed: `git diff --check`, typecheck,
   lint, 73 Vitest tests, 17 serial Chromium journeys, and production build.
 
+## 2026-07-18 — Natural-language event-classification hints
+
+- Active event packs may supply bounded optional `recognitionHints` solely to
+  improve live classifier recognition of ordinary event wording. The Israel
+  `expecting_child` catalog now includes “having a baby” and “pregnant”; the
+  hints are neither policy content nor compiler input.
+- The classifier still returns only a registered event ID and explicit
+  allowlisted facts. Tasks, rules, timing, sources, verification, and
+  eligibility remain deterministic catalog/compiler responsibilities.
+- Passed: `git diff --check`, typecheck, lint, 74 Vitest tests, 17 serial
+  Chromium journeys, and production build.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

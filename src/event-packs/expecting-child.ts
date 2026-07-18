@@ -17,7 +17,7 @@ export const expectingChildPack = {
   id: "expecting_child",
   version: "il-expecting-child-v1",
   jurisdiction: "IL",
-  metadata: { title: "Expecting a child — Israel" },
+  metadata: { title: "Expecting a child — Israel", recognitionHints: ["expecting a child", "having a baby", "we're having a baby", "pregnant"] },
   facts: [
     { id: "event_stage", valueType: "string", labelKey: "expecting_child.fact.event_stage", sensitive: false, factRole: "confirmed_transition" },
     { id: "birth_location", valueType: "string", labelKey: "expecting_child.fact.birth_location", sensitive: false },

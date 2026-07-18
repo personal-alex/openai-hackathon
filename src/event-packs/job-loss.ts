@@ -20,7 +20,7 @@ export const jobLossPack = {
   id: "job_loss",
   version: "il-job-loss-v1",
   jurisdiction: "IL",
-  metadata: { title: "Job loss — Israel" },
+  metadata: { title: "Job loss — Israel", recognitionHints: ["lost my job", "was fired", "laid off"] },
   facts: [
     { id: "employment_stage", valueType: "string", labelKey: "job_loss.fact.employment_stage", sensitive: true, factRole: "confirmed_transition" },
     { id: "event_date", valueType: "string", labelKey: "job_loss.fact.event_date", sensitive: true },
