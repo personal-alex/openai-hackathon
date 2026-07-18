@@ -94,6 +94,18 @@ test("keeps the approved expecting-child route generic and supports its after-bi
   await expect(page.getByRole("button", { name: "Yes, in Israel" })).toBeVisible();
 });
 
+test("does not let model-returned facts skip a decision-changing question", async ({ page }) => {
+  await page.route("**/api/ai/extract-event", async (route) => {
+    await route.fulfill({ contentType: "application/json", status: 200, body: JSON.stringify({ kind: "classified", classification: { eventId: "expecting_child", facts: [{ factId: "event_stage", value: "birth_occurred" }] } }) });
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Skip intro" }).click();
+  await page.getByLabel("What happened?").fill("We’re having a baby!");
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.getByRole("button", { name: "Yes, that’s right" }).click();
+  await expect(page.getByRole("heading", { name: "Has the child already been born?" })).toBeVisible();
+});
+
 test("keeps conversation first on mobile with a route jump for the single-column layout", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");

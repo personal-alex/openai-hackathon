@@ -440,3 +440,18 @@ Week submission. It is a concise evidence log, not a transcript.
   passed. Existing port-3000 development process was serving a Next 404 page,
   so Chromium/build must be rerun after that process is restarted; no
   `/feedback` session ID is recorded.
+
+### 2026-07-18 — Classification-to-question safety repair
+
+- Task/outcome: Corrected a verified expecting-child flow defect where a
+  type-valid model-returned fact could suppress the first user question.
+- Codex contribution: Kept entry classification non-authoritative for planning
+  context, made provider instructions explicit about recognition-hint variants
+  and zero inferred facts, and set Ollama sampling temperature to zero.
+- Safety/scope: Event identification remains allowlisted; decision-changing
+  facts originate only in approved question controls. No event-pack content,
+  compiler behavior, source, timing, rule, or eligibility logic changed.
+- Verification: direct local API checks classified ASCII and typographic
+  apostrophe “having a baby!” variants as `expecting_child` with `facts: []`;
+  diff check, typecheck, lint, and 75 Vitest tests passed. Chromium/build remain
+  pending a restart of the port-3000 process that is serving a Next 404 page.

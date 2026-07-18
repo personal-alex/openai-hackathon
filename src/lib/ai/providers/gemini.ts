@@ -33,7 +33,7 @@ function schema(candidates: readonly ClassificationCandidate[]): Record<string, 
 }
 
 function prompt(input: ClassifyEventInput): string {
-  return ["/no_think", "Classify only among the supplied event IDs. Extract only explicitly stated facts using supplied fact IDs.", "Unknown facts must be omitted. Never provide tasks, sources, rules, timing, eligibility, advice, or prose.", `Candidates: ${JSON.stringify(input.candidates.slice(0, MAX_CANDIDATES).map((candidate) => ({ id: candidate.id, label: candidate.label, recognitionHints: candidate.recognitionHints.slice(0, 4), facts: candidate.facts.slice(0, MAX_FACTS) })))}`, `User statement: ${input.text.slice(0, 2_000)}`].join("\n");
+  return ["/no_think", "Classify only among the supplied event IDs. A recognition hint is a supported ordinary expression even when punctuation or a contraction differs.", "For entry classification, return facts: [] unless a supplied fact value is stated exactly; never infer a decision-changing fact. Never provide tasks, sources, rules, timing, eligibility, advice, or prose.", `Candidates: ${JSON.stringify(input.candidates.slice(0, MAX_CANDIDATES).map((candidate) => ({ id: candidate.id, label: candidate.label, recognitionHints: candidate.recognitionHints.slice(0, 4), facts: candidate.facts.slice(0, MAX_FACTS) })))}`, `User statement: ${input.text.slice(0, 2_000)}`].join("\n");
 }
 
 function validate(payload: unknown, candidates: readonly ClassificationCandidate[]): ClassificationResult {

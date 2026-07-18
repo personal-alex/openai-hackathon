@@ -411,6 +411,18 @@ The repository contains a validated modular-monolith baseline, deterministic com
   browser-level classifier fixture and expecting-child journey. It still reaches
   the live classification boundary in normal product operation.
 
+## 2026-07-18 — Classification cannot pre-answer planning questions
+
+- Entry classification now identifies only the supported event for the UI. Its
+  returned facts never populate planning context, so a model inference cannot
+  bypass a decision-changing approved question. The first expecting-child
+  question remains “Has the child already been born?”
+- Provider instructions explicitly treat recognition hints as ordinary wording
+  despite punctuation/contraction variation, use deterministic Ollama sampling,
+  and require an empty fact list unless an approved value is literally stated.
+- Direct local endpoint checks classified both ASCII and typographic-apostrophe
+  variants of “we’re having a baby!” as `expecting_child` with no facts.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

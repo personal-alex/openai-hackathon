@@ -70,18 +70,19 @@ export default function Home() {
     setError(undefined);
     try {
       const response = await fetch("/api/ai/extract-event", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ story: statement, sessionId: classifierSessionId() }) });
-      const result = await response.json() as { kind?: unknown; reason?: unknown; classification?: { eventId?: unknown; facts?: unknown } };
+      const result = await response.json() as { kind?: unknown; reason?: unknown; classification?: { eventId?: unknown } };
       const id = typeof result.classification?.eventId === "string" ? result.classification.eventId : undefined;
       const nextScenario = id ? findSeededScenario(id as SeededScenario["id"]) : undefined;
-      const parsedContext = UserContextSchema.safeParse({ facts: result.classification?.facts && Array.isArray(result.classification.facts) ? Object.fromEntries(result.classification.facts.filter((fact): fact is { factId: string; value: string | number | boolean } => Boolean(fact && typeof fact === "object" && "factId" in fact && typeof fact.factId === "string" && "value" in fact)).map((fact) => [fact.factId, fact.value])) : {} });
-      if (!response.ok || result.kind !== "classified" || !nextScenario || !parsedContext.success) {
+      if (!response.ok || result.kind !== "classified" || !nextScenario) {
         setError(result.reason === "rate_limited"
           ? "This local live-classifier session has reached its request limit. Please wait before trying again."
           : "I’m not yet sure which supported event this is. Please choose “I’m expecting a child” or “I lost my job,” or describe it a little differently.");
         return;
       }
       setScenarioId(nextScenario.id);
-      setClassifiedContext(parsedContext.data);
+      // Classification identifies a supported event only. Decision-changing
+      // context remains unknown until the user answers an approved question.
+      setClassifiedContext({ facts: {} });
       setContext({ facts: {} });
       setProgress(emptyProgress);
       setLastDiff(undefined);

@@ -28,9 +28,11 @@ describe("Ollama classification adapter", () => {
     const body = JSON.parse(String(request.body));
     expect(body.model).toBe("qwen3.5:9b");
     expect(body.think).toBe(false);
+    expect(body.options.temperature).toBe(0);
     expect(body.format.type).toBe("object");
     expect(body.messages[0].content).toContain("/no_think");
     expect(body.messages[0].content).toContain("having a baby");
+    expect(body.messages[0].content).toContain("punctuation or a contraction differs");
   });
 
   it("returns typed unavailable without fetch for Vercel or non-local URLs", async () => {

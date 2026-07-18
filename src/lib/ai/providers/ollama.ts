@@ -65,7 +65,8 @@ function systemPrompt(input: ClassifyEventInput): string {
     "/no_think",
     "You classify an explicitly stated life event into the supplied allowlist.",
     "Return JSON matching the provided schema only. Do not infer facts, eligibility, tasks, sources, timing, or advice.",
-    "Use null for eventId when no supported event is clearly stated. Omit facts that are not explicitly stated.",
+    "A recognition hint is a supported ordinary expression for that candidate; classify it even when punctuation or a contraction differs.",
+    "Use null for eventId when no supported event is clearly stated. Return facts: [] for entry classification unless a supplied fact value is stated exactly; never infer a decision-changing fact.",
     `Allowed candidates: ${JSON.stringify(candidates)}`
   ].join("\n");
 }
@@ -116,7 +117,7 @@ export class OllamaGateway implements LlmGateway {
           stream: false,
           think: false,
           format: jsonSchemaFor(input),
-          options: { num_predict: this.config.maxOutputTokens },
+          options: { temperature: 0, num_predict: this.config.maxOutputTokens },
           messages: [
             { role: "system", content: systemPrompt(input) },
             { role: "user", content: input.text }

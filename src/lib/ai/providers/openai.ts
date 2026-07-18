@@ -57,7 +57,8 @@ function instructions(candidates: ReturnType<typeof boundedCandidates>): string 
   return [
     "/no_think",
     "Classify the user's stated life event using only the supplied candidate event IDs and fact IDs.",
-    "Extract only directly stated fact values. Unknown facts must be omitted.",
+    "A recognition hint is a supported ordinary expression for that candidate; classify it even when punctuation or a contraction differs.",
+    "For entry classification, return facts: [] unless a supplied fact value is stated exactly; never infer a decision-changing fact.",
     "Do not provide advice, tasks, sources, rules, timing, or eligibility conclusions.",
     "Return null eventId when no supplied event is supported.",
     `Candidates: ${JSON.stringify(candidates)}`
