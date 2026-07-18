@@ -101,7 +101,7 @@ test("does not let model-returned facts skip a decision-changing question", asyn
   await page.goto("/");
   await page.getByRole("button", { name: "Skip intro" }).click();
   await page.getByLabel("What happened?").fill("We’re having a baby!");
-  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.locator(".conversation-composer").getByRole("button", { name: "Continue", exact: true }).click();
   await page.getByRole("button", { name: "Yes, that’s right" }).click();
   await expect(page.getByRole("heading", { name: "Has the child already been born?" })).toBeVisible();
 });

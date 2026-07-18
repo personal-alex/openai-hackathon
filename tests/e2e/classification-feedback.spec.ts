@@ -13,7 +13,7 @@ test("explains a local classifier limit without presenting it as an unsupported 
   await page.goto("/");
   await page.getByRole("button", { name: "Skip intro" }).click();
   await page.getByLabel("What happened?").fill("We’re having a baby");
-  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page.locator(".conversation-composer").getByRole("button", { name: "Continue", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText("local live-classifier session has reached its request limit");
   await expect(page.getByRole("alert")).not.toContainText("not yet sure");
 });
