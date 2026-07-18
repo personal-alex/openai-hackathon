@@ -43,14 +43,14 @@ export function ActionRoute({ roadmap, sourceCards, progress, taskDiff, rational
   const adjusted = changes.filter((change) => change.kind === "changed").length;
   const removed = changes.filter((change) => change.kind === "removed").length;
   return <section className="action-route" aria-labelledby="route-title">
-    <div className="route-heading"><div><h2 id="route-title">Your route</h2></div>{changes.length > 0 && <p className="route-update" role="status"><strong>Your plan changed.</strong> {added} added · {adjusted} adjusted · {removed} removed</p>}</div>
-    <p className="route-boundary">Your plan updates only from validated answers and reviewed catalog rules.</p>
+    <div className="route-heading"><div><p className="route-kicker">Route overview</p><h2 id="route-title">Your route</h2></div>{changes.length > 0 ? <p className="route-update" role="status"><strong>Your plan changed.</strong> {added} added · {adjusted} adjusted · {removed} removed</p> : <p className="route-status">Built from what you’ve shared</p>}</div>
+    <p className="route-boundary">Start with what needs your attention now, then explore the rest in any order. Your route updates only from validated answers and reviewed catalog rules.</p>
     {startHere ? <>
       <section className="route-start" aria-labelledby="route-start-title">
         <div className="route-section-heading"><h3 id="route-start-title">Start here</h3><span>{startHere.lane}</span></div>
         <ol className="route-list route-list--start"><RouteItem item={startHere} primary taskDiff={taskDiff} progress={progress} readOnly={readOnly} onSelect={(task, element) => { trigger.current = element; setSelected(task); }} /></ol>
       </section>
-      {remainingGroups.length > 0 && <section className="route-follow-ons" aria-labelledby="route-follow-ons-title"><h3 id="route-follow-ons-title">Then keep moving</h3>{remainingGroups.map((group) => <section className="route-lane" key={group.id} aria-labelledby={`route-lane-${group.id}`}><div className="route-section-heading"><h4 id={`route-lane-${group.id}`}>{group.label}</h4><span>{group.tasks.length} action{group.tasks.length === 1 ? "" : "s"}</span></div><ol className="route-list">{group.tasks.map((task) => <RouteItem key={task.id} item={{ task, lane: group.label }} taskDiff={taskDiff} progress={progress} readOnly={readOnly} onSelect={(nextTask, element) => { trigger.current = element; setSelected(nextTask); }} />)}</ol></section>)}</section>}
+      {remainingGroups.length > 0 && <section className="route-follow-ons" aria-labelledby="route-follow-ons-title"><h3 id="route-follow-ons-title">Then keep moving</h3>{remainingGroups.map((group) => <section className={`route-lane route-lane--${group.id}`} key={group.id} aria-labelledby={`route-lane-${group.id}`}><div className="route-section-heading"><h4 id={`route-lane-${group.id}`}>{group.label}</h4><span>{group.tasks.length} action{group.tasks.length === 1 ? "" : "s"}</span></div><ol className="route-list">{group.tasks.map((task) => <RouteItem key={task.id} item={{ task, lane: group.label }} taskDiff={taskDiff} progress={progress} readOnly={readOnly} onSelect={(nextTask, element) => { trigger.current = element; setSelected(nextTask); }} />)}</ol></section>)}</section>}
     </> : <p className="route-empty">Your route will take shape from what you choose to share.</p>}
     {remainingTasks.length > 3 && <button className="text-button route-more" type="button" onClick={() => setExpandedRoadmapSignature((current) => current === roadmapSignature ? undefined : roadmapSignature)}>{showAll ? "Show fewer actions" : `Show ${hiddenTaskCount} more action${hiddenTaskCount === 1 ? "" : "s"}`}</button>}
     {selected && <TaskDrawer task={selected} sourceCards={sources} taskTitles={taskTitles} rationale={rationaleByKey[selected.rationale]} timing={timingSummary(selected.timing)} status={statusFor(selected, progress)} readOnly={readOnly} onClose={() => setSelected(undefined)} onCycle={() => onCycleProgress(selected.id)} />}
@@ -62,11 +62,13 @@ function RouteItem({ item, primary = false, taskDiff, progress, readOnly, onSele
   const change = changeFor(task.id, taskDiff);
   const status = readOnly ? "preview" : statusFor(task, progress);
   const statusLabel = change === "added" ? "New item" : change === "changed" ? "Updated item" : status === "complete" ? "Complete" : status === "reviewed" ? "Reviewed" : status === "preview" ? "After-birth preview" : "Current";
+  const sourceLabel = task.sourceIds.length ? "Source available" : "No source card";
+  const verificationLabel = task.verificationLabel ? "Verification details" : undefined;
   return <li className={`route-item${primary ? " route-item--primary" : ""}${change ? ` route-item--${change}` : ""}`}>
     <span className="route-connector" aria-hidden="true" />
     <button type="button" className="route-item-button" onClick={(event) => onSelect(task, event.currentTarget)} aria-label={`Open details for ${task.title}`}>
       <span className="route-node" aria-hidden="true" />
-      <span className="route-item-copy"><span className="route-item-title">{task.title}</span><span className="route-item-summary">{task.actionSummary}</span><span className="route-item-meta">{lane} · {statusLabel}</span></span>
+      <span className="route-item-copy"><span className="route-item-title">{task.title}</span><span className="route-item-summary">{task.actionSummary}</span><span className="route-item-meta"><span>{lane} · {statusLabel}</span><span>{sourceLabel}</span>{verificationLabel && <span>{verificationLabel}</span>}</span></span>
       <span className="route-open" aria-hidden="true">›</span>
     </button>
   </li>;

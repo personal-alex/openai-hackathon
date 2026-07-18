@@ -46,6 +46,7 @@ export default function Home() {
   const [classificationPending, setClassificationPending] = useState(false);
   const [classifiedContext, setClassifiedContext] = useState<UserContext>({ facts: {} });
   const [transcriptAnswers, setTranscriptAnswers] = useState<TranscriptAnswer[]>([]);
+  const [resetPending, setResetPending] = useState(false);
   const scenario = findSeededScenario(scenarioId) ?? seededScenarios[0];
   const presentation = useMemo(() => compileRoadmapPresentation(scenario.pack, context), [scenario, context]);
   const questions = scenario.questions.filter((question) => question.isApplicable?.(context.facts) ?? true);
@@ -98,7 +99,21 @@ export default function Home() {
   function answer(value: SeededValue | undefined, label: string) { if (!activeQuestion) return; const facts = { ...context.facts }; if (value === undefined) delete facts[activeQuestion.factId]; else facts[activeQuestion.factId] = value; const next = { facts }; const nextRoadmap = compileRoadmapPresentation(scenario.pack, next).roadmap; setLastDiff(diffRoadmaps(presentation.roadmap, nextRoadmap)); setContext(next); setTranscriptAnswers((current) => [...current, { questionId: activeQuestion.id, value: label }]); setProgress((current) => ({ progressStatusByTaskId: Object.fromEntries(Object.entries(current.progressStatusByTaskId).filter(([id]) => nextRoadmap.steps.some((task) => task.id === id))) })); }
   function cycleProgress(taskId: string) { setProgress((current) => { const next = { ...current.progressStatusByTaskId }; if (!next[taskId]) next[taskId] = "reviewed"; else if (next[taskId] === "reviewed") next[taskId] = "complete"; else delete next[taskId]; return { progressStatusByTaskId: next }; }); }
   function confirmBirth() { const next = { facts: { ...context.facts, event_stage: "birth_occurred" } }; setLastDiff(diffRoadmaps(presentation.roadmap, compileRoadmapPresentation(scenario.pack, next).roadmap)); setContext(next); }
-  function reset() { localStorage.removeItem(storageKey); setState("entry"); setStatement(""); setScenarioId("expecting_child"); setContext({ facts: {} }); setClassifiedContext({ facts: {} }); setProgress(emptyProgress); setLastDiff(undefined); setError(undefined); setTranscriptAnswers([]); }
+  function reset() {
+    localStorage.removeItem(storageKey);
+    setState("entry");
+    setStatement("");
+    setScenarioId("expecting_child");
+    setContext({ facts: {} });
+    setClassifiedContext({ facts: {} });
+    setProgress(emptyProgress);
+    setLastDiff(undefined);
+    setError(undefined);
+    setTranscriptAnswers([]);
+    setIntroExiting(false);
+    setShowIntro(true);
+    setResetPending(false);
+  }
   function closeIntro() { setShowIntro(false); }
 
   const routePane = <section className="route-pane">{state === "planning" ? <><ActionRoute roadmap={presentation.roadmap} sourceCards={scenario.pack.sourceCards} progress={progress} taskDiff={lastDiff} rationaleByKey={scenario.rationaleByKey ?? {}} readOnly={presentation.mode === "preview"} onCycleProgress={cycleProgress} />{activeQuestion && <a className="mobile-question-link" href="#current-question">Continue with the current question <span aria-hidden="true">↓</span></a>}</> : <section className="route-preview-empty" aria-labelledby="route-title"><p className="route-eyebrow">Your route</p><h2 id="route-title">Your plan will take shape here.</h2><p>Confirm what happened, then answer only the questions that can change your next steps.</p><ol aria-label="Route preview"><li>Today</li><li>Your plan</li><li>Next</li></ol></section>}</section>;
@@ -118,9 +133,28 @@ export default function Home() {
         {state === "planning" && <><article className="assistant-message">Your route is ready to refine. I’ll ask only what can change it.</article>{transcriptAnswers.map((answer) => <article className="user-message user-message--answer" key={answer.questionId}>{answer.value}</article>)}{activeQuestion ? <article ref={currentTurn} id="current-question" className="assistant-message assistant-message--question">{lastDiff?.changes.length ? <a className="route-change-link" href="#route-title"><span>Your route updated</span><strong>View changes <span aria-hidden="true">→</span></strong></a> : null}<h2>{activeQuestion.presentation.prompt}</h2><QuestionInput question={activeQuestion} onAnswer={answer} /><details className="why-ask"><summary>Why are we asking this?</summary><p>{activeQuestion.presentation.rationale}</p></details></article> : <article ref={currentTurn} className="assistant-message"><h2>{presentation.mode === "preview" ? "Your after-birth preview is ready." : "Your route is ready."}</h2>{presentation.mode === "preview" && <button className="primary-button" type="button" onClick={confirmBirth}>The child has now been born</button>}</article>}</>}
       </div>
       {state === "entry" && <form className="conversation-composer" onSubmit={(event) => { event.preventDefault(); void understandEvent(); }} noValidate aria-busy={classificationPending}><label htmlFor="event-statement">What happened?</label><div><input ref={input} id="event-statement" value={statement} onChange={(event) => { setStatement(event.target.value); setError(undefined); }} placeholder="For example: I lost my job" disabled={classificationPending} /><button className="primary-button" type="submit" disabled={classificationPending}>{classificationPending ? "Understanding…" : <>Continue <span aria-hidden="true">→</span></>}</button></div><p className="conversation-composer__scope">Currently, I can help plan for expecting a child, losing a job, or relocating from Israel to the United States.</p><p>Quick starts</p><div className="prompt-list">{seededScenarios.map((item) => <button key={item.id} type="button" className="prompt-button" onClick={() => chooseScenario(item)} disabled={classificationPending}>{item.examplePrompt}</button>)}</div>{error && <p className="input-error" role="alert">{error}</p>}</form>}
-      {state === "planning" && <footer className="conversation-footer"><span>General planning support only.</span><button className="text-button" type="button" onClick={reset}>Reset local demo</button></footer>}
+      {state === "planning" && <footer className="conversation-footer"><span>General planning support only.</span><button className="text-button" type="button" onClick={() => setResetPending(true)}>Reset demo</button></footer>}
       </section>
       {state !== "planning" && routePane}
     </section>
+    {resetPending && <ResetDialog onCancel={() => setResetPending(false)} onConfirm={reset} />}
   </main>;
+}
+
+function ResetDialog({ onCancel, onConfirm }: { onCancel(): void; onConfirm(): void }) {
+  const cancel = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    cancel.current?.focus();
+    const handler = (event: KeyboardEvent) => { if (event.key === "Escape") onCancel(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onCancel]);
+  return <div className="reset-dialog-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onCancel(); }}>
+    <section className="reset-dialog" role="dialog" aria-modal="true" aria-labelledby="reset-dialog-title" aria-describedby="reset-dialog-description">
+      <p className="section-kicker">Demo controls</p>
+      <h2 id="reset-dialog-title">Start this demo again?</h2>
+      <p id="reset-dialog-description">This clears this browser’s saved route, answers, and local progress. It does not affect an account or an external service.</p>
+      <div className="reset-dialog-actions"><button ref={cancel} className="answer-button" type="button" onClick={onCancel}>Keep my route</button><button className="primary-button" type="button" onClick={onConfirm}>Reset demo</button></div>
+    </section>
+  </div>;
 }

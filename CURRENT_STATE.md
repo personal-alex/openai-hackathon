@@ -482,6 +482,21 @@ The repository contains a validated modular-monolith baseline, deterministic com
 - Passed: `git diff --check`, typecheck, lint, 85 Vitest tests, production
   build, and 13 focused Chromium E2E journeys including the mobile route flow.
 
+## 2026-07-18 — Guided Route Companion visual-system refinement
+
+- The project owner approved the supplied visual-system and mobile-route
+  references as the presentation north star: warm paper surfaces, deep navy
+  structure, restrained sage provenance cues, amber for the current action,
+  and quieter blue-gray later-route states.
+- The shared UI now makes the validated route primary on desktop and mobile,
+  keeps timing lanes and task/source/verification cues generic, and adds a
+  confirmed local-demo reset that clears only browser-local state before
+  returning to the first-visit experience. No event-pack, compiler, source,
+  model, or policy content changed.
+- Passed: `git diff --check`, `npm run typecheck`, `npm run lint`, `npm run
+  test` (85 tests), `npm run build`, and all 20 Chromium E2E journeys against
+  an isolated production server.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

@@ -1,54 +1,57 @@
 .action-route { min-width: 0; }
 .route-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
-.route-heading h2 { margin: 0; font-size: clamp(2rem, 3.4vw, 3.2rem); letter-spacing: -0.04em; text-wrap: balance; }
-.route-boundary { margin: 14px 0 20px; color: var(--muted); font-size: 0.84rem; line-height: 1.45; }
-.route-update { max-width: 260px; margin: 0; border: 1px solid #bdd6c4; border-radius: 10px; padding: 8px 10px; background: var(--green-soft); color: var(--green); font-size: 0.76rem; line-height: 1.4; }
-.route-start { margin-top: 26px; }
-.route-follow-ons { margin-top: 28px; }
-.route-follow-ons > h3 { margin: 0 0 14px; color: #425048; font-size: 0.8rem; letter-spacing: 0.03em; }
-.route-lane { margin-top: 19px; }
-.route-section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 9px 28px; color: #425048; }
-.route-section-heading h3, .route-section-heading h4 { margin: 0; font-size: 0.73rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
-.route-section-heading span { color: var(--muted); font-size: 0.72rem; font-weight: 700; }
+.route-kicker, .route-section-heading h3, .route-section-heading h4, .route-follow-ons > h3 { margin: 0; color: var(--sage); font-size: .72rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.route-heading h2 { max-width: 13ch; margin: 6px 0 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.45rem, 4vw, 4.2rem); font-weight: 600; letter-spacing: -.065em; line-height: .94; text-wrap: balance; }
+.route-boundary { max-width: 58ch; margin: 16px 0 28px; color: var(--muted); font-size: .9rem; line-height: 1.5; }
+.route-status, .route-update { flex: 0 0 auto; max-width: 270px; margin: 2px 0 0; border: 1px solid var(--line); border-radius: 999px; padding: 8px 12px; background: var(--surface); color: var(--muted); font-size: .76rem; font-weight: 700; line-height: 1.35; }
+.route-status::before { display: inline-block; width: 8px; height: 8px; margin: 0 7px 1px 0; border-radius: 50%; background: var(--sage); content: ""; }
+.route-update { border-color: #e5ba8b; background: var(--amber-soft); color: #74441c; }
+.route-start { margin-top: 28px; }
+.route-follow-ons { margin-top: 30px; }
+.route-follow-ons > h3 { margin-bottom: 16px; color: var(--muted); }
+.route-lane { margin-top: 26px; }
+.route-section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 10px 30px; color: var(--muted); }
+.route-section-heading span { color: var(--muted); font-size: .74rem; font-weight: 700; }
+.route-lane--later .route-section-heading h4, .route-lane--unscheduled .route-section-heading h4 { color: var(--later); }
 .route-list { margin: 0; padding: 0; list-style: none; }
-.route-item { position: relative; padding: 0 0 9px 28px; }
-.route-connector { position: absolute; top: 22px; bottom: -2px; left: 7px; width: 1px; background: #d3d7cc; }
-.route-item:last-child .route-connector { bottom: 22px; }
-.route-item-button { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; width: 100%; min-height: 64px; align-items: center; gap: 11px; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: transparent; color: var(--ink); cursor: pointer; text-align: left; }
-.route-item-button:hover { border-color: #b8c8ba; background: rgba(255, 253, 248, 0.7); }
-.route-item-button:focus-visible, .drawer-close:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
-.route-item--primary .route-item-button { min-height: 88px; border-color: var(--green); background: var(--surface); }
-.route-item--primary .route-item-button:hover { background: #f0f4ee; }
-.route-item--primary .route-item-title { font-size: 1.04rem; }
-.route-item--primary .route-node { width: 15px; height: 15px; background: var(--green); }
-.route-item--added .route-item-button, .route-item--changed .route-item-button { border-color: #a7c5b0; }
-.route-node { width: 13px; height: 13px; border: 2px solid var(--green); border-radius: 50%; background: var(--paper); }
-.route-item--added .route-node::after, .route-item--changed .route-node::after { display: block; color: var(--green); content: "•"; font-size: 0; }
-.route-item-copy { display: grid; min-width: 0; gap: 2px; }
-.route-item-title { font-weight: 780; letter-spacing: -0.02em; }
-.route-item-summary { overflow: hidden; color: #4b554e; font-size: 0.82rem; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
-.route-item-meta { color: var(--muted); font-size: 0.7rem; font-weight: 700; }
-.route-open { color: var(--green); font-size: 1.45rem; }
-.route-more { min-height: 44px; margin: 8px 0 0 28px; font-size: 0.84rem; }
+.route-item { position: relative; padding: 0 0 10px 30px; }
+.route-connector { position: absolute; top: 23px; bottom: -3px; left: 8px; width: 1px; background: var(--line); }
+.route-item:last-child .route-connector { bottom: 23px; }
+.route-item-button { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; width: 100%; min-height: 74px; align-items: center; gap: 12px; border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; background: var(--surface); box-shadow: 0 2px 8px rgba(23, 38, 61, .035); color: var(--ink); cursor: pointer; text-align: left; transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease; }
+.route-item-button:hover { border-color: #aeb9c2; box-shadow: 0 8px 20px rgba(23, 38, 61, .07); transform: translateY(-1px); }
+.route-item-button:focus-visible, .drawer-close:focus-visible { outline: 3px solid var(--sage); outline-offset: 3px; }
+.route-item--primary .route-item-button { min-height: 112px; border-color: var(--amber); background: var(--surface); box-shadow: 0 12px 28px rgba(216, 138, 61, .12); }
+.route-item--primary .route-item-button:hover { background: #fffaf3; }
+.route-item--primary .route-item-title { font-size: 1.16rem; }
+.route-item--primary .route-node { width: 17px; height: 17px; border-color: var(--amber); background: var(--amber); }
+.route-item--added .route-item-button, .route-item--changed .route-item-button { border-color: var(--amber); }
+.route-node { width: 14px; height: 14px; border: 2px solid var(--sage); border-radius: 50%; background: var(--paper); }
+.route-lane--later .route-node, .route-lane--unscheduled .route-node { border-color: var(--later); }
+.route-item-copy { display: grid; min-width: 0; gap: 3px; }
+.route-item-title { font-weight: 780; letter-spacing: -.025em; }
+.route-item-summary { display: -webkit-box; overflow: hidden; color: var(--muted); font-size: .84rem; line-height: 1.35; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.route-item-meta { display: flex; flex-wrap: wrap; gap: 3px 10px; margin-top: 2px; color: var(--muted); font-size: .7rem; font-weight: 700; }
+.route-item-meta span + span::before { margin-right: 10px; color: var(--line-strong); content: "•"; }
+.route-open { color: var(--sage); font-size: 1.5rem; }
+.route-more { min-height: 44px; margin: 10px 0 0 30px; font-size: .84rem; }
 .route-empty { margin: 42px 0; color: var(--muted); }
-.task-drawer-backdrop { position: fixed; z-index: 20; inset: 0; display: flex; justify-content: flex-end; background: rgba(26, 30, 26, 0.24); }
-.task-drawer { width: min(450px, 100%); height: 100%; overflow: auto; border-left: 1px solid var(--line); padding: 26px; background: var(--paper); box-shadow: -14px 0 38px rgba(28, 25, 19, 0.14); }
-.task-drawer header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--line); padding-bottom: 18px; }
-.task-drawer h3 { margin: 0; font-size: 1.5rem; letter-spacing: -0.045em; }
-.task-drawer h4 { margin: 24px 0 6px; color: #425048; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
-.task-drawer p { margin: 0; color: #425047; line-height: 1.45; }
-.task-drawer article { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 12px; font-size: 0.88rem; }
-.task-drawer a { display: inline-block; margin-top: 7px; color: var(--green); font-weight: 750; }
+.task-drawer-backdrop, .reset-dialog-backdrop { position: fixed; z-index: 20; inset: 0; display: flex; justify-content: flex-end; background: rgba(23, 38, 61, .3); }
+.task-drawer { width: min(460px, 100%); height: 100%; overflow: auto; border-left: 1px solid var(--line); padding: 28px; background: var(--paper); box-shadow: -14px 0 38px rgba(23, 38, 61, .18); }
+.task-drawer header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--line); padding-bottom: 20px; }
+.task-drawer h3 { margin: 0; font-size: 1.55rem; letter-spacing: -.045em; }
+.task-drawer h4 { margin: 26px 0 7px; color: var(--muted); font-size: .72rem; letter-spacing: .09em; text-transform: uppercase; }
+.task-drawer p { margin: 0; color: var(--ink-soft); line-height: 1.5; }
+.task-drawer article { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 12px; font-size: .88rem; }
+.task-drawer a { display: inline-block; margin-top: 7px; color: var(--sage); font-weight: 750; }
 .drawer-close { min-width: 44px; min-height: 44px; border: 0; background: transparent; color: var(--ink); cursor: pointer; font-size: 1.8rem; }
-.drawer-boundary { margin-top: 24px !important; border-top: 1px solid var(--line); padding-top: 15px; font-size: 0.82rem; }
+.drawer-boundary { margin-top: 26px !important; border-top: 1px solid var(--line); padding-top: 16px; font-size: .82rem; }
 .task-drawer .progress-button { margin-top: 18px; }
 
 @media (max-width: 760px) {
   .route-heading { flex-direction: column; }
-  .route-update { max-width: none; }
+  .route-heading h2 { max-width: 11ch; font-size: clamp(2.35rem, 12vw, 3.5rem); }
+  .route-status, .route-update { max-width: none; }
   .task-drawer { width: 100%; height: min(88svh, 760px); margin-top: auto; border-top: 1px solid var(--line); border-left: 0; border-radius: 22px 22px 0 0; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .task-drawer-backdrop { transition: none; }
-}
+@media (prefers-reduced-motion: reduce) { .route-item-button { transition: none; } }

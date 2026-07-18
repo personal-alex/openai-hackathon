@@ -28,14 +28,18 @@ test("reduced motion presents the completed statement and keeps Skip intro avail
   await expect(page.getByLabel("What happened?")).toBeFocused();
 });
 
-test("does not replay the intro after a local reset in the same browser session", async ({ page }) => {
+test("confirms a local reset and returns to the clean first-visit state", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Skip intro" }).click();
   await page.getByLabel("What happened?").fill("I lost my job");
   await page.locator(".conversation-composer").getByRole("button", { name: "Continue", exact: true }).click();
   await page.getByRole("button", { name: "Yes, that’s right" }).click();
-  await page.getByRole("button", { name: "Reset local demo" }).click();
-  await expect(page.getByTestId("landing-intro")).toHaveCount(0);
+  await page.getByRole("button", { name: "Reset demo" }).click();
+  await expect(page.getByRole("dialog", { name: "Start this demo again?" })).toBeVisible();
+  await expect(page.getByRole("dialog")).toContainText("saved route, answers, and local progress");
+  await page.getByRole("dialog").getByRole("button", { name: "Reset demo" }).click();
+  await expect(page.getByTestId("landing-intro")).toBeVisible();
+  await page.getByRole("button", { name: "Skip intro" }).click();
   await expect(page.getByLabel("What happened?")).toBeFocused();
 });
 

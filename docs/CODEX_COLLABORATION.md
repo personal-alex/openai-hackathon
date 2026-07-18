@@ -532,3 +532,21 @@ Week submission. It is a concise evidence log, not a transcript.
 - Verification: `git diff --check`, typecheck, lint, 85 Vitest tests,
   production build, and 13 focused Chromium journeys passed. No `/feedback`
   session ID is recorded.
+
+### 2026-07-18 — Guided Route Companion visual-system refinement
+
+- Task/outcome: Applied the project-owner-approved visual-system and mobile
+  route references as a generic presentation north star for the existing
+  Guided Route Companion.
+- Codex contribution: Rebalanced the shared route/workspace hierarchy around
+  a route-first desktop and mobile composition; introduced navy/sage/amber and
+  later-state presentation tokens; added compact validated source and
+  verification affordances; and implemented a keyboard-accessible confirmation
+  before local-demo reset.
+- Human decision: Selected one cohesive visual family with the roadmap as the
+  primary artifact and the conversation as refinement input, while retaining
+  the motto intro and all deterministic safety boundaries.
+- Safety/verification: No event pack, source card, task/rule, compiler,
+  classifier, or policy content changed. `git diff --check`, typecheck, lint,
+  85 Vitest tests, production build, and all 20 Chromium E2E journeys passed.
+  No `/feedback` session ID is recorded.

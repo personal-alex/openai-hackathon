@@ -1,7 +1,7 @@
 .action-workspace {
   display: grid;
-  grid-template-columns: minmax(320px, 0.8fr) minmax(460px, 1.2fr);
-  gap: clamp(38px, 6vw, 96px);
+  grid-template-columns: minmax(480px, 1.2fr) minmax(320px, 0.8fr);
+  gap: clamp(32px, 5vw, 76px);
   max-width: 1400px;
   min-height: calc(100svh - 130px);
   margin: 0 auto;
@@ -12,7 +12,7 @@
 .route-pane { min-width: 0; }
 
 .action-workspace--planning {
-  grid-template-areas: "conversation route";
+  grid-template-areas: "route conversation";
 }
 
 .action-workspace--planning .conversation-pane { grid-area: conversation; }
@@ -30,8 +30,8 @@
 .conversation-thread {
   display: grid;
   gap: 12px;
-  max-height: min(52svh, 560px);
-  margin-top: clamp(34px, 10vh, 108px);
+  max-height: min(58svh, 620px);
+  margin-top: clamp(28px, 7vh, 72px);
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 2px 10px 2px 2px;
@@ -64,8 +64,8 @@
 .assistant-message--question {
   max-width: 35rem;
   padding: 14px 15px 12px;
-  background: rgba(255, 253, 248, 0.8);
-  box-shadow: 0 5px 16px rgba(35, 30, 24, 0.035);
+  background: var(--surface);
+  box-shadow: 0 8px 22px rgba(23, 38, 61, 0.06);
 }
 
 .assistant-message--question h2 {
@@ -82,15 +82,15 @@
   gap: 12px;
   min-height: 44px;
   margin: 0 0 14px;
-  border-bottom: 1px solid #b8c8ba;
-  color: var(--green);
+  border-bottom: 1px solid #e5ba8b;
+  color: #74441c;
   font-size: 0.84rem;
   font-weight: 750;
   text-decoration: none;
 }
 
 .route-change-link strong { text-decoration: underline; text-underline-offset: 3px; }
-.route-change-link:focus-visible { outline: 3px solid #d48632; outline-offset: 3px; }
+.route-change-link:focus-visible { outline: 3px solid var(--sage); outline-offset: 3px; }
 
 .message-actions,
 .answer-list--replies {
@@ -151,10 +151,10 @@
 
 .conversation-composer {
   margin-top: 24px;
-  border: 1px solid var(--green);
+  border: 1px solid var(--line-strong);
   border-radius: 18px;
   padding: 18px;
-  background: rgba(255, 253, 248, 0.86);
+  background: var(--surface);
   box-shadow: var(--shadow);
 }
 
@@ -168,7 +168,7 @@
 .conversation-composer > div:first-of-type {
   display: flex;
   gap: 10px;
-  border-bottom: 1px solid var(--green);
+  border-bottom: 1px solid var(--sage);
   padding-bottom: 12px;
 }
 
@@ -212,6 +212,12 @@
   color: var(--muted);
   font-size: 0.84rem;
 }
+
+.reset-dialog-backdrop { z-index: 30; align-items: center; justify-content: center; padding: 20px; }
+.reset-dialog { width: min(100%, 480px); border: 1px solid var(--line); border-radius: 18px; padding: 28px; background: var(--surface); box-shadow: var(--shadow); }
+.reset-dialog h2 { margin: 4px 0 10px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.9rem, 5vw, 2.55rem); letter-spacing: -.055em; line-height: .98; }
+.reset-dialog > p:not(.section-kicker) { max-width: 48ch; margin: 0; color: var(--muted); line-height: 1.5; }
+.reset-dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 24px; }
 
 .route-pane { padding-top: 5px; }
 
@@ -267,7 +273,7 @@
     grid-template-areas:
       "route"
       "conversation";
-    gap: 32px;
+    gap: 36px;
   }
   .action-workspace--planning .route-pane { padding-top: 0; }
   .action-workspace--planning .conversation-pane { padding-top: 0; }
@@ -282,7 +288,7 @@
   }
   .conversation-thread {
     max-height: min(56svh, 520px);
-    margin-top: 26px;
+    margin-top: 20px;
   }
   .route-preview-empty { min-height: 280px; }
   .mobile-question-link {
@@ -291,13 +297,13 @@
     align-items: center;
     justify-content: space-between;
     margin: 20px 0 0 28px;
-    color: var(--green);
+    color: var(--sage);
     font-size: 0.9rem;
     font-weight: 750;
     text-decoration: underline;
     text-underline-offset: 3px;
   }
-  .mobile-question-link:focus-visible { outline: 3px solid #d48632; outline-offset: 3px; }
+  .mobile-question-link:focus-visible { outline: 3px solid var(--sage); outline-offset: 3px; }
 }
 
 @media (max-width: 620px) {
@@ -311,6 +317,8 @@
     align-items: flex-start;
     flex-direction: column;
   }
+  .reset-dialog { padding: 24px 20px; }
+  .reset-dialog-actions > * { flex: 1 1 150px; }
   .answer-list--typed-reply { grid-template-columns: 1fr 1fr; }
   .answer-list--typed-reply input { grid-column: 1 / -1; }
 }

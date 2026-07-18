@@ -104,7 +104,9 @@ test("routes supported IL→US relocation language through confirmation without 
   await page.getByRole("button", { name: "Work or employment" }).click();
   await expect(page.getByRole("heading", { name: /Do you already have a job offer/i })).toBeVisible();
 
-  await page.getByRole("button", { name: "Reset local demo" }).click();
+  await page.getByRole("button", { name: "Reset demo" }).click();
+  await page.getByRole("dialog", { name: "Start this demo again?" }).getByRole("button", { name: "Reset demo" }).click();
+  await page.getByRole("button", { name: "Skip intro" }).click();
   for (const statement of ["I’m visiting the US for two weeks", "I moved house in Israel", "I need help with a U.S. tourist visa"]) {
     await page.getByLabel("What happened?").fill(statement);
     await page.locator(".conversation-composer").getByRole("button", { name: "Continue", exact: true }).click();
