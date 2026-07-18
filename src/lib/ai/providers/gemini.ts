@@ -3,40 +3,29 @@ import { EventClassificationSchema, type ClassificationCandidate, type Classific
 
 const MAX_CANDIDATES = 16;
 const MAX_FACTS = 16;
+const unsupportedEventId = "unsupported";
 
 export type GeminiGatewayDependencies = { apiKey?: string; fetch?: typeof fetch; endpoint?: string };
 
 function schema(candidates: readonly ClassificationCandidate[]): Record<string, unknown> {
   const eventIds = candidates.map((candidate) => candidate.id);
-  const factIds = [...new Set(candidates.flatMap((candidate) => candidate.facts.map((fact) => fact.id)))];
   return {
     type: "object",
     additionalProperties: false,
     required: ["eventId", "facts"],
     properties: {
-      eventId: { anyOf: [{ type: "string", enum: eventIds }, { type: "null" }] },
-      facts: {
-        type: "array",
-        maxItems: 24,
-        items: {
-          type: "object",
-          additionalProperties: false,
-          required: ["factId", "value"],
-          properties: {
-            factId: { type: "string", enum: factIds },
-            value: { anyOf: [{ type: "string" }, { type: "number" }, { type: "boolean" }] }
-          }
-        }
-      }
+      eventId: { type: "string", enum: [...eventIds, unsupportedEventId] },
+      facts: { type: "array", maxItems: 0 }
     }
   };
 }
 
 function prompt(input: ClassifyEventInput): string {
-  return ["/no_think", "Classify only among the supplied event IDs. A recognition hint is a supported ordinary expression even when punctuation or a contraction differs.", "For entry classification, return facts: [] unless a supplied fact value is stated exactly; never infer a decision-changing fact. Never provide tasks, sources, rules, timing, eligibility, advice, or prose.", `Candidates: ${JSON.stringify(input.candidates.slice(0, MAX_CANDIDATES).map((candidate) => ({ id: candidate.id, label: candidate.label, recognitionHints: candidate.recognitionHints.slice(0, 4), facts: candidate.facts.slice(0, MAX_FACTS) })))}`, `User statement: ${input.text.slice(0, 2_000)}`].join("\n");
+  return ["/no_think", "Classify only among the supplied event IDs. A recognition hint is a supported ordinary expression even when punctuation or a contraction differs.", `Return facts: [] always. If no supported event is clearly stated, return eventId: \"${unsupportedEventId}\". Never infer a decision-changing fact or provide tasks, sources, rules, timing, eligibility, advice, or prose.`, `Candidates: ${JSON.stringify(input.candidates.slice(0, MAX_CANDIDATES).map((candidate) => ({ id: candidate.id, label: candidate.label, recognitionHints: candidate.recognitionHints.slice(0, 4), facts: candidate.facts.slice(0, MAX_FACTS) })))}`, `User statement: ${input.text.slice(0, 2_000)}`].join("\n");
 }
 
 function validate(payload: unknown, candidates: readonly ClassificationCandidate[]): ClassificationResult {
+  if (typeof payload === "object" && payload !== null && !Array.isArray(payload) && (payload as Record<string, unknown>).eventId === unsupportedEventId) return { kind: "clarification", reason: "unsupported" };
   const parsed = EventClassificationSchema.safeParse(payload);
   if (!parsed.success) return { kind: "clarification", reason: "invalid_output" };
   if (parsed.data.eventId === null) return { kind: "clarification", reason: "unsupported" };

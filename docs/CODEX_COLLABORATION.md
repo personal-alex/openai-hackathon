@@ -503,3 +503,18 @@ Week submission. It is a concise evidence log, not a transcript.
 - Verification: `git diff --check`, typecheck, lint, 84 Vitest tests, 20
   Chromium journeys against an isolated production build, and production build
   passed. No `/feedback` session ID is recorded.
+
+### 2026-07-18 — Gemini structured-output compatibility repair
+
+- Task/outcome: Diagnosed the production classification failure after deployment
+  as Gemini HTTP 400 rejection of the adapter's response schema, rather than an
+  event-pack or classifier-quality failure.
+- Codex contribution: Replaced unsupported response-schema constructs with the
+  provider-compatible allowlisted event-ID schema and an empty entry-facts
+  array; mapped a bounded internal unsupported sentinel to the existing neutral
+  clarification result.
+- Safety/verification: The model still cannot set planning facts, tasks,
+  sources, rules, timing, or eligibility. Direct configured-Gemini checks
+  classified expecting-child, job-loss, and IL→US relocation; a tourist-visa
+  statement stayed unsupported. Typecheck, lint, focused unit tests, and build
+  passed.

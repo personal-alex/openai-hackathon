@@ -459,6 +459,18 @@ The repository contains a validated modular-monolith baseline, deterministic com
   test` (84 tests), full Chromium E2E (20 journeys) against an isolated
   production build, and `npm run build`. No commit has been created.
 
+## 2026-07-18 — Gemini classification schema compatibility repair
+
+- Gemini rejected the previous structured-output schema with HTTP 400; the
+  adapter safely mapped that provider failure to `unavailable`, which the entry
+  UI presented as a neutral clarification for every scenario.
+- The Gemini adapter now uses its supported JSON-schema subset: an allowlisted
+  string event ID (plus an internal unsupported sentinel) and an always-empty
+  entry-facts array. The adapter maps the sentinel back to the existing neutral
+  unsupported result. Entry classification remains unable to set planning facts.
+- Direct local Gemini checks classified `expecting_child`, `job_loss`, and
+  `relocate_il_us`, while a tourist-visa statement remained unsupported.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations
