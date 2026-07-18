@@ -88,7 +88,6 @@
   right: clamp(1.5rem, 4vw, 3rem);
 }
 
-.landing-intro__continue,
 .landing-intro__skip {
   border-radius: 999px;
   font: inherit;
@@ -96,20 +95,12 @@
   padding: 0.55rem 1rem;
 }
 
-.landing-intro__continue {
-  border: 1px solid #174c3b;
-  background: #174c3b;
-  color: white;
-}
-
 .landing-intro__skip {
-  margin-left: 8px;
   border: 1px solid #bdb7aa;
   background: transparent;
   color: #34423c;
 }
 
-.landing-intro__continue:hover,
 .landing-intro__skip:hover {
   border-color: #1e5a46;
 }
@@ -118,7 +109,6 @@
   color: #164a39;
 }
 
-.landing-intro__continue:focus-visible,
 .landing-intro__skip:focus-visible {
   outline: 3px solid #d58b2a;
   outline-offset: 3px;

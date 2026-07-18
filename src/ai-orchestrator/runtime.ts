@@ -6,9 +6,7 @@ const localGuard = new InMemoryAiRateGuard();
 
 /** Only facts from runtime-validated packs may be offered to the model boundary. */
 export function getReviewedAiCandidates(): readonly EventCandidate[] {
-  return activeEventPacks.flatMap((pack) =>
-    pack.id === "expecting_child" || pack.id === "job_loss" ? [{ id: pack.id, facts: pack.facts }] : []
-  );
+  return activeEventPacks.map((pack) => ({ id: pack.id, facts: pack.facts }));
 }
 
 export function getServerAi(): LifeNavigatorAi {

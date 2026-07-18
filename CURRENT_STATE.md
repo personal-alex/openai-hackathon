@@ -423,6 +423,42 @@ The repository contains a validated modular-monolith baseline, deterministic com
 - Direct local endpoint checks classified both ASCII and typographic-apostrophe
   variants of “we’re having a baby!” as `expecting_child` with no facts.
 
+## 2026-07-18 — Guided-route entry and roadmap hierarchy refinement
+
+- The presentation-only motto animation remains on a new no-plan visit, but
+  now hands off automatically three seconds after the complete statement is
+  visible. Skip intro, reduced-motion, seeded-demo bypass, restored-plan
+  bypass, keyboard focus, and no-JavaScript access remain intact.
+- Entry copy now explains the two currently supported planning paths in
+  user-facing language and labels the choices as quick starts rather than
+  implementation-facing seeded scenarios.
+- The generic route now elevates the deterministic first task as “Start here,”
+  groups follow-on validated tasks by existing timing lanes, and exposes an
+  in-question “Your route updated — View changes” link when a compiler diff is
+  present. No event-pack, source, rule, compiler, or AI behavior changed.
+- Passed: `git diff --check`, `npm run typecheck`, `npm run lint`, `npm run
+  test` (75 passed), `npx playwright test` (19 Chromium journeys), and `npm
+  run build`.
+
+## 2026-07-18 — Approved IL→US relocation hackathon pack activated
+
+- The project owner approved the reviewed `relocate_il_us` handoff for
+  hackathon/demo use only. The pack is registered through the same validated
+  catalog, live classifier, one-question flow, deterministic compiler, and
+  source-inspection UI as the existing scenarios.
+- This is a narrow exception to the Israel-only runtime-catalog rule: the pack
+  represents relocation **from Israel to the United States**, has per-card IL/US
+  provenance, and creates neither a country selector nor a U.S.-only product.
+  It does not determine immigration, visa, admission, residency, tax, filing,
+  work authorization, benefits, or eligibility outcomes.
+- ADR 0004 records the decision. A declared fact may now safely anchor planned
+  timing; undeclared planned task or rule timing anchors fail validation. The pack has
+  no base task, so unknown/skip context remains unknown and compiles to no
+  implied action.
+- Passed: `git diff --check`, `npm run typecheck`, `npm run lint`, `npm run
+  test` (84 tests), full Chromium E2E (20 journeys) against an isolated
+  production build, and `npm run build`. No commit has been created.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

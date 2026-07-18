@@ -25,6 +25,8 @@ test("moves event understanding into the conversation and keeps a sparse route v
   await page.getByRole("button", { name: "My employment has ended" }).click();
   await expect(page.locator(".user-message--answer")).toHaveText("My employment has ended");
   await expect(page.getByText("Your plan changed.")).toBeVisible();
+  await expect(page.getByRole("link", { name: /Your route updated.*View changes/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Start here" })).toBeVisible();
   await expect(page.getByRole("button", { name: /Open details for/i }).first()).toBeVisible();
 });
 
@@ -48,6 +50,8 @@ test("uses only the assistant welcome and catalog-provided human confirmation co
   await page.getByRole("button", { name: "Skip intro" }).click();
   await expect(page.getByRole("heading", { name: "Tell us what changed." })).toHaveCount(0);
   await expect(page.getByText("Tell me what changed. I’ll help you organize the next steps and what can wait.")).toHaveCount(1);
+  await expect(page.getByText("Currently, I can help plan for expecting a child, losing a job, or relocating from Israel to the United States.")).toBeVisible();
+  await expect(page.getByText("Quick starts")).toBeVisible();
   await page.getByLabel("What happened?").fill("I lost my job");
   await page.locator(".conversation-composer").getByRole("button", { name: "Continue", exact: true }).click();
   await expect(page.getByText("It sounds like you lost your job. I can help organize the immediate steps and what can wait. Is that right?")).toBeVisible();
@@ -92,6 +96,20 @@ test("keeps the approved expecting-child route generic and supports its after-bi
   await expect(page.getByRole("button", { name: /Open details for/i }).first()).toBeVisible();
   await page.getByRole("button", { name: /The child has now been born/i }).click();
   await expect(page.getByRole("button", { name: "Yes, in Israel" })).toBeVisible();
+});
+
+test("routes supported IL→US relocation language through confirmation without defaulting ambiguous U.S. travel to relocation", async ({ page }) => {
+  await enterWorkspace(page, "We are moving to America for my job");
+  await expect(page.getByRole("heading", { name: /What is the main purpose of your move to the U\.S\.?/i })).toBeVisible();
+  await page.getByRole("button", { name: "Work or employment" }).click();
+  await expect(page.getByRole("heading", { name: /Do you already have a job offer/i })).toBeVisible();
+
+  await page.getByRole("button", { name: "Reset local demo" }).click();
+  for (const statement of ["I’m visiting the US for two weeks", "I moved house in Israel", "I need help with a U.S. tourist visa"]) {
+    await page.getByLabel("What happened?").fill(statement);
+    await page.locator(".conversation-composer").getByRole("button", { name: "Continue", exact: true }).click();
+    await expect(page.locator(".conversation-composer").getByRole("alert")).toContainText("I’m not yet sure which supported event this is");
+  }
 });
 
 test("does not let model-returned facts skip a decision-changing question", async ({ page }) => {

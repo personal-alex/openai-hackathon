@@ -8,7 +8,7 @@ Deliver a public, Israel-only, English-only Life Navigator hackathon application
 
 ### Decided constraints
 
-- Canonical event IDs are `expecting_child`, `job_loss`, and `move_home`.
+- Canonical event IDs are `expecting_child`, `job_loss`, and `move_home`; ADR 0004 adds the separately approved, hackathon-only `relocate_il_us` exception without expanding the baseline committed scope.
 - The product is a Next.js + TypeScript modular monolith with browser-local persistence, versioned event packs, a server-side AI boundary, and a deterministic roadmap compiler. `docs/technical-product-direction.md#6-architecture-direction`
 - The complete flows are `expecting_child` and `job_loss`; `move_home` is stretch-only after explicit gates. `docs/technical-product-direction.md#4-product-scope`
 - Zod validates state; GPT may interpret stated facts, choose allowlisted questions, and draft bounded explanations only. The compiler alone selects tasks, sources, timing, labels, and diffs. `docs/instructions/architecture-and-domain.md#ownership-boundaries`

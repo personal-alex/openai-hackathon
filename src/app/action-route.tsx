@@ -6,6 +6,7 @@ import { groupTasksByTimingLane } from "./timing-lanes";
 import "./action-route.css";
 
 type Props = { roadmap: CompiledRoadmap; sourceCards: EventPack["sourceCards"]; progress: LocalProgress; taskDiff?: TaskDiff; rationaleByKey: Record<string, string>; readOnly?: boolean; onCycleProgress(taskId: string): void };
+type RouteTask = { task: CatalogTask; lane: string };
 const statusFor = (task: CatalogTask, progress: LocalProgress) => progress.progressStatusByTaskId[task.id] ?? "not started";
 const changeFor = (taskId: string, diff?: TaskDiff) => diff?.changes.find((change) => change.taskId === taskId)?.kind;
 
@@ -17,15 +18,22 @@ function timingSummary(timing: Timing): string {
 }
 
 export function ActionRoute({ roadmap, sourceCards, progress, taskDiff, rationaleByKey, readOnly = false, onCycleProgress }: Props) {
-  const [showAll, setShowAll] = useState(false);
+  const [expandedRoadmapSignature, setExpandedRoadmapSignature] = useState<string>();
   const [selected, setSelected] = useState<CatalogTask>();
   const trigger = useRef<HTMLButtonElement>(null);
   const sources = useMemo(() => new Map(sourceCards.map((source) => [source.id, source])), [sourceCards]);
   const taskTitles = useMemo(() => new Map(roadmap.steps.map((task) => [task.id, task.title])), [roadmap.steps]);
   const grouped = useMemo(() => groupTasksByTimingLane(roadmap.steps), [roadmap.steps]);
-  const tasks = grouped.flatMap((group) => group.tasks.map((task) => ({ task, lane: group.label })));
+  const tasks = grouped.flatMap((group) => group.tasks.map((task) => ({ task, lane: group.label } satisfies RouteTask)));
+  const roadmapSignature = tasks.map(({ task, lane }) => `${task.id}:${task.priority}:${lane}:${task.actionSummary}`).join("|");
+  const showAll = expandedRoadmapSignature === roadmapSignature;
   const changes = taskDiff?.changes ?? [];
-  const shown = showAll ? tasks : [...tasks].sort((left, right) => Number(Boolean(changeFor(right.task.id, taskDiff))) - Number(Boolean(changeFor(left.task.id, taskDiff)))).slice(0, 5);
+  const startHere = tasks[0];
+  const remainingTasks = tasks.slice(1);
+  const shownRemaining = showAll ? remainingTasks : remainingTasks.slice(0, 3);
+  const shownRemainingIds = new Set(shownRemaining.map(({ task }) => task.id));
+  const remainingGroups = grouped.map((group) => ({ ...group, tasks: group.tasks.filter((task) => shownRemainingIds.has(task.id)) })).filter((group) => group.tasks.length > 0);
+  const hiddenTaskCount = remainingTasks.length - shownRemaining.length;
 
   useEffect(() => {
     if (!selected) trigger.current?.focus();
@@ -35,23 +43,33 @@ export function ActionRoute({ roadmap, sourceCards, progress, taskDiff, rational
   const adjusted = changes.filter((change) => change.kind === "changed").length;
   const removed = changes.filter((change) => change.kind === "removed").length;
   return <section className="action-route" aria-labelledby="route-title">
-    <div className="route-heading"><div><p className="section-kicker">Live deterministic plan</p><h2 id="route-title">Your route</h2></div>{changes.length > 0 && <p className="route-update" role="status"><strong>Your plan changed.</strong> {added} added · {adjusted} adjusted · {removed} removed</p>}</div>
+    <div className="route-heading"><div><h2 id="route-title">Your route</h2></div>{changes.length > 0 && <p className="route-update" role="status"><strong>Your plan changed.</strong> {added} added · {adjusted} adjusted · {removed} removed</p>}</div>
     <p className="route-boundary">Your plan updates only from validated answers and reviewed catalog rules.</p>
-    {shown.length ? <ol className="route-list">{shown.map(({ task, lane }) => {
-      const change = changeFor(task.id, taskDiff);
-      const status = readOnly ? "preview" : statusFor(task, progress);
-      return <li key={task.id} className={`route-item${change ? ` route-item--${change}` : ""}`}>
-        <span className="route-connector" aria-hidden="true" />
-        <button type="button" className="route-item-button" onClick={(event) => { trigger.current = event.currentTarget; setSelected(task); }} aria-label={`Open details for ${task.title}`}>
-          <span className="route-node" aria-hidden="true" />
-          <span className="route-item-copy"><span className="route-item-title">{task.title}</span><span className="route-item-summary">{task.actionSummary}</span><span className="route-item-meta">{lane} · {change === "added" ? "New item" : change === "changed" ? "Updated item" : status === "complete" ? "Complete" : status === "reviewed" ? "Reviewed" : status === "preview" ? "After-birth preview" : "Current"}</span></span>
-          <span className="route-open" aria-hidden="true">›</span>
-        </button>
-      </li>;
-    })}</ol> : <p className="route-empty">Your route will take shape from what you choose to share.</p>}
-    {tasks.length > 5 && <button className="text-button route-more" type="button" onClick={() => setShowAll((value) => !value)}>{showAll ? "Show fewer actions" : `Show ${tasks.length - 5} more actions`}</button>}
+    {startHere ? <>
+      <section className="route-start" aria-labelledby="route-start-title">
+        <div className="route-section-heading"><h3 id="route-start-title">Start here</h3><span>{startHere.lane}</span></div>
+        <ol className="route-list route-list--start"><RouteItem item={startHere} primary taskDiff={taskDiff} progress={progress} readOnly={readOnly} onSelect={(task, element) => { trigger.current = element; setSelected(task); }} /></ol>
+      </section>
+      {remainingGroups.length > 0 && <section className="route-follow-ons" aria-labelledby="route-follow-ons-title"><h3 id="route-follow-ons-title">Then keep moving</h3>{remainingGroups.map((group) => <section className="route-lane" key={group.id} aria-labelledby={`route-lane-${group.id}`}><div className="route-section-heading"><h4 id={`route-lane-${group.id}`}>{group.label}</h4><span>{group.tasks.length} action{group.tasks.length === 1 ? "" : "s"}</span></div><ol className="route-list">{group.tasks.map((task) => <RouteItem key={task.id} item={{ task, lane: group.label }} taskDiff={taskDiff} progress={progress} readOnly={readOnly} onSelect={(nextTask, element) => { trigger.current = element; setSelected(nextTask); }} />)}</ol></section>)}</section>}
+    </> : <p className="route-empty">Your route will take shape from what you choose to share.</p>}
+    {remainingTasks.length > 3 && <button className="text-button route-more" type="button" onClick={() => setExpandedRoadmapSignature((current) => current === roadmapSignature ? undefined : roadmapSignature)}>{showAll ? "Show fewer actions" : `Show ${hiddenTaskCount} more action${hiddenTaskCount === 1 ? "" : "s"}`}</button>}
     {selected && <TaskDrawer task={selected} sourceCards={sources} taskTitles={taskTitles} rationale={rationaleByKey[selected.rationale]} timing={timingSummary(selected.timing)} status={statusFor(selected, progress)} readOnly={readOnly} onClose={() => setSelected(undefined)} onCycle={() => onCycleProgress(selected.id)} />}
   </section>;
+}
+
+function RouteItem({ item, primary = false, taskDiff, progress, readOnly, onSelect }: { item: RouteTask; primary?: boolean; taskDiff?: TaskDiff; progress: LocalProgress; readOnly: boolean; onSelect(task: CatalogTask, element: HTMLButtonElement): void }) {
+  const { task, lane } = item;
+  const change = changeFor(task.id, taskDiff);
+  const status = readOnly ? "preview" : statusFor(task, progress);
+  const statusLabel = change === "added" ? "New item" : change === "changed" ? "Updated item" : status === "complete" ? "Complete" : status === "reviewed" ? "Reviewed" : status === "preview" ? "After-birth preview" : "Current";
+  return <li className={`route-item${primary ? " route-item--primary" : ""}${change ? ` route-item--${change}` : ""}`}>
+    <span className="route-connector" aria-hidden="true" />
+    <button type="button" className="route-item-button" onClick={(event) => onSelect(task, event.currentTarget)} aria-label={`Open details for ${task.title}`}>
+      <span className="route-node" aria-hidden="true" />
+      <span className="route-item-copy"><span className="route-item-title">{task.title}</span><span className="route-item-summary">{task.actionSummary}</span><span className="route-item-meta">{lane} · {statusLabel}</span></span>
+      <span className="route-open" aria-hidden="true">›</span>
+    </button>
+  </li>;
 }
 
 function TaskDrawer({ task, sourceCards, taskTitles, rationale, timing, status, readOnly, onClose, onCycle }: { task: CatalogTask; sourceCards: Map<string, EventPack["sourceCards"][number]>; taskTitles: Map<string, string>; rationale?: string; timing: string; status: string; readOnly: boolean; onClose(): void; onCycle(): void }) {

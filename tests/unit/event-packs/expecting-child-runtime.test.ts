@@ -14,7 +14,7 @@ describe("approved expecting-child runtime catalog", () => {
 
   it("keeps the validated expecting-child pack and its five approved first-party source cards in the active catalog", () => {
     expect(validateApprovedEventPack(pack).success).toBe(true);
-    expect(activeEventPacks.map((entry) => entry.id)).toEqual(["expecting_child", "job_loss"]);
+    expect(activeEventPacks.map((entry) => entry.id)).toEqual(["expecting_child", "job_loss", "relocate_il_us"]);
     expect(activeEventPacks.every((entry) => !entry.testOnly)).toBe(true);
     const expectingChildSources = activeSourceCards.filter((source) => pack.sourceCards.some((packSource) => packSource.id === source.id));
     expect(expectingChildSources.map((source) => source.id)).toEqual([

@@ -465,3 +465,41 @@ Week submission. It is a concise evidence log, not a transcript.
   scoped both assertions to the conversation composer’s form error.
 - Verification: `git diff --check`, typecheck, lint, 75 Vitest tests, focused
   Chromium coverage, all 19 Chromium journeys, and production build passed.
+
+### 2026-07-18 — Guided-route entry and roadmap hierarchy refinement
+
+- Task/outcome: Retained the human-approved Life Navigator motto animation,
+  made its transition to planning automatic after the completed statement has
+  held for three seconds, clarified the two supported quick starts, and made
+  the validated route easier to scan and revisit after an answer changes it.
+- Codex contribution: Reworked only generic presentation code: a prominent
+  “Start here” route action, existing typed timing-lane follow-ons, an
+  in-question route-change anchor, and stable Playwright coverage for automatic
+  intro completion, Skip intro, reduced motion, quick-start scope, and route
+  updates.
+- Human review/decision: Kept the motto animation as intentional product pitch;
+  requested automatic handoff, clearer supported-event language, visible route
+  updates, and less list-like route hierarchy.
+- Safety/scope: No event pack, source card, task/rule content, compiler
+  selection, source policy, or model-authoritative content changed.
+- Verification: `git diff --check`, typecheck, lint, 75 Vitest tests, all 19
+  Chromium journeys, and production build passed. No `/feedback` session ID is
+  recorded.
+
+### 2026-07-18 — Approved `relocate_il_us` hackathon catalog activation
+
+- Task/outcome: Translated the project-owner-approved
+  `relocate_il_us_candidate_packet.zip` handoff into the registered,
+  validation-gated IL→US relocation event pack, its classifier candidates,
+  seeded scenario, deterministic rules, and focused regression coverage.
+- Human decision: The 2026-07-18 approval is hackathon/demo-only. It authorizes
+  one English-only relocation-from-Israel-to-the-United-States scenario, not a
+  U.S. product, country selector, or production legal/tax/immigration review.
+- Safety/architecture: ADR 0004 records the narrow scope exception. The pack
+  selects only source-backed, verification-required tasks from stated facts;
+  unknown context produces no base task. A declared generic timing anchor is
+  now validated against pack facts. The compiler and UI remain authoritative
+  only for validated catalog data.
+- Verification: `git diff --check`, typecheck, lint, 84 Vitest tests, 20
+  Chromium journeys against an isolated production build, and production build
+  passed. No `/feedback` session ID is recorded.

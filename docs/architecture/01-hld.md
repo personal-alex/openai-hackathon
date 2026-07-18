@@ -8,10 +8,10 @@ Provide a bounded, testable Next.js + TypeScript modular monolith that turns val
 
 ### Decided constraints
 
-- Canonical IDs are `expecting_child`, `job_loss`, and `move_home`; the first two are complete hackathon flows and `move_home` remains stretch-only. `docs/planning/01-implementation-plan.md#classification-and-authority`
+- Canonical IDs are `expecting_child`, `job_loss`, `move_home`, and the narrowly approved hackathon-only cross-border exception `relocate_il_us`. The first two remain the baseline complete flows; `move_home` remains stretch-only. `docs/adr/0004-hackathon-il-us-relocation-exception.md`
 - The MVP is a Next.js + TypeScript modular monolith with versioned event packs, a server-side AI boundary, browser-local persistence, and a pure deterministic compiler. `docs/technical-product-direction.md#6-architecture-direction`
 - Zod validates AI and domain state; GPT may only interpret stated facts, choose allowlisted questions, and draft bounded explanations. The compiler alone selects tasks, sources, timing, labels, and diffs. `docs/instructions/architecture-and-domain.md#ownership-boundaries`
-- Only reviewed IL content is user-facing. The MVP has no authentication, product database, queues, background workers, integrations, live-web retrieval, determinations, advice, or sensitive-data storage. `AGENTS.md#non-negotiable-scope`
+- Only reviewed IL content is user-facing except the owner-approved, hackathon-only `relocate_il_us` pack, which has per-source IL/US provenance and no country selector. The MVP has no authentication, product database, queues, background workers, integrations, live-web retrieval, determinations, advice, or sensitive-data storage. `docs/adr/0004-hackathon-il-us-relocation-exception.md`
 - Source-card review owner is the project owner/human reviewer, with a dated disposition recorded per source card.
 - M9 classification uses a server-only provider-neutral gateway: local default is
   Ollama `qwen3.5:9b`; a configured OpenAI adapter is production-capable and
@@ -57,8 +57,8 @@ tests/
 **Recommendation:** Zod schemas in `domain-contracts` are the runtime contract source; TypeScript types are inferred from them. Validate every untrusted transition and separate immutable catalog tasks from local progress.
 
 ```ts
-type EventId = "expecting_child" | "job_loss" | "move_home";
-type JurisdictionCode = "IL";
+type EventId = "expecting_child" | "job_loss" | "move_home" | "relocate_il_us";
+type JurisdictionCode = "IL" | "IL_US";
 
 type ValidatedState = {
   eventId: EventId;
@@ -107,7 +107,7 @@ The compiler/event pack never owns user completion state. UI joins `CatalogTask`
 type EventPack = {
   id: EventId;
   version: string;
-  jurisdiction: "IL";
+  jurisdiction: "IL" | "IL_US";
   metadata: { title: string };
   facts: FactDefinition[];
   questions: QuestionDefinition[];

@@ -2,13 +2,13 @@
 
 ## Outcome
 
-Define a calm, inspectable, event-led experience for `expecting_child` and `job_loss` that makes a validated, deterministic roadmap more useful after each answer.
+Define a calm, inspectable, event-led experience for `expecting_child` and `job_loss`; the owner-approved hackathon-only `relocate_il_us` pack inherits this same generic experience without a bespoke jurisdiction UI.
 
 ## Scope and classification
 
 ### Decided
 
-- The product is Israel-only and English-only. `expecting_child` and `job_loss` are complete flows; `move_home` is outside current UX scope. `docs/planning/01-implementation-plan.md#classification-and-authority`
+- The product is Israel-first and English-only. `expecting_child` and `job_loss` remain the baseline complete flows; `move_home` is outside current UX scope. `relocate_il_us` is a narrowly approved IL→US hackathon/demo exception with no country selector or U.S.-only journey. `docs/adr/0004-hackathon-il-us-relocation-exception.md`
 - The roadmap is the primary product artifact; conversation serves intake and explanation. `docs/technical-product-direction.md#2-product-thesis`
 - UI renders validated catalog data and compiler diffs, never authoritative model prose. `docs/architecture/01-hld.md#2-contracts-and-validation-boundaries`
 - Local `progressStatus` overlays immutable compiled catalog tasks and never changes task selection or task diffs. `docs/adr/0002-event-pack-contract-and-roadmap-compiler.md#compiled-roadmap-diff-and-local-progress`
@@ -53,7 +53,7 @@ Use restrained color, clear hierarchy, readable typography, generous reading spa
 
 1. User enters a free-text statement.
 2. The app shows a loading state while structured extraction runs.
-3. Valid `expecting_child` or `job_loss` extraction presents “It sounds like you may be [event]. Is that right?” with **Continue**, **Choose a different supported event**, and **Start over**.
+3. Valid supported-event extraction presents catalog-approved confirmation copy with **Continue**, **Choose a different supported event**, and **Start over**. This includes the owner-approved `relocate_il_us` exception.
 4. After explicit confirmation of `expecting_child`, optionally show the approved, skippable acknowledgement: “Congratulations—let’s build a plan for what may be ahead.” The user may skip it and continue with the neutral approved alternative: “Let’s build a plan for what may be ahead.”
 5. After explicit confirmation of `job_loss`, show the approved empathetic, non-assumptive acknowledgement: “I’m sorry you’re dealing with a job loss. Let’s make a clear plan for the next steps.”
 6. Direct selection uses neutral wording and no acknowledgement.

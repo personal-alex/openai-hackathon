@@ -3,12 +3,11 @@ import { mockLiveClassifier } from "./classifier";
 
 test.beforeEach(async ({ page }) => { await page.addInitScript(() => { localStorage.clear(); sessionStorage.clear(); }); await mockLiveClassifier(page); });
 
-test("shows the motto on a standard no-plan visit and Continue opens the workspace", async ({ page }) => {
+test("shows the motto on a standard no-plan visit and opens the workspace automatically", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByTestId("landing-intro")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Life doesn’t come with instructions. Now it does." })).toBeVisible();
-  await page.getByTestId("landing-intro").getByRole("button", { name: "Continue" }).click();
-  await expect(page.getByTestId("landing-intro")).toHaveCount(0);
+  await expect(page.getByTestId("landing-intro")).toHaveCount(0, { timeout: 7000 });
   await expect(page.getByLabel("What happened?")).toBeFocused();
 });
 
@@ -20,12 +19,12 @@ test("Skip intro remains an immediate keyboard-accessible exit", async ({ page }
   await expect(page.getByLabel("What happened?")).toBeFocused();
 });
 
-test("reduced motion presents the completed statement and an explicit Continue action", async ({ page }) => {
+test("reduced motion presents the completed statement and keeps Skip intro available", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await expect(page.getByTestId("landing-intro")).toBeVisible();
   await expect(page.getByTestId("landing-intro-second-line")).toHaveClass(/is-visible/);
-  await page.getByTestId("landing-intro").getByRole("button", { name: "Continue" }).click();
+  await page.getByTestId("landing-intro").getByRole("button", { name: "Skip intro" }).click();
   await expect(page.getByLabel("What happened?")).toBeFocused();
 });
 

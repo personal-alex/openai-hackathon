@@ -5,7 +5,8 @@ export type FactDefinition = z.infer<typeof FactDefinitionSchema>;
 /** The model receives only allowlist metadata, never catalog presentation copy. */
 export type QuestionDefinition = Pick<CatalogQuestionDefinition, "id" | "factId" | "rationaleKey">;
 
-const LIVE_EVENT_IDS = ["expecting_child", "job_loss"] as const;
+/** The structured-output enum is derived from the same approved event ID contract as the catalog. */
+const LIVE_EVENT_IDS = EventIdSchema.options;
 const LiveEventIdSchema = z.enum(LIVE_EVENT_IDS);
 const ExtractOutputSchema = z.object({
   eventId: LiveEventIdSchema.nullable(),
@@ -15,7 +16,7 @@ const SelectQuestionOutputSchema = z.object({ questionId: z.string() }).strict()
 const DraftExplanationOutputSchema = z.object({ message: z.string().trim().min(1).max(1_200) }).strict();
 
 export type AiOperation = "extract" | "select_question" | "explain";
-export type EventCandidate = { id: Extract<EventId, "expecting_child" | "job_loss">; facts: readonly FactDefinition[] };
+export type EventCandidate = { id: EventId; facts: readonly FactDefinition[] };
 export type ExplanationCandidate = { taskId: string; rationaleKey: string; changeMessageKey?: string };
 export type StructuredOutputRequest = {
   operation: AiOperation;

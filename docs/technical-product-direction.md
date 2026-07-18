@@ -62,7 +62,7 @@ The target is a flawless, rehearsable 90-second product flow and a public video 
 
 ### Jurisdiction and language
 
-- **Jurisdiction:** Israel only for hackathon scope
+- **Jurisdiction:** Israel-first for hackathon scope, with one explicit owner-approved **IL→US relocation** exception for the 2026-07-18 demo. It is not a U.S. product, country selector, or general multi-jurisdiction rollout.
 - **UI and submission language:** English only
 - **Hebrew localization:** Explicitly out of hackathon scope; all judge-facing materials and the product demo are English
 - **Persistence:** Anonymous, browser-local only
@@ -73,11 +73,13 @@ The target is a flawless, rehearsable 90-second product flow and a public video 
 |---|---|---:|---|
 | Expecting a child | Family / health-adjacent / benefits | Full interactive flow | Proves long-horizon planning across preparation, employment, benefits, registration, and post-birth administration |
 | I lost my job | Employment / income disruption | Full interactive flow | Proves urgent, high-stakes sequencing and materially different decision rules |
+| Relocating from Israel to the United States | Cross-border relocation | Hackathon/demo-only interactive flow | Proves the same engine can present reviewed IL→US verification routes without determining immigration, residency, tax, or eligibility outcomes |
 | I’m moving home | Civic / household logistics | Optional, only after the two full flows meet quality gates | May provide a third category proof, but is not committed hackathon scope |
 
 ### Scope rules
 
 - The two full flows are the minimum product bar.
+- `relocate_il_us` is the only authorized cross-border exception: English-only, owner-approved for hackathon/demo content on 2026-07-18, and limited to people relocating from Israel to the United States. It has no country selector, no U.S.-only journey, and no production legal/tax/immigration review. ADR 0004 records the superseding exception.
 - Moving home is a **stretch goal**. Do not start it until the two deep flows, tests, demo reliability, and submission evidence pass their quality gates. If included, it must be a real engine-powered flow, not a static mockup.
 - Do **not** implement bereavement in the hackathon version. It requires trauma-informed interaction, specialized content review, and a different safety standard.
 - Do **not** add more jurisdictions, account systems, institution integrations, reminders, benefit calculators, appointments, or form submission.
@@ -175,7 +177,7 @@ A pack contains:
 
 ```ts
 type LifeEventDefinition = {
-  id: "expecting_child" | "job_loss" | "move_home";
+  id: "expecting_child" | "job_loss" | "move_home" | "relocate_il_us";
   version: string;
   jurisdiction: JurisdictionCode;
   metadata: EventMetadata;

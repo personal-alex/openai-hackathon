@@ -1,8 +1,11 @@
 import { z } from "zod";
 
-export const eventIds = ["expecting_child", "job_loss", "move_home"] as const;
+export const eventIds = ["expecting_child", "job_loss", "move_home", "relocate_il_us"] as const;
 export const EventIdSchema = z.enum(eventIds);
-export const JurisdictionCodeSchema = z.literal("IL");
+/** Runtime packs remain Israel-first; IL_US is the explicit hackathon-only cross-border exception. */
+export const JurisdictionCodeSchema = z.enum(["IL", "IL_US"]);
+/** A cross-border pack can retain provenance for each authority without a country selector. */
+export const SourceJurisdictionCodeSchema = z.enum(["IL", "US"]);
 export const StableIdSchema = z.string().regex(/^[a-z][a-z0-9_]*$/, "Use a stable snake_case ID.");
 export const MessageKeySchema = z.string().regex(/^[a-z][a-z0-9_.-]*$/, "Use a stable message key.");
 
@@ -25,7 +28,8 @@ export const UserContextSchema = z.object({
 export const TimingSchema = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("planned"),
-    anchor: z.literal("due_date"),
+    /** A declared date-like context fact; validation rejects undeclared anchors. */
+    anchor: StableIdSchema,
     window: z.enum(["before", "around", "after"]),
     offsetDays: z.number().int().nonnegative().optional(),
     labelKey: MessageKeySchema
@@ -105,7 +109,7 @@ export const SourceCardSchema = z.object({
   title: z.string().min(1),
   publisher: z.string().min(1),
   canonicalUrl: z.url(),
-  jurisdiction: JurisdictionCodeSchema,
+  jurisdiction: SourceJurisdictionCodeSchema,
   reviewedOn: z.iso.date(),
   reviewer: z.string().min(1),
   disposition: z.enum(["approved", "approved_for_hackathon", "rejected", "needs_review"]),
@@ -202,7 +206,8 @@ export const EventPackSchema = z.object({
   questions: z.array(QuestionDefinitionSchema),
   sourceCards: z.array(SourceCardSchema),
   tasks: z.array(TaskDefinitionSchema),
-  baseTaskIds: z.array(StableIdSchema).min(1),
+  /** A safety-first pack may show no task until a decision-changing fact is known. */
+  baseTaskIds: z.array(StableIdSchema),
   rules: z.array(RoadmapRuleSchema),
   safety: SafetyPolicySchema,
   demoScenarios: z.array(DemoScenarioSchema),
@@ -279,6 +284,13 @@ function conditionFactIds(condition: Condition): string[] {
   return [condition.fact];
 }
 
+function timingFactIds(timing: Timing): string[] {
+  // `event_date` and milestones retain their established compiler semantics.
+  // Only planned timing has a newly generic, pack-authored anchor contract.
+  if (timing.kind === "planned") return [timing.anchor];
+  return [];
+}
+
 export function validateEventPack(input: unknown): ContractValidationResult<EventPack> {
   const parsed = EventPackSchema.safeParse(input);
   if (!parsed.success) return { success: false, errors: parsed.error.issues.map((issue) => `${issue.path.join(".")}: ${issue.message}`) };
@@ -314,6 +326,9 @@ export function validateEventPack(input: unknown): ContractValidationResult<Even
     }
   }
   for (const task of pack.tasks) {
+    for (const factId of timingFactIds(task.timing)) {
+      if (!factIds.has(factId)) errors.push(`unknown task timing fact ID: ${factId}`);
+    }
     for (const sourceId of task.sourceIds) if (!sourceIds.has(sourceId)) errors.push(`unknown task source ID: ${sourceId}`);
     for (const dependencyId of task.dependsOn) if (!taskIds.has(dependencyId)) errors.push(`unknown task dependency ID: ${dependencyId}`);
     if (task.guidanceType === "practical_guidance" && task.verificationLabel !== PracticalGuidanceVerificationLabel) {
@@ -342,6 +357,12 @@ export function validateEventPack(input: unknown): ContractValidationResult<Even
     for (const factId of conditionFactIds(rule.when)) if (!factIds.has(factId)) errors.push(`unknown rule fact ID: ${factId}`);
     for (const taskId of [...(rule.effect.includeTaskIds ?? []), ...(rule.effect.excludeTaskIds ?? []), ...(rule.effect.overrides ?? []).map(({ taskId }) => taskId)]) {
       if (!taskIds.has(taskId)) errors.push(`unknown rule task ID: ${taskId}`);
+    }
+    for (const override of rule.effect.overrides ?? []) {
+      if (!override.timing) continue;
+      for (const factId of timingFactIds(override.timing)) {
+        if (!factIds.has(factId)) errors.push(`unknown rule timing fact ID: ${factId}`);
+      }
     }
   }
   for (const scenario of pack.demoScenarios) {

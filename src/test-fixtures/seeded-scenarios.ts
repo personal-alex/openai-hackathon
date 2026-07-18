@@ -1,6 +1,7 @@
 import type { EventId, EventPack, FactValue, QuestionDefinition, UserContext } from "@/domain-contracts";
 import { expectingChildPack } from "@/event-packs/expecting-child";
 import { jobLossPack } from "@/event-packs/job-loss";
+import { relocateIlUsPack } from "@/event-packs/relocate-il-us";
 
 export type SeededValue = FactValue;
 
@@ -9,7 +10,7 @@ export type SeededQuestion = QuestionDefinition & {
 };
 
 export type SeededScenario = {
-  id: "expecting_child" | "job_loss";
+  id: "expecting_child" | "job_loss" | "relocate_il_us";
   label: string;
   examplePrompt: string;
   /** Test/demo-only matching hints; shared presentation code contains no event-specific matcher. */
@@ -184,6 +185,36 @@ export const seededScenarios: SeededScenario[] = [
       { ...jobLossPack.questions[5], isApplicable: (facts) => facts.employment_stage === "ended" && facts.work_arrangement === "salaried" },
       { ...jobLossPack.questions[6], isApplicable: (facts) => facts.employment_stage === "ended" || facts.employment_stage === "notice_given" },
       { ...jobLossPack.questions[7], isApplicable: (facts) => facts.employment_stage === "ended" && facts.work_arrangement === "salaried" }
+    ]
+  },
+  {
+    id: "relocate_il_us",
+    label: "Relocating from Israel to the United States",
+    examplePrompt: "I’m relocating from Israel to the U.S.",
+    statementHints: ["relocat", "moving to america", "moving to the us", "moving to the u.s.", "moving to california", "states"],
+    confirmationCopy: "It sounds like you’re planning a move from Israel to the United States. I can help organize what to verify and what to consider next.",
+    explanation: "This hackathon-only roadmap is compiled from the reviewed IL→US catalog. It provides educational planning support, not immigration, legal, tax, residency, or eligibility advice.",
+    catalogKind: "approved",
+    rationaleByKey: {
+      "relocate_il_us.rationale.departure_notice": "You described an expected absence longer than three months, so the plan adds the official departure-notification information for review.",
+      "relocate_il_us.rationale.residency_review": "You described a move expected to last over two years, so the plan adds a verification-only review of official National Insurance residency information.",
+      "relocate_il_us.rationale.family_unit": "You said a spouse or child may remain in Israel, so the plan adds a verification-only family-unit review without predicting an outcome.",
+      "relocate_il_us.rationale.tax_review": "You shared an expected duration abroad, so the plan adds a bounded review of official tax-residency information without deciding tax status or filing obligations.",
+      "relocate_il_us.rationale.us_category_review": "You shared a purpose for the move, so the plan adds an official U.S. category-directory review without selecting a category or predicting admission.",
+      "relocate_il_us.rationale.employment_offer": "You said you have a U.S. job offer, so the plan highlights an employment-category review. It does not decide whether any category applies.",
+      "relocate_il_us.rationale.family_path_review": "You said family or marriage is the purpose of the move, so the plan adds official family-path information for review without deciding a petition or visa outcome.",
+      "relocate_il_us.rationale.married_path": "You said you are married to a U.S. citizen or permanent resident, so the plan highlights official spouse-path information without deciding eligibility or outcome.",
+      "relocate_il_us.rationale.engaged_path": "You said you are engaged to a U.S. citizen or permanent resident, so the plan highlights official fiancé-path information without deciding eligibility or outcome."
+    },
+    context: { facts: {} },
+    pack: relocateIlUsPack,
+    questions: [
+      relocateIlUsPack.questions[0],
+      { ...relocateIlUsPack.questions[1], isApplicable: (facts) => facts.relocation_purpose === "employment" },
+      { ...relocateIlUsPack.questions[2], isApplicable: (facts) => facts.relocation_purpose === "family_or_marriage" },
+      relocateIlUsPack.questions[3],
+      relocateIlUsPack.questions[4],
+      { ...relocateIlUsPack.questions[5], isApplicable: (facts) => facts.time_abroad_expected === "3_months_to_2_years" || facts.time_abroad_expected === "over_2_years" }
     ]
   }
 ];

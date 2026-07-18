@@ -26,8 +26,8 @@ const validPack = {
 };
 
 describe("domain contracts", () => {
-  it("accepts exactly the canonical event IDs", () => {
-    expect(EventIdSchema.options).toEqual(["expecting_child", "job_loss", "move_home"]);
+  it("accepts the approved active and gated event IDs", () => {
+    expect(EventIdSchema.options).toEqual(["expecting_child", "job_loss", "move_home", "relocate_il_us"]);
     expect(EventIdSchema.safeParse("marriage").success).toBe(false);
   });
 
@@ -54,6 +54,18 @@ describe("domain contracts", () => {
     const invalidTypedAnswer = validateEventPack({ ...typedPack, questions: [{ ...typedPack.questions[0], answerType: "number" }] });
     expect(invalidTypedAnswer.success).toBe(false);
     if (!invalidTypedAnswer.success) expect(invalidTypedAnswer.errors).toContain("invalid typed input answer type for question ID: ask_planning_date");
+  });
+
+  it("permits a declared planning-date anchor and rejects undeclared timing anchors", () => {
+    const datedPack = {
+      ...validPack,
+      facts: [{ id: "departure_date", valueType: "string", labelKey: "fact.departure_date", sensitive: false }],
+      questions: [{ id: "ask_departure_date", factId: "departure_date", promptKey: "question.departure_date", rationaleKey: "why.departure_date", answerType: "string", allowSkip: true, presentation: { prompt: "When do you plan to depart?", rationale: "The date only changes timing.", input: { kind: "date", validationMessage: "Enter a valid date." } } }],
+      tasks: [{ ...validPack.tasks[0], timing: { kind: "planned" as const, anchor: "departure_date", window: "before" as const, labelKey: "timing.before_departure" } }]
+    };
+    expect(validateEventPack(datedPack).success).toBe(true);
+    const unknownAnchor = { ...datedPack, tasks: [{ ...datedPack.tasks[0], timing: { kind: "planned" as const, anchor: "unknown_date", window: "before" as const, labelKey: "timing.before_departure" } }] };
+    expect(validateEventPack(unknownAnchor)).toMatchObject({ success: false, errors: expect.arrayContaining(["unknown task timing fact ID: unknown_date"]) });
   });
 
   it("blocks non-approved source cards from product packs", () => {

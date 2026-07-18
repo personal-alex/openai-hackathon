@@ -8,10 +8,12 @@
 
 The product architecture separates generic life-event semantics from
 jurisdiction-specific profiles. Hackathon scope is English-only and ships
-reviewed Israel (`IL`) content only, with complete flows for `expecting_child`
-and `job_loss`. The repository includes the deterministic roadmap MVP and its
-bounded event-classification gateway; it does not make eligibility decisions or
-perform external actions.
+reviewed Israel (`IL`) content, plus one owner-approved, hackathon-only
+`relocate_il_us` cross-border pack. Baseline complete flows are
+`expecting_child` and `job_loss`; the relocation pack is not a U.S.-only
+product or country selector. The repository includes the deterministic roadmap
+MVP and its bounded event-classification gateway; it does not make eligibility
+decisions or perform external actions.
 
 ## Setup
 
@@ -89,10 +91,24 @@ code. This baseline intentionally creates no empty module directories.
 
 Life Navigator is planned as educational planning support, not legal, medical,
 tax, financial, or eligibility advice. Human review owns product, safety,
-source, and policy-content decisions. Only reviewed, source-backed `IL` content
-may be exposed in the hackathon product. This repository currently contains no
-live event content, source URLs, integrations, authentication, database, or
-live-web retrieval.
+source, and policy-content decisions. Only reviewed, source-backed catalog
+content may be exposed in the hackathon product. `relocate_il_us` is approved
+only for the hackathon/demo and remains verification-oriented; it is not legal,
+tax, immigration, residency, or eligibility advice. The repository has no
+integrations, authentication, database, or live-web retrieval.
+
+## Supported hackathon scenarios
+
+- `expecting_child` — reviewed Israel family-registration planning.
+- `job_loss` — reviewed Israel employment-transition planning.
+- `relocate_il_us` — owner-approved, hackathon-only verification planning for
+  relocating from Israel to the United States.
+
+Start the app, enter “I’m relocating from Israel to the U.S.”, confirm the
+suggested event, and answer the decision-changing questions. The deterministic
+compiler will show only the source-backed verification tasks supported by the
+facts you provide. See [ADR 0004](docs/adr/0004-hackathon-il-us-relocation-exception.md)
+for the scenario’s boundary.
 
 ## Deployment
 

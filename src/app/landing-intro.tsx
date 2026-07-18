@@ -7,6 +7,7 @@ const firstLineCharacters = Array.from(firstLine.replaceAll(" ", ""));
 const glyphs = "·:+×◇□△";
 const revealIntervalMs = 42;
 const secondLineDelayMs = 350;
+const completedHoldMs = 3000;
 const exitDurationMs = 320;
 
 type LandingIntroProps = {
@@ -70,6 +71,12 @@ export function LandingIntro({ onExitStart, onComplete }: LandingIntroProps) {
     return () => window.clearTimeout(secondLineTimer);
   }, [phase]);
 
+  useEffect(() => {
+    if (phase !== "complete") return;
+    const exitTimer = window.setTimeout(() => leaveIntro(), completedHoldMs);
+    return () => window.clearTimeout(exitTimer);
+  }, [leaveIntro, phase]);
+
   const isLineResolved = phase !== "revealing";
   const isComplete = phase === "complete" || phase === "leaving";
 
@@ -101,7 +108,6 @@ export function LandingIntro({ onExitStart, onComplete }: LandingIntroProps) {
         </h1>
       </div>
       <div className="landing-intro__actions">
-        <button type="button" className="landing-intro__continue" onClick={() => leaveIntro(true)}>Continue</button>
         <button type="button" className="landing-intro__skip" onClick={() => leaveIntro(true)}>Skip intro</button>
       </div>
     </section>

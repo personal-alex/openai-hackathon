@@ -18,6 +18,11 @@ describe("LifeNavigatorAi", () => {
     expect(seen[0]?.maxOutputTokens).toBe(300);
   });
 
+  it("accepts the approved IL→US relocation ID only when the caller supplies it as a catalog candidate", async () => {
+    const result = await service({ eventId: "relocate_il_us", facts: [] }).extractEvent({ story: "A relocation fixture", sessionId, candidates: [{ id: "relocate_il_us", facts: [] }] });
+    expect(result).toEqual({ kind: "live", data: { eventId: "relocate_il_us", facts: {} } });
+  });
+
   it("rejects invalid fact values and never lets output define roadmap content", async () => {
     const result = await service({ eventId: "expecting_child", facts: [{ factId: "has_date", value: "true" }], taskId: "injected" }).extractEvent({ story: "Fixture", sessionId, candidates: [{ id: "expecting_child", facts }] });
     expect(result).toMatchObject({ kind: "fallback", reason: "invalid_output", data: { eventId: null, facts: {} } });
