@@ -11,6 +11,13 @@
 .conversation-pane,
 .route-pane { min-width: 0; }
 
+.action-workspace--planning {
+  grid-template-areas: "conversation route";
+}
+
+.action-workspace--planning .conversation-pane { grid-area: conversation; }
+.action-workspace--planning .route-pane { grid-area: route; }
+
 .conversation-pane {
   display: flex;
   min-height: 0;
@@ -18,6 +25,7 @@
 }
 
 .mobile-plan-link { display: none; }
+.mobile-question-link { display: none; }
 
 .conversation-thread {
   display: grid;
@@ -255,6 +263,14 @@
 
 @media (max-width: 900px) {
   .action-workspace { grid-template-columns: 1fr; }
+  .action-workspace--planning {
+    grid-template-areas:
+      "route"
+      "conversation";
+    gap: 32px;
+  }
+  .action-workspace--planning .route-pane { padding-top: 0; }
+  .action-workspace--planning .conversation-pane { padding-top: 0; }
   .conversation-pane { padding-top: 16px; }
   .mobile-plan-link {
     display: inline-block;
@@ -269,6 +285,19 @@
     margin-top: 26px;
   }
   .route-preview-empty { min-height: 280px; }
+  .mobile-question-link {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0 0 28px;
+    color: var(--green);
+    font-size: 0.9rem;
+    font-weight: 750;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .mobile-question-link:focus-visible { outline: 3px solid #d48632; outline-offset: 3px; }
 }
 
 @media (max-width: 620px) {

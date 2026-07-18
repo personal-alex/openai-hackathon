@@ -518,3 +518,17 @@ Week submission. It is a concise evidence log, not a transcript.
   classified expecting-child, job-loss, and IL→US relocation; a tourist-visa
   statement stayed unsupported. Typecheck, lint, focused unit tests, and build
   passed.
+
+### 2026-07-18 — Mobile route-first planning refinement
+
+- Task/outcome: Replaced the small-screen planning-state route jump link with
+  the full validated route before the conversation, while retaining a direct
+  “Continue with the current question” link for the focused one-question flow.
+- Codex contribution: Used state-specific semantic layout order, responsive
+  grid areas, and focused Playwright coverage instead of CSS-only visual
+  reordering; no catalog or compiler data changed.
+- Human decision: The roadmap is the primary product artifact on mobile as well
+  as desktop; conversation is the decision-changing input mechanism.
+- Verification: `git diff --check`, typecheck, lint, 85 Vitest tests,
+  production build, and 13 focused Chromium journeys passed. No `/feedback`
+  session ID is recorded.

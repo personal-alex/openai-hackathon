@@ -471,6 +471,17 @@ The repository contains a validated modular-monolith baseline, deterministic com
 - Direct local Gemini checks classified `expecting_child`, `job_loss`, and
   `relocate_il_us`, while a tourist-visa statement remained unsupported.
 
+## 2026-07-18 — Mobile route-first planning composition
+
+- In the planning state, the small-screen layout now presents the actual
+  validated route before the conversation rather than reducing it to a “View
+  your route” jump link. The route's source and visual order match.
+- A 44px keyboard-focusable “Continue with the current question” link preserves
+  a direct path to the single active question. This is presentation-only: no
+  event pack, task, source, rule, compiler, or AI behavior changed.
+- Passed: `git diff --check`, typecheck, lint, 85 Vitest tests, production
+  build, and 13 focused Chromium E2E journeys including the mobile route flow.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

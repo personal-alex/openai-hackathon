@@ -124,13 +124,15 @@ test("does not let model-returned facts skip a decision-changing question", asyn
   await expect(page.getByRole("heading", { name: "Has the child already been born?" })).toBeVisible();
 });
 
-test("keeps conversation first on mobile with a route jump for the single-column layout", async ({ page }) => {
+test("makes the validated route primary on mobile while preserving a direct path to the current question", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
-  await page.getByRole("button", { name: "Skip intro" }).click();
-  await expect(page.getByText("Tell me what changed. I’ll help you organize the next steps and what can wait.")).toBeVisible();
-  await page.getByRole("link", { name: "View your route" }).click();
-  await expect(page.getByRole("heading", { name: "Your plan will take shape here." })).toBeInViewport();
+  await enterWorkspace(page, "I lost my job");
+  const route = page.getByRole("heading", { name: "Your route" });
+  const question = page.getByRole("heading", { name: /Has your employment already ended/i });
+  await expect(route).toBeInViewport();
+  await expect(page.getByRole("link", { name: /Continue with the current question/i })).toBeVisible();
+  await page.getByRole("link", { name: /Continue with the current question/i }).click();
+  await expect(question).toBeInViewport();
 });
 
 test("shows a neutral clarification when live classification cannot support the statement", async ({ page }) => {
