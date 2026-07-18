@@ -455,3 +455,13 @@ Week submission. It is a concise evidence log, not a transcript.
   apostrophe “having a baby!” variants as `expecting_child` with `facts: []`;
   diff check, typecheck, lint, and 75 Vitest tests passed. Chromium/build remain
   pending a restart of the port-3000 process that is serving a Next 404 page.
+
+### 2026-07-18 — GitHub Actions Playwright selector repair
+
+- Task/outcome: Repaired the CI-only strict-selector failure in the local
+  classifier-limit feedback journey.
+- Codex contribution: Inspected failed Actions run 29637103505 through GitHub
+  CLI, identified Next’s route announcer as the second `role="alert"`, and
+  scoped both assertions to the conversation composer’s form error.
+- Verification: `git diff --check`, typecheck, lint, 75 Vitest tests, focused
+  Chromium coverage, all 19 Chromium journeys, and production build passed.
