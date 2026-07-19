@@ -497,6 +497,15 @@ The repository contains a validated modular-monolith baseline, deterministic com
   test` (85 tests), `npm run build`, and all 20 Chromium E2E journeys against
   an isolated production server.
 
+## 2026-07-19 — Primary `/feedback` provenance recorded
+
+- Primary `/feedback` session ID `019f6502-98b3-7270-89f4-6bd83e370589` is now
+  recorded in `README.md` and `docs/CODEX_COLLABORATION.md`.
+- The ID corresponds to the main long-running Codex session responsible for
+  most Life Navigator implementation work.
+- This improves submission provenance only; no runtime, content, policy,
+  architecture, or testing behavior changed.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

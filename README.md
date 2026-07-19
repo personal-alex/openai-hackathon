@@ -123,14 +123,38 @@ linked and configured for Node 24, deploy with `vercel --prod`.
 
 ## Codex and GPT-5.6 Collaboration
 
-Completed, verifiable Codex use at bootstrap time covers the implementation
-planning, HLD, ADR, UX decision package, and repository setup. Human review
-owns all product, safety, and source decisions. The approved future GPT-5.6
-role is bounded to structured interpretation of stated facts, allowlisted
-question selection, and bounded explanations; it is not implemented here and
-does not select authoritative tasks, sources, timing, or eligibility outcomes.
+Life Navigator was built with Codex using GPT-5.6 throughout most of the
+hackathon lifecycle. GPT-5.6 supported problem discovery, product framing,
+architecture and implementation planning, repository scaffolding,
+implementation, debugging, test generation and repair, UI refinement,
+refactoring, documentation, and submission preparation.
+
+Codex and GPT-5.6 accelerated the implementation of the validated domain
+contracts, event-pack architecture, deterministic roadmap compiler,
+classification gateway, source-backed scenario packs, test fixtures,
+end-to-end coverage, and deployment preparation. Isolated Git worktrees were
+used for bounded life-event discovery, evidence-ledger and reviewer-gate
+preparation, candidate event-pack authoring, and internal review-deck work.
+Remote/mobile access was used to monitor the primary Codex session, review
+results, provide context, approve actions, and redirect work while away from
+the workstation.
+
+Human review owns product scope, system architecture, trust and safety
+boundaries, source-review standards, policy wording, integration decisions,
+and final code review. The product's trusted decisions remain deterministic:
+validated event packs and the roadmap compiler—not model prose—select
+user-visible tasks, timing, sources, safety labels, and never make eligibility
+outcomes.
+
+The deployed application may use a separately configured runtime classifier;
+this development-collaboration record does not claim that GPT-5.6 is the live
+production runtime provider.
 
 See [the Codex collaboration record](docs/CODEX_COLLABORATION.md).
 
-Primary-thread `/feedback` session ID: _To be recorded after feedback is
-submitted._
+Primary-thread `/feedback` session ID: `019f6502-98b3-7270-89f4-6bd83e370589`
+
+This ID identifies the long-running primary Codex thread in which the majority
+of Life Navigator’s core implementation work was completed. See
+[`docs/CODEX_COLLABORATION.md`](docs/CODEX_COLLABORATION.md) for the dated,
+verifiable collaboration record.

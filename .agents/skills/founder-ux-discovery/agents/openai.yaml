@@ -1,0 +1,4 @@
+interface:
+  display_name: "Founder UX Discovery"
+  short_description: "Turn product ideas into clear UX direction"
+  default_prompt: "Guide me through UX discovery for my product idea."

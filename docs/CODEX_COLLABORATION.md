@@ -6,11 +6,20 @@ Week submission. It is a concise evidence log, not a transcript.
 ## Primary implementation thread
 
 - Codex thread: Primary local implementation thread; no external session ID is claimed here
-- `/feedback` session ID: To be recorded after feedback is submitted
+- `/feedback` session ID: `019f6502-98b3-7270-89f4-6bd83e370589`
+- Verification note: This is the primary Codex thread where the majority of the project’s core functionality was built, including problem discovery, product framing, repository scaffold, domain contracts, event-pack architecture, deterministic roadmap compiler, classifier gateway, UI refinement, test fixtures, end-to-end coverage, deployment preparation, and submission materials.
 - Scope: Scaffold, contracts, event packs, compiler, tests, product integration,
   deployment, and submission materials
 
 ## Entries
+
+### 2026-07-19 — Primary `/feedback` session ID recorded
+
+- Task/outcome: Recorded submitted `/feedback` session ID `019f6502-98b3-7270-89f4-6bd83e370589` as the primary long-running Codex thread used for the majority of Life Navigator core project work.
+- Codex contribution: Updated the primary implementation-thread provenance record and README reference so the Build Week submission can connect the implementation evidence to the submitted Codex feedback thread.
+- Workflow context: The recorded work used a main implementation thread, isolated Git worktrees for life-event discovery/content-authoring and review-deck preparation, and remote/mobile oversight.
+- Human review/decision: Human ownership remained with product scope, architecture, trust and safety, source review, policy wording, integration decisions, and final review.
+- Boundary: This records provenance only and does not alter product behavior, approved content, source dispositions, architecture, or tests.
 
 ### 2026-07-17 — Catalog-driven typed-question capability
 

@@ -29,6 +29,11 @@ pnpm-debug.log*
 # Local IDE state
 .idea/
 
+# Local design-assistant skill/runtime files
+.agents/skills/impeccable/
+.github/skills/impeccable/
+.impeccable/
+
 # Obsidian workspace state
 docs/.obsidian/
 
