@@ -97,6 +97,12 @@ only for the hackathon/demo and remains verification-oriented; it is not legal,
 tax, immigration, residency, or eligibility advice. The repository has no
 integrations, authentication, database, or live-web retrieval.
 
+## License
+
+This private repository is shared only for hackathon judging and internal
+collaboration. No license is granted for copying, modification, distribution,
+or commercial use. See [LICENSE](LICENSE).
+
 ## Supported hackathon scenarios
 
 - `expecting_child` — reviewed Israel family-registration planning.
