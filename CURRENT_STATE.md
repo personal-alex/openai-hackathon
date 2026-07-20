@@ -506,6 +506,36 @@ The repository contains a validated modular-monolith baseline, deterministic com
 - This improves submission provenance only; no runtime, content, policy,
   architecture, or testing behavior changed.
 
+## 2026-07-20 — OPE-40 stated-fact pre-population
+
+- The live classifier now returns only validated, event-scoped `statedFacts`.
+  Unknown, cross-event, duplicate, wrong-type, and unsupported-option facts are
+  stripped; absent facts remain absent.
+- After event confirmation, the user-visible, correctable stated facts become
+  context before question selection. A correction replaces the classifier value;
+  the existing one-question sequence skips only fact keys already present.
+- The deterministic compiler remains the sole authority for tasks, sources,
+  timing, safety labels, and eligibility-adjacent results. No event-pack content
+  or question wording changed.
+- Passed: `git diff --check`, `npm run typecheck`, `npm run lint`, `npm run
+  test` (90 passed), `npm run build`, and 21 Chromium E2E journeys against an
+  isolated production server.
+
+## 2026-07-20 — Gemini classifier schema and recognition repair
+
+- Gemini rejected OPE-40's dynamic multi-pack fact-ID enum/value union with a
+  400 response, which the safe gateway surfaced as `unavailable`. Its schema
+  now accepts only string fact items and delegates all key/value filtering to
+  the shared validated boundary; every active runtime pack currently uses
+  string-valued intake facts.
+- Reviewed recognition metadata now includes a U.S. company job-offer phrase for
+  the narrow IL→US relocation demo and a workplace/factory-closure phrase for
+  job loss. These hints identify only an event; they add no task, rule, source,
+  timing, eligibility result, or automatic context fact.
+- Direct Gemini verification classified both reported phrases with only their
+  explicit, validated facts. Passed: `git diff --check`, typecheck, lint,
+  focused unit tests, production build, and 22 Chromium E2E journeys.
+
 ## Deferred / explicitly out of scope for MVP
 
 - Government or commercial-system integrations

@@ -8,6 +8,11 @@ const pack = jobLossPack;
 const taskIds = (facts: Record<string, string>) => compileRoadmap(pack, { facts }).steps.map((task) => task.id);
 
 describe("reviewed Hackathon job-loss catalog", () => {
+  it("keeps the reviewed factory-closure expression as recognition metadata only", () => {
+    expect(pack.metadata.recognitionHints).toEqual(expect.arrayContaining(["my workplace or factory is closing"]));
+    expect(JSON.stringify(pack.rules)).not.toMatch(/factory|closing/i);
+  });
+
   it("validates the complete approved-for-hackathon official route source cards", () => {
     expect(validateEventPack(jobLossPack).success).toBe(true);
     expect(validateApprovedEventPack(pack).success).toBe(true);

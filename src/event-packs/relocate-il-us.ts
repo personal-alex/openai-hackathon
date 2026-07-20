@@ -75,7 +75,7 @@ export const relocateIlUsPack: EventPack = {
       "relocating from Israel to the US",
       "relocating from Israel to the United States",
       "moving to America for my job",
-      "offer in the States and want to move",
+      "I got a job offer from a company in the USA",
       "moving to the U.S. to join my spouse",
       "my fiancé is American and I’m moving to the US",
       "relocating from Israel to California",

@@ -4,7 +4,7 @@ import { createOpenAiGateway } from "@/lib/ai/providers/openai";
 
 const candidates: readonly ClassificationCandidate[] = [{
   id: "job_loss", label: "Job loss", recognitionHints: ["lost my job"],
-  facts: [{ id: "event_stage", valueType: "string" }, { id: "has_notice", valueType: "boolean" }]
+  facts: [{ id: "event_stage", valueType: "string", allowedValues: ["ended"] }, { id: "has_notice", valueType: "boolean", allowedValues: [true, false] }]
 }];
 
 const input = { text: "I lost my job and got notice", requestId: "request-123", candidates };
@@ -16,13 +16,14 @@ function response(payload: unknown, status = 200, headers?: Record<string, strin
 
 describe("OpenAI classification adapter", () => {
   it("uses strict structured output and returns an allowlisted classification", async () => {
-    const fetch = vi.fn<typeof globalThis.fetch>().mockResolvedValue(response({ output_text: JSON.stringify({ eventId: "job_loss", facts: [{ factId: "has_notice", value: true }] }) }));
+    const fetch = vi.fn<typeof globalThis.fetch>().mockResolvedValue(response({ output_text: JSON.stringify({ eventId: "job_loss", statedFacts: [{ factId: "has_notice", value: true }] }) }));
     const result = await createOpenAiGateway(config, { apiKey: "test-key", fetch }).classifyEvent(input);
-    expect(result).toEqual({ kind: "classified", classification: { eventId: "job_loss", facts: [{ factId: "has_notice", value: true }] } });
+    expect(result).toEqual({ kind: "classified", classification: { eventId: "job_loss", statedFacts: [{ factId: "has_notice", value: true }] } });
     const request = JSON.parse(String(fetch.mock.calls[0]?.[1]?.body)) as Record<string, unknown>;
     expect(request.temperature).toBe(0);
     expect(request.text).toMatchObject({ format: { type: "json_schema", strict: true } });
     expect(JSON.stringify(request.input)).toContain("/no_think");
+    expect(JSON.stringify(request.input)).toContain("Extract a stated fact only");
     expect(new Headers(fetch.mock.calls[0]?.[1]?.headers).get("authorization")).toBe("Bearer test-key");
   });
 
@@ -51,10 +52,10 @@ describe("OpenAI classification adapter", () => {
 
   it("uses a neutral clarification for unsupported events and invalid candidate facts", async () => {
     const fetch = vi.fn<typeof globalThis.fetch>()
-      .mockResolvedValueOnce(response({ output_text: JSON.stringify({ eventId: null, facts: [] }) }))
-      .mockResolvedValueOnce(response({ output_text: JSON.stringify({ eventId: "job_loss", facts: [{ factId: "unknown", value: true }] }) }));
+      .mockResolvedValueOnce(response({ output_text: JSON.stringify({ eventId: null, statedFacts: [] }) }))
+      .mockResolvedValueOnce(response({ output_text: JSON.stringify({ eventId: "job_loss", statedFacts: [{ factId: "unknown", value: true }] }) }));
     const gateway = createOpenAiGateway(config, { apiKey: "test-key", fetch });
     await expect(gateway.classifyEvent(input)).resolves.toEqual({ kind: "clarification", reason: "unsupported" });
-    await expect(gateway.classifyEvent(input)).resolves.toEqual({ kind: "clarification", reason: "invalid_output" });
+    await expect(gateway.classifyEvent(input)).resolves.toEqual({ kind: "classified", classification: { eventId: "job_loss", statedFacts: [] } });
   });
 });

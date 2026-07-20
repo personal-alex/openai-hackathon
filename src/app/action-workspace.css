@@ -109,6 +109,38 @@
   line-height: 1.25;
 }
 
+.stated-facts {
+  margin: 12px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 10px 0;
+}
+
+.stated-facts > p {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.stated-facts ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stated-facts li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.stated-facts .answer-list--replies,
+.stated-facts .answer-list--typed-reply { width: 100%; }
+
 .answer-button--affirmative {
   border-color: var(--green);
   background: var(--green);

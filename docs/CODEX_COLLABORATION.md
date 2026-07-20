@@ -13,6 +13,43 @@ Week submission. It is a concise evidence log, not a transcript.
 
 ## Entries
 
+### 2026-07-20 — OPE-40 stated-fact classifier pre-population
+
+- Task/outcome: Implemented validated, event-scoped `statedFacts` from initial
+  event classification through confirmation and into the existing question
+  selector.
+- Codex contribution: Derived fact IDs and option values from active packs,
+  centralized stripping of unknown/cross-event/invalid/duplicate model facts,
+  updated all provider prompts and structured schemas, and added a correctable
+  confirmation disclosure plus focused unit and browser coverage.
+- Human review/decision: Implemented Linear OPE-40’s accepted scope. Existing
+  `job_loss` contracts use `employment_stage` rather than the issue example’s
+  nonexistent `separation_type`; no fact key, question copy, task, source, or
+  rule was added or changed.
+- Safety/scope: Classifier values remain provisional until the user confirms or
+  corrects them. The deterministic compiler continues to own tasks, sources,
+  timing, labels, and eligibility-adjacent outcomes.
+- Verification: `git diff --check`, `npm run typecheck`, `npm run lint`, `npm
+  run test` (90 passed), `npm run build`, and 21 serial Chromium E2E journeys
+  against an isolated production server passed. Linear issue: OPE-40.
+
+### 2026-07-20 — Gemini stated-fact schema compatibility and recognition repair
+
+- Task/outcome: Repaired the Gemini production classifier after OPE-40 caused
+  the provider to reject the dynamic multi-pack fact enum/value union with HTTP
+  400, which the gateway safely represented as `unavailable`.
+- Codex contribution: Reduced Gemini's provider schema to its supported
+  string-item subset and retained the shared post-parse allowlist validator;
+  added bounded catalog recognition metadata and focused regression tests for a
+  U.S. company job offer and a factory-closure statement.
+- Human review/decision: The wording remains recognition metadata only. It does
+  not add policy content or infer a move, employment end, task, source, rule,
+  timing, verification label, or eligibility outcome.
+- Verification: Direct live Gemini calls classified the two reported phrases as
+  `relocate_il_us` with explicit offer/purpose facts and `job_loss` with an
+  explicit notice fact; `git diff --check`, typecheck, lint, focused unit
+  tests, production build, and 22 serial Chromium E2E journeys passed.
+
 ### 2026-07-19 — Primary `/feedback` session ID recorded
 
 - Task/outcome: Recorded submitted `/feedback` session ID `019f6502-98b3-7270-89f4-6bd83e370589` as the primary long-running Codex thread used for the majority of Life Navigator core project work.

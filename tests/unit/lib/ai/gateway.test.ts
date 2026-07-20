@@ -8,9 +8,9 @@ describe("provider-neutral classification gateway contract", () => {
   });
 
   it("selects the configured adapter without exposing provider failures", async () => {
-    const gateway: LlmGateway = { classifyEvent: async () => ({ kind: "classified", classification: { eventId: "job_loss", facts: [] } }) };
+    const gateway: LlmGateway = { classifyEvent: async () => ({ kind: "classified", classification: { eventId: "job_loss", statedFacts: [] } }) };
     const result = await createLlmGateway(getLlmConfig({ LLM_PROVIDER: "openai" }), { openai: () => gateway }).classifyEvent({ text: "I lost my job", requestId: "request", candidates: [] });
-    expect(result).toEqual({ kind: "classified", classification: { eventId: "job_loss", facts: [] } });
+    expect(result).toEqual({ kind: "classified", classification: { eventId: "job_loss", statedFacts: [] } });
   });
 
   it("returns a typed clarification when no configured adapter is available", async () => {
@@ -18,11 +18,11 @@ describe("provider-neutral classification gateway contract", () => {
   });
 
   it("uses a fallback only for transient provider failures", async () => {
-    const fallback: LlmGateway = { classifyEvent: async () => ({ kind: "classified", classification: { eventId: "expecting_child", facts: [] } }) };
+    const fallback: LlmGateway = { classifyEvent: async () => ({ kind: "classified", classification: { eventId: "expecting_child", statedFacts: [] } }) };
     const transient: LlmGateway = { classifyEvent: async () => ({ kind: "clarification", reason: "timeout" }) };
     const invalid: LlmGateway = { classifyEvent: async () => ({ kind: "clarification", reason: "invalid_output" }) };
     const input = { text: "test", requestId: "request", candidates: [] };
-    await expect(withTransientFallback(transient, fallback).classifyEvent(input)).resolves.toEqual({ kind: "classified", classification: { eventId: "expecting_child", facts: [] } });
+    await expect(withTransientFallback(transient, fallback).classifyEvent(input)).resolves.toEqual({ kind: "classified", classification: { eventId: "expecting_child", statedFacts: [] } });
     await expect(withTransientFallback(invalid, fallback).classifyEvent(input)).resolves.toEqual({ kind: "clarification", reason: "invalid_output" });
   });
 });

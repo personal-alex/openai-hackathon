@@ -1,5 +1,5 @@
 import type { LlmConfig } from "../config";
-import { EventClassificationSchema, type ClassificationCandidate, type ClassificationResult, type ClassifyEventInput, type LlmGateway } from "../contracts";
+import { type ClassificationCandidate, type ClassificationResult, type ClassifyEventInput, type LlmGateway, validateEventClassification } from "../contracts";
 
 type FetchLike = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 
@@ -28,7 +28,7 @@ function jsonSchemaFor(input: ClassifyEventInput): Record<string, unknown> {
   return {
     type: "object",
     additionalProperties: false,
-    required: ["eventId", "facts"],
+    required: ["eventId", "statedFacts"],
     properties: {
       eventId: {
         anyOf: [
@@ -36,7 +36,7 @@ function jsonSchemaFor(input: ClassifyEventInput): Record<string, unknown> {
           { type: "null" }
         ]
       },
-      facts: {
+      statedFacts: {
         type: "array",
         maxItems: 24,
         items: {
@@ -64,9 +64,9 @@ function systemPrompt(input: ClassifyEventInput): string {
   return [
     "/no_think",
     "You classify an explicitly stated life event into the supplied allowlist.",
-    "Return JSON matching the provided schema only. Do not infer facts, eligibility, tasks, sources, timing, or advice.",
+    "Return JSON matching the provided schema only. Extract only facts directly stated by the user; never infer, assume, guess, or fill defaults. You may normalize direct wording to a supplied canonical option value. Omit absent facts from statedFacts.",
     "A recognition hint is a supported ordinary expression for that candidate; classify it even when punctuation or a contraction differs.",
-    "Use null for eventId when no supported event is clearly stated. Return facts: [] for entry classification unless a supplied fact value is stated exactly; never infer a decision-changing fact.",
+    "Use null for eventId when no supported event is clearly stated. Return statedFacts: [] when no supplied fact value is directly stated.",
     `Allowed candidates: ${JSON.stringify(candidates)}`
   ].join("\n");
 }
@@ -74,19 +74,6 @@ function systemPrompt(input: ClassifyEventInput): string {
 function failureReason(error: unknown): ClarificationReason {
   if (error instanceof DOMException && error.name === "AbortError") return "timeout";
   return "unavailable";
-}
-
-function validateClassification(payload: unknown, candidates: readonly ClassificationCandidate[]): ClassificationResult {
-  const parsed = EventClassificationSchema.safeParse(payload);
-  if (!parsed.success) return { kind: "clarification", reason: "invalid_output" };
-  if (parsed.data.eventId === null) return { kind: "clarification", reason: "unsupported" };
-  const candidate = candidates.find((item) => item.id === parsed.data.eventId);
-  if (!candidate) return { kind: "clarification", reason: "unsupported" };
-  for (const fact of parsed.data.facts) {
-    const definition = candidate.facts.find((item) => item.id === fact.factId);
-    if (!definition || typeof fact.value !== definition.valueType || (definition.valueType === "number" && !Number.isFinite(fact.value))) return { kind: "clarification", reason: "invalid_output" };
-  }
-  return { kind: "classified", classification: parsed.data };
 }
 
 /**
@@ -138,7 +125,7 @@ export class OllamaGateway implements LlmGateway {
           return undefined;
         }
       })();
-      return validateClassification(parsedJson, input.candidates);
+      return validateEventClassification(parsedJson, input.candidates);
     } catch (error) {
       return { kind: "clarification", reason: failureReason(error) };
     } finally {

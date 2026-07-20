@@ -1,5 +1,5 @@
 import type { LlmConfig } from "../config";
-import { EventClassificationSchema, type ClassificationCandidate, type ClassificationResult, type ClassifyEventInput, type LlmGateway } from "../contracts";
+import { type ClassificationCandidate, type ClassificationResult, type ClassifyEventInput, type LlmGateway, validateEventClassification } from "../contracts";
 
 const MAX_CANDIDATES = 16;
 const MAX_FACTS = 16;
@@ -12,30 +12,34 @@ function schema(candidates: readonly ClassificationCandidate[]): Record<string, 
   return {
     type: "object",
     additionalProperties: false,
-    required: ["eventId", "facts"],
+    required: ["eventId", "statedFacts"],
     properties: {
       eventId: { type: "string", enum: [...eventIds, unsupportedEventId] },
-      facts: { type: "array", maxItems: 0 }
+      statedFacts: {
+        type: "array",
+        maxItems: 24,
+        items: {
+          type: "object",
+          additionalProperties: false,
+          required: ["factId", "value"],
+          properties: {
+            /** Gemini rejects the dynamic multi-pack enum/union combination; the shared runtime validator filters both fields after parsing. */
+            factId: { type: "string" },
+            value: { type: "string" }
+          }
+        }
+      }
     }
   };
 }
 
 function prompt(input: ClassifyEventInput): string {
-  return ["/no_think", "Classify only among the supplied event IDs. A recognition hint is a supported ordinary expression even when punctuation or a contraction differs.", `Return facts: [] always. If no supported event is clearly stated, return eventId: \"${unsupportedEventId}\". Never infer a decision-changing fact or provide tasks, sources, rules, timing, eligibility, advice, or prose.`, `Candidates: ${JSON.stringify(input.candidates.slice(0, MAX_CANDIDATES).map((candidate) => ({ id: candidate.id, label: candidate.label, recognitionHints: candidate.recognitionHints.slice(0, 4), facts: candidate.facts.slice(0, MAX_FACTS) })))}`, `User statement: ${input.text.slice(0, 2_000)}`].join("\n");
+  return ["/no_think", "Classify only among the supplied event IDs. A recognition hint is a supported ordinary expression even when punctuation or a contraction differs.", `Extract only facts directly stated by the user. Never infer, assume, guess, or fill a default; omit absent facts from statedFacts. You may normalize direct wording to a supplied canonical option value. If no supported event is clearly stated, return eventId: \"${unsupportedEventId}\". Never provide tasks, sources, rules, timing, eligibility, advice, or prose.`, `Candidates: ${JSON.stringify(input.candidates.slice(0, MAX_CANDIDATES).map((candidate) => ({ id: candidate.id, label: candidate.label, recognitionHints: candidate.recognitionHints.slice(0, 4), facts: candidate.facts.slice(0, MAX_FACTS) })))}`, `User statement: ${input.text.slice(0, 2_000)}`].join("\n");
 }
 
 function validate(payload: unknown, candidates: readonly ClassificationCandidate[]): ClassificationResult {
   if (typeof payload === "object" && payload !== null && !Array.isArray(payload) && (payload as Record<string, unknown>).eventId === unsupportedEventId) return { kind: "clarification", reason: "unsupported" };
-  const parsed = EventClassificationSchema.safeParse(payload);
-  if (!parsed.success) return { kind: "clarification", reason: "invalid_output" };
-  if (parsed.data.eventId === null) return { kind: "clarification", reason: "unsupported" };
-  const candidate = candidates.find((item) => item.id === parsed.data.eventId);
-  if (!candidate) return { kind: "clarification", reason: "unsupported" };
-  for (const fact of parsed.data.facts) {
-    const definition = candidate.facts.find((item) => item.id === fact.factId);
-    if (!definition || typeof fact.value !== definition.valueType || (definition.valueType === "number" && !Number.isFinite(fact.value))) return { kind: "clarification", reason: "invalid_output" };
-  }
-  return { kind: "classified", classification: parsed.data };
+  return validateEventClassification(payload, candidates);
 }
 
 /** Gemini is a classification-only fallback and is invoked only by the server composition root. */

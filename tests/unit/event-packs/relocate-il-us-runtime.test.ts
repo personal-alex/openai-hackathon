@@ -12,7 +12,7 @@ describe("reviewed hackathon IL→US relocation catalog", () => {
     expect(validateApprovedEventPack(relocateIlUsPack).success).toBe(true);
     expect(relocateIlUsPack.jurisdiction).toBe("IL_US");
     expect(relocateIlUsPack.sourceCards.every((source) => source.disposition === "approved_for_hackathon" && source.reviewedOn === "2026-07-18" && source.supportedClaimSummary.length > 0)).toBe(true);
-    expect(relocateIlUsPack.metadata.recognitionHints).toEqual(expect.arrayContaining(["relocating from Israel to the US", "moving to America for my job"]));
+    expect(relocateIlUsPack.metadata.recognitionHints).toEqual(expect.arrayContaining(["relocating from Israel to the US", "moving to America for my job", "I got a job offer from a company in the USA"]));
   });
 
   it("selects the bounded employment, departure, residency, and tax reviews for a long-term move with an offer", () => {

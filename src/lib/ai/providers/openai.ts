@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { EventClassificationSchema, type ClassificationCandidate, type ClassificationResult, type ClassifyEventInput, type LlmGateway } from "../contracts";
+import { type ClassificationCandidate, type ClassificationResult, type ClassifyEventInput, type LlmGateway, validateEventClassification } from "../contracts";
 import type { LlmConfig } from "../config";
 
 const MAX_CANDIDATES = 16;
@@ -23,7 +23,7 @@ function boundedCandidates(candidates: readonly ClassificationCandidate[]) {
     id: boundedText(candidate.id),
     label: boundedText(candidate.label),
     recognitionHints: candidate.recognitionHints.slice(0, MAX_HINTS_PER_CANDIDATE).map(boundedText),
-    facts: candidate.facts.slice(0, MAX_FACTS_PER_CANDIDATE).map((fact) => ({ id: boundedText(fact.id), valueType: fact.valueType }))
+    facts: candidate.facts.slice(0, MAX_FACTS_PER_CANDIDATE).map((fact) => ({ id: boundedText(fact.id), valueType: fact.valueType, allowedValues: fact.allowedValues }))
   }));
 }
 
@@ -33,10 +33,10 @@ function classificationSchema(candidates: readonly ClassificationCandidate[]): R
   return {
     type: "object",
     additionalProperties: false,
-    required: ["eventId", "facts"],
+    required: ["eventId", "statedFacts"],
     properties: {
       eventId: { type: ["string", "null"], enum: [...eventIds, null] },
-      facts: {
+      statedFacts: {
         type: "array",
         maxItems: 24,
         items: {
@@ -58,7 +58,7 @@ function instructions(candidates: ReturnType<typeof boundedCandidates>): string 
     "/no_think",
     "Classify the user's stated life event using only the supplied candidate event IDs and fact IDs.",
     "A recognition hint is a supported ordinary expression for that candidate; classify it even when punctuation or a contraction differs.",
-    "For entry classification, return facts: [] unless a supplied fact value is stated exactly; never infer a decision-changing fact.",
+    "Extract a stated fact only when the user's words directly express it. You may normalize direct wording to a supplied canonical option value, but never infer, assume, guess, or fill a default. Omit absent facts from statedFacts; return statedFacts: [] when none are directly stated.",
     "Do not provide advice, tasks, sources, rules, timing, or eligibility conclusions.",
     "Return null eventId when no supplied event is supported.",
     `Candidates: ${JSON.stringify(candidates)}`
@@ -73,23 +73,6 @@ function retryAfterSeconds(headers: Headers | undefined): number | undefined {
   const value = headers?.get("retry-after");
   const seconds = Number(value);
   return Number.isFinite(seconds) && seconds > 0 ? Math.ceil(seconds) : undefined;
-}
-
-function valueMatchesType(value: string | number | boolean, type: "string" | "number" | "boolean"): boolean {
-  return typeof value === type && (type !== "number" || Number.isFinite(value));
-}
-
-function validateClassification(payload: unknown, candidates: readonly ClassificationCandidate[]): ClassificationResult {
-  const parsed = EventClassificationSchema.safeParse(payload);
-  if (!parsed.success) return { kind: "clarification", reason: "invalid_output" };
-  if (parsed.data.eventId === null) return { kind: "clarification", reason: "unsupported" };
-  const candidate = candidates.find((item) => item.id === parsed.data.eventId);
-  if (!candidate) return { kind: "clarification", reason: "unsupported" };
-  for (const fact of parsed.data.facts) {
-    const definition = candidate.facts.find((item) => item.id === fact.factId);
-    if (!definition || !valueMatchesType(fact.value, definition.valueType)) return { kind: "clarification", reason: "invalid_output" };
-  }
-  return { kind: "classified", classification: parsed.data };
 }
 
 /**
@@ -121,7 +104,7 @@ export function createOpenAiGateway(config: LlmConfig, dependencies: OpenAiGatew
           const text = response.output_text;
           if (!text) return { kind: "clarification", reason: "invalid_output" };
           try {
-            return validateClassification(JSON.parse(text) as unknown, candidates);
+            return validateEventClassification(JSON.parse(text) as unknown, candidates);
           } catch {
             return { kind: "clarification", reason: "invalid_output" };
           }

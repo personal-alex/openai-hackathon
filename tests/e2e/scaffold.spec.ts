@@ -114,16 +114,35 @@ test("routes supported IL→US relocation language through confirmation without 
   }
 });
 
-test("does not let model-returned facts skip a decision-changing question", async ({ page }) => {
+test("commits explicitly stated expecting-child facts after confirmation and skips their question", async ({ page }) => {
   await page.route("**/api/ai/extract-event", async (route) => {
-    await route.fulfill({ contentType: "application/json", status: 200, body: JSON.stringify({ kind: "classified", classification: { eventId: "expecting_child", facts: [{ factId: "event_stage", value: "birth_occurred" }] } }) });
+    await route.fulfill({ contentType: "application/json", status: 200, body: JSON.stringify({ kind: "classified", classification: { eventId: "expecting_child", statedFacts: [{ factId: "event_stage", value: "not_yet_born" }] } }) });
   });
   await page.goto("/");
   await page.getByRole("button", { name: "Skip intro" }).click();
   await page.getByLabel("What happened?").fill("We’re having a baby!");
   await page.locator(".conversation-composer").getByRole("button", { name: "Continue", exact: true }).click();
+  await expect(page.getByText("We also noted these details from what you said.")).toBeVisible();
+  await expect(page.getByText(/Has the child already been born.*Not yet/)).toBeVisible();
   await page.getByRole("button", { name: "Yes, that’s right" }).click();
-  await expect(page.getByRole("heading", { name: "Has the child already been born?" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Has the child already been born?" })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "Your after-birth preview is ready." })).toBeVisible();
+});
+
+test("uses a confirmation correction instead of the classifier's provisional job-loss fact", async ({ page }) => {
+  await page.route("**/api/ai/extract-event", async (route) => {
+    await route.fulfill({ contentType: "application/json", status: 200, body: JSON.stringify({ kind: "classified", classification: { eventId: "job_loss", statedFacts: [{ factId: "employment_stage", value: "ended" }] } }) });
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Skip intro" }).click();
+  await page.getByLabel("What happened?").fill("I was fired");
+  await page.locator(".conversation-composer").getByRole("button", { name: "Continue", exact: true }).click();
+  await expect(page.getByText(/Has your employment already ended.*My employment has ended/)).toBeVisible();
+  await page.getByRole("button", { name: "Correct" }).click();
+  await page.getByRole("button", { name: "I have been given notice" }).click();
+  await page.getByRole("button", { name: "Yes, that’s right" }).click();
+  await expect(page.getByRole("heading", { name: /Has your employment already ended/i })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "What would be most helpful to focus on first?" })).toBeVisible();
 });
 
 test("makes the validated route primary on mobile while preserving a direct path to the current question", async ({ page }) => {
@@ -153,4 +172,16 @@ test("the seeded demo query still uses the live classification route", async ({ 
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await expect(page.getByText("Is that right?")).toBeVisible();
   expect(classifier.calls).toEqual(["I lost my job"]);
+});
+
+test("recognizes the reviewed job-offer and factory-closure language without adding policy facts in the browser fixture", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Skip intro" }).click();
+  await page.getByLabel("What happened?").fill("I got job offer from company in USA");
+  await page.locator(".conversation-composer").getByRole("button", { name: "Continue", exact: true }).click();
+  await expect(page.getByText(/planning a move from Israel to the United States/i)).toBeVisible();
+  await page.getByRole("button", { name: "Choose a different event" }).click();
+  await page.getByLabel("What happened?").fill("My boss told me they’re closing our factory");
+  await page.locator(".conversation-composer").getByRole("button", { name: "Continue", exact: true }).click();
+  await expect(page.getByText(/sounds like you lost your job/i)).toBeVisible();
 });
