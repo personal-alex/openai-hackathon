@@ -116,6 +116,12 @@ compiler will show only the source-backed verification tasks supported by the
 facts you provide. See [ADR 0004](docs/adr/0004-hackathon-il-us-relocation-exception.md)
 for the scenario’s boundary.
 
+## Adding an event pack
+
+New life events follow a controlled research, human-review, validation, and
+explicit-registration process. See [Adding a Life Navigator event pack](docs/adding-an-event-pack.md)
+before proposing or implementing event-pack content.
+
 ## Deployment
 
 No Vercel configuration is necessary for this baseline. After a project is
